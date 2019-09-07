@@ -67,7 +67,7 @@ class BaseTournament:
     )
 
   def get_config_data(self):
-    p = self.config_data_path()
+    p = self._config_data_path()
     if p.is_file() and p.stat().st_size:
       with p.open(encoding="utf8") as f:
         o = json.load(f)
@@ -76,7 +76,7 @@ class BaseTournament:
       return {}
 
   def set_config_data(self, o):
-    p = self.config_data_path()
+    p = self._config_data_path()
     with p.open("w", encoding="utf8") as f:
       json.dump(
         o,
@@ -91,9 +91,28 @@ class BaseTournament:
     data_path = cibblbibbl.settings["cibblbibbl-data.path"]
     p = pathlib.Path(data_path)
     p /= f'tournament/config/{filename}'
+    return p
 
 
 class Tournament(BaseTournament):
+
+  default_key_point = {
+    "W": 3,
+    "D": 1,
+    "L": 0,
+    "C": 0,
+    "B": 3,
+    "F": 0,
+  }
+
+  default_key_prestige = {
+    "W": 3,
+    "D": 1,
+    "L": 0,
+    "C": -10,
+    "B": 0,
+    "F": 0,
+  }
 
   def matches(self):
     return tuple(
@@ -102,7 +121,13 @@ class Tournament(BaseTournament):
       if S["result"].get("id")
     )
 
+  def key_point(self):
+    c = self.get_config_data()
+    return c.get("key_point") or self.default_key_point
 
+  def key_prestige(self):
+    c = self.get_config_data()
+    return c.get("key_prestige") or self.default_key_prestige
 
 def init(ID):
   return Tournament(ID)
