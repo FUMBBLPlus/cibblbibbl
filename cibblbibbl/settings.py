@@ -61,3 +61,40 @@ class LoginSettings(BaseSettings):
   )
 loginsettings = LoginSettings()  # singleton
 
+
+class DataSettings(BaseSettings):
+
+  @property
+  def files(self):
+    data_path = settings["cibblbibbl-data.path"]
+    p = pathlib.Path(data_path)
+    p /= "settings.json"
+    return (p,)
+
+data_settings = DataSettings()  # singleton
+
+
+class DataBIBBLSettings(BaseSettings):
+
+  @property
+  def files(self):
+    data_path = settings["cibblbibbl-data.path"]
+    p = pathlib.Path(data_path)
+    p /= "bibbl"
+    p /= "settings.json"
+    return (p,)
+
+data_bibbl_settings = DataBIBBLSettings()  # singleton
+
+
+class DataCIBBLSettings(BaseSettings):
+
+  @property
+  def files(self):
+    data_path = settings["cibblbibbl-data.path"]
+    p = pathlib.Path(data_path)
+    p /= "cibbl"
+    p /= "settings.json"
+    return (p,)
+
+data_cibbl_settings = DataCIBBLSettings()  # singleton

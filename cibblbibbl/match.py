@@ -16,11 +16,12 @@ class Match:
   def ID(self):
     return self._ID
 
-  def get_api_data(self):
+  def get_api_data(self, reload=False):
     return cibblbibbl._helper.get_api(
         self.ID,
         "cache/api-match",
         pyfumbbl.match.get,
+        reload=reload,
     )
 
   def conceded(self):

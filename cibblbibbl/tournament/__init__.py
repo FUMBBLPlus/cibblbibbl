@@ -7,16 +7,20 @@ from . import tools
 from . import handler
 
 tournament = {}
+d_tournament = {}
 
 
-def init(groupname):
+def init(group_key):
   data_path = cibblbibbl.settings["cibblbibbl-data.path"]
-  seasons = tuple(cibblbibbl.settings["cibblbibbl.seasons"])
-  li = tournament[groupname] = []
-  _group_id = cibblbibbl.settings["cibbl.groupId"]
+  seasons = tuple(cibblbibbl.data_settings["seasons"])
+  li = tournament[group_key] = []
+  group_settings = getattr(
+      cibblbibbl, f'data_{group_key}_settings'
+  )
+  _group_id = group_settings["groupId"]
   for d in pyfumbbl.group.tournaments(_group_id):
     ID = d["id"]
-    handlervaluefile = f'tournament/handler/{ID}'
+    handlervaluefile = f'group_key/tournament/handler/{ID}'
     p = pathlib.Path(data_path) / handlervaluefile
     p_exists = (p.is_file() and p.stat().st_size)
     if p_exists:
@@ -25,4 +29,6 @@ def init(groupname):
     else:
       handlername = "default"
     handler_ = getattr(handler, handlername)
-    li.append(handler_.init(ID))
+    T = handler_.init(group_key, ID)
+    li.append(T)
+    d_tournament[ID] = T
