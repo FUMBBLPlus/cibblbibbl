@@ -16,6 +16,11 @@ class Match:
   def ID(self):
     return self._ID
 
+  @property
+  def teams(self):
+    d = self.get_api_data()
+    tuple(d[f'team{n}']["id"] for n in range(1, 3))
+
   def get_api_data(self, reload=False):
     return cibblbibbl._helper.get_api(
         self.ID,

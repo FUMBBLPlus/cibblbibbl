@@ -7,16 +7,18 @@ import cibblbibbl
 
 def iter_raw_results(T, *, follow_prev=True, from_next=False):
   C = T.get_config_data()
+  key_casd = T.key_casd()
+  key_tdd = T.key_tdd()
+  excluded_teams = T.excluded_teams(with_fillers=True)
   if not from_next and C.get("next"):
     return
   if follow_prev and C.get("prev"):
       T2 = cibblbibbl.tournament.d_tournament[C["prev"]]
       yield from iter_raw_results(T2, from_next=True)
-  filler_teams = set(cibblbibbl.data_settings["filler_teams"])
   li = []
   for S in T.get_api_schedule_data():
     team = {d["id"]: d["name"] for d in S["teams"]}
-    if set(team) & filler_teams:
+    if set(team) & excluded_teams:
       continue
     R = S["result"]
     if R.get("id"):
@@ -41,16 +43,18 @@ def iter_raw_results(T, *, follow_prev=True, from_next=False):
           key = "C"
         else:
           key = "L"
+        tdd += key_tdd.get(key, 0)
+        casd += key_casd.get(key, 0)
         yield ID, name.strip(), key, tdd, casd
     else:
       winner_ID = int(R["winner"])
-      tdd = 0
-      casd = 0
       for ID, name in team.items():
         if ID == winner_ID:
           key = "B"
         else:
           key = "F"
+        tdd = key_tdd.get(key, 0)
+        casd = key_casd.get(key, 0)
         yield ID, name.strip(), key, tdd, casd
 
 
@@ -71,7 +75,9 @@ def results_for_hth(T):
 
 
 def standings_base(T):
-  key_point = T.key_point()
+  C = T.get_config_data()
+  CS = C.get("standings", {})
+  key_pts = T.key_pts()
   d = {}
   for t in iter_raw_results(T):
     ID, name, key, tdd, casd = t
@@ -80,7 +86,6 @@ def standings_base(T):
       d2["perf"] += key
       d2["tdd"] += tdd
       d2["casd"] += casd
-      d2["pts"] += key_point[key]
     else:
       d[ID] = d2 = {}
       d2["id"] = ID
@@ -88,23 +93,36 @@ def standings_base(T):
       d2["perf"] = key
       d2["tdd"] = tdd
       d2["casd"] = casd
-      d2["pts"] = key_point[key]
-    d2["hth"] = -1
+    d2["hth"] = -1  # these are not yet resolved
     d2["coin"] = -1
-  # TODO:custom perf
-  IDs = sorted(d, key=lambda id_: (
-      -d[id_]["pts"], -d[id_]["tdd"], -d[id_]["casd"]
-  ))
+  for ID, d2 in d.items():
+    CST = CS.get(str(ID), {})
+    # custom values override the calculated ones
+    for k in ("perf", "tdd", "casd", "hth", "coin"):
+      cst_val = CST.get(k)
+      if cst_val is not None:
+        d2[k] = cst_val
+    cst_pts = CST.get("pts")
+    if cst_pts is not None:
+      d2["pts"] = cst_pts
+    else:
+      d2["pts"] = sum(key_pts.get(key, 0) for key in d2["perf"])
+  IDs = C.get("order")
+  if IDs is None:
+    key_f = (lambda ID, d=d: T.standings_keyf(d, ID))
+    IDs = sorted(d, key=key_f)
   return [d[ID] for ID in IDs]
 
 
 def standings_tieb(T):
+  C = T.get_config_data()
+  CS = C.get("standings", {})
   r0_hth = results_for_hth(T)
   B = standings_base(T)
   B = copy.copy(B)
   if not B:
     return B
-  rows = {d["id"]: d for d in B}
+  d = {d_["id"]: d_ for d_ in B}
   hth = {}
   curr_hth_teams = set()
   pts0 = B[0]["pts"]
@@ -112,7 +130,12 @@ def standings_tieb(T):
     r1_hth = team_results_for_hth(r0_hth, *curr_hth_teams)
     hth = pytourney.tie.hth.calculate(r1_hth)
     for ID, hth_val in hth.items():
-        rows[int(ID)]["hth"] = hth_val
+        CST = CS.get(str(ID), {})  # apply custom if set
+        cst_hth = CST.get("hth")
+        if cst_hth is not None:
+          d[int(ID)]["hth"] = cst_hth
+        else:
+          d[int(ID)]["hth"] = hth_val
   for r in B:
     pts1 = r["pts"]
     if pts1 == pts0:
@@ -123,7 +146,11 @@ def standings_tieb(T):
       pts0 = pts1
   else:
     apply_hth()
-  return sorted(B, key=T.standings_keyf)
+  IDs = C.get("order")
+  if IDs is None:
+    key_f = (lambda ID, d=d: T.standings_keyf(d, ID))
+    IDs = sorted(d, key=key_f)
+  return [d[ID] for ID in IDs]
 
 
 def team_results_for_hth(results_for_hth, *team_IDs):

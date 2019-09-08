@@ -29,7 +29,8 @@ class BaseTournament:
 
   @property
   def name(self):
-    return self.get_api_data()["name"]
+    C = self.get_config_data()
+    return C.get("name") or self.get_api_data()["name"]
 
   @property
   def season(self):
@@ -62,6 +63,17 @@ class BaseTournament:
 
   def calculate_standings(self):
     return cibblbibbl.tournament.tools.standings_tieb(self)
+
+  def excluded_teams(self, with_fillers=False):
+    C = self.get_config_data()
+    s = set(C.get("exclude", []))
+    nextID = C.get("next")
+    if nextID is not None:
+      nextT = cibblbibbl.tournament.d_tournament[nextID]
+      s |= nextT.excluded_teams()
+    if with_fillers:
+      s |= set(cibblbibbl.data_settings["filler_teams"])
+    return s
 
   def get_api_data(self, reload=False):
     return cibblbibbl._helper.get_api(
@@ -153,9 +165,11 @@ class BaseTournament:
 
   def _coin_toss_missing(self, S):
     li = []
+    d = {d_["id"]: d_ for d_ in S}
     key_rows = {}
-    for d in S:
-      key_rows.setdefault(self.standings_keyf(d), []).append(d)
+    for ID, d2 in d.items():
+      li2 = key_rows.setdefault(self.standings_keyf(d, ID), [])
+      li2.append(d2)
     for li2 in key_rows.values():
       if 1 < len(li2):
         li.append(sorted(r["id"] for r in li2))
@@ -186,37 +200,44 @@ class BaseTournament:
 class Tournament(BaseTournament):
 
   @staticmethod
-  def standings_keyf(row):
-    d = row
+  def standings_keyf(d, ID):
+    row = d[ID]
     return (
-      -d["pts"], d["hth"], -d["tdd"], -d["casd"], -d["coin"]
+      -row["pts"],
+      +row["hth"],
+      -row["tdd"],
+      -row["casd"],
+      -row["coin"]
   )
 
-  def key_point(self):
+  def key_casd(self):
     c = self.get_config_data()
-    key_point = c.get("key_point")
-    if not key_point:
+    key_casd = c.get("key_casd")
+    if not key_casd:
+      key_casd = {
+        "B": 0,
+        "b": 0,
+        "F": 0,
+      }
+    return key_casd
+
+  def key_pts(self):
+    c = self.get_config_data()
+    key_pts = c.get("key_pts")
+    if not key_pts:
       if self.season == "Summer":
-        key_point = {
+        key_pts = {
           "W": 2,
           "D": 1,
-          "L": 0,
-          "C": 0,
           "B": 2,
-          "b": 0,
-          "F": 0,
         }
       else:
-        key_point = {
+        key_pts = {
           "W": 3,
           "D": 1,
-          "L": 0,
-          "C": 0,
           "B": 3,
-          "b": 0,
-          "F": 0,
         }
-    return key_point
+    return key_pts
 
   def key_prestige(self):
     c = self.get_config_data()
@@ -225,14 +246,25 @@ class Tournament(BaseTournament):
       key_prestige = {
         "W": 3,
         "D": 1,
-        "L": 0,
         "C": -10,
-        "B": 0,
-        "F": 0,
       }
     return key_prestige
 
-  def standings_text(self, tablefmt=None):
+  def key_tdd(self):
+    c = self.get_config_data()
+    key_tdd = c.get("key_tdd")
+    if not key_tdd:
+      key_tdd = {
+        "B": 2,
+        "b": -2,
+        "F": -2,
+      }
+    return key_tdd
+
+  def standings_text(self, *,
+      show_team_id = False,
+      tablefmt = None,
+  ):
     S = self.standings()
     if not S:
       return ""
@@ -269,8 +301,12 @@ class Tournament(BaseTournament):
     for r in S:
       Te = cibblbibbl.team.Team(r["id"])
       ct_str = ("(!) " if r["id"] in cointoss_team_IDs else "")
+      if show_team_id:
+        team_id_str = f'{Te.ID:.>7} '
+      else:
+        team_id_str = ""
       row = [
-          ct_str + Te.name,
+          ct_str + team_id_str + Te.name,
           Te.roster_name,
           Te.coach_name,
           r["perf"],
