@@ -347,11 +347,10 @@ Name                                    Roster    Coach      Perf.      PTS    H
 
 Name                          Roster          Coach      Perf.      PTS    HTH    TDD    CASD    COIN
 ----------------------------  --------------  ---------  -------  -----  -----  -----  ------  ------
-.854600 Montetriste Noblemen  Estalia         Burnalot   LWDB         7      1      2       4
-.855120 Trantio Dragon Hawks  Tilea           MachJacob  BWDL         7      1      2       0       1
-.873759 Knightly Virtues      Bretonnian      Guardikai  WLBD         7      1      2       0       0
-.874545 Stone Prince's Men    Border Princes  Loew       LBWD         7      1      2      -4
-.854502 Spartak Bolgasgrad    Kislev          ubaten     FFFF         0            -8       0
+.854600 Montetriste Noblemen  Estalia         Burnalot   LWD          4      1      0       4
+.855120 Trantio Dragon Hawks  Tilea           MachJacob  WDL          4      1      0       0       1
+.873759 Knightly Virtues      Bretonnian      Guardikai  WLD          4      1      0       0       0
+.874545 Stone Prince's Men    Border Princes  Loew       LWD          4      1      0      -4
 
 
 [Round Robin] Standings of Y2, Spring - Southlands and Araby (#42892)
@@ -467,8 +466,8 @@ Name                                    Roster           Coach                Pe
 .859097 Bhubaneswar Rampage             Kingdoms of Ind  wallenstein          WDWLD        6     --      1       7
 .873945 Warhird Huscarls                Norse Dwarf      Garion               WLWLW        6     --     -3      -2
 .855228 Ninja Warriors                  Nippon           Azure                DWLWL        5             0      -8
-.867862 Everlasting Vultures of Settra  Zandri           DatMonsta            LLLWW        4      1     -2       3
 .854600 Montetriste Noblemen            Estalia          Burnalot             DDLLW        4      2      1       2
+.867862 Everlasting Vultures of Settra  Zandri           DatMonsta            LLLWW        4      1     -2       3
 .874302 Grasparossa B.B.C               Human            iena                 DLWLL        3      1     -4       0
 .874985 Red Crag Redcaps                Squig            captainmalkor        DLWLL        3      1     -6      -4
 .872475 True Roots of Khaine            Treemen          Quarion8             DLLLL        1            -6      -4

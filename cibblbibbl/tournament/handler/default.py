@@ -1,3 +1,4 @@
+import itertools
 import json
 import pathlib
 import warnings
@@ -33,6 +34,11 @@ class BaseTournament:
     return C.get("name") or self.get_api_data()["name"]
 
   @property
+  def PPOS(self):
+    C = self.get_config_data()
+    return C.get("PPOS", [])
+
+  @property
   def season(self):
     name = self.name.lower()
     seasons = tuple(cibblbibbl.data_settings["seasons"])
@@ -60,6 +66,28 @@ class BaseTournament:
   @property
   def year(self):
     return int(self.get_api_data()["season"])
+
+  def calculate_prestiges(self):
+    winter = ("winter" in self.name.lower())
+    key_prestige = self.key_prestige()
+    iter_PPOS = itertools.chain(self.PPOS, itertools.repeat(0))
+    S = self.standings()
+    P = []
+    for Sr in S:
+      Pr = {k: Sr[k] for k in ("id", "name", "perf")}
+      perf_prestige = 0
+      if not winter:
+        for key in Pr["perf"]:
+          perf_prestige += key_prestige.get(key, 0)
+      Pr["PGAM"] = perf_prestige
+      Pr["PPOS"] = next(iter_PPOS)
+      Pr["P"] = sum(Pr[k] for k in ("PGAM", "PPOS"))
+      # TODO: achievements
+      Pr["A+"] = 0
+      Pr["A-"] = 0
+      Pr["P+A"] = Pr["P"] + Pr["A+"] - Pr["A-"]
+      P.append(Pr)
+    return P
 
   def calculate_standings(self):
     return cibblbibbl.tournament.tools.standings_tieb(self)
@@ -118,6 +146,25 @@ class BaseTournament:
       for S in self.get_api_schedule_data()
       if S["result"].get("id")
     )
+
+  def prestiges(self):
+    P = self.calculate_prestiges()
+    C = self.get_config_data()
+    CP = C.get("prestiges", {})
+    CP = {int(k): a for k, a in CP.items() if k.isdecimal()}
+    if CP:
+      CP_IDs = set(CP.keys())
+      Prows = {d["id"]: d for d in P}
+      P_IDs = set(Prows.keys())
+      for ID in (CP_IDs & P_IDs):
+        Pr = Prows[ID]
+        CP_d = CP[ID]
+        Pr.update(CP_d)
+        if not "P" in CP_d:
+          Pr["P"] = sum(Pr[k] for k in ("PGAM", "PPOS"))
+        if not "P+A" in CP_d:
+          Pr["P+A"] = Pr["P"] + Pr["A+"] - Pr["A-"]
+    return P
 
   def set_config_data(self, o):
     p = self._config_data_path()
@@ -245,6 +292,7 @@ class Tournament(BaseTournament):
     if not key_prestige:
       key_prestige = {
         "W": 3,
+        "B": 3,
         "D": 1,
         "C": -10,
       }
@@ -260,6 +308,66 @@ class Tournament(BaseTournament):
         "F": -2,
       }
     return key_tdd
+
+  def prestiges_text(self, *,
+      show_team_id = False,
+      tablefmt = None,
+  ):
+    S = self.prestiges()
+    if not S:
+      return ""
+    rows = []
+    headers = (
+        "Name",
+        "Roster",
+        "Coach",
+        "Perf.",
+        "PGAM",
+        "PPOS",
+        "P",
+        "A+",
+        "A-",
+        "P+A",
+    )
+    colalign=(
+      "left",
+      "left",
+      "left",
+      "left",
+      "right",
+      "right",
+      "right",
+      "right",
+      "right",
+      "right",
+    )
+    for r in S:
+      Te = cibblbibbl.team.Team(r["id"])
+      if show_team_id:
+        team_id_str = f'{Te.ID:.>7} '
+      else:
+        team_id_str = ""
+      row = [
+          team_id_str + Te.name,
+          Te.roster_name,
+          Te.coach_name,
+          r["perf"],
+          (r["PGAM"] if r["PGAM"] else ""),
+          (r["PPOS"] if r["PPOS"] else ""),
+          r["P"],
+          (r["A+"] if r["A+"] else ""),
+          (r["A-"] if r["A-"] else ""),
+          r["P+A"],
+      ]
+      rows.append(row)
+    tabulate_s = tabulate(
+        rows,
+        colalign=colalign,
+        headers=headers,
+        tablefmt=tablefmt,
+    )
+    return f'Prestiges of {self.name} (#{self.ID})' \
+        f'\n\n{tabulate_s}'
 
   def standings_text(self, *,
       show_team_id = False,
