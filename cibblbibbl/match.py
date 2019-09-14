@@ -18,11 +18,11 @@ class Match:
 
   @property
   def teams(self):
-    d = self.get_api_data()
+    d = self.get_api_data_data()
     tuple(d[f'team{n}']["id"] for n in range(1, 3))
 
-  def get_api_data(self, reload=False):
-    return cibblbibbl._helper.get_api(
+  def get_api_data_data(self, reload=False):
+    return cibblbibbl._helper.get_api_data(
         self.ID,
         "cache/api-match",
         pyfumbbl.match.get,
@@ -30,13 +30,13 @@ class Match:
     )
 
   def conceded(self):
-    d = self.get_api_data()
+    d = self.get_api_data_data()
     if d["conceded"] != "None":
       d2 = d[d["conceded"].lower()]
       return {k: d2[k] for k in ("id", "name")}
 
   def casualties(self):
-    d = self.get_api_data()
+    d = self.get_api_data_data()
     result = {}
     for n in range(1,3):
       d2 = d[f'team{n}']

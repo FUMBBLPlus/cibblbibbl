@@ -6,7 +6,7 @@ import pytourney
 import cibblbibbl
 
 
-def iter_raw_results(T, *, follow_prev=True, from_next=False):
+def individual(T, *, follow_prev=True, from_next=False):
   C = T.get_config_data()
   key_casd = T.key_casd()
   key_tdd = T.key_tdd()
@@ -14,10 +14,10 @@ def iter_raw_results(T, *, follow_prev=True, from_next=False):
   if not from_next and C.get("next"):
     return
   if follow_prev and C.get("prev"):
-      T2 = cibblbibbl.tournament.d_tournament[C["prev"]]
-      yield from iter_raw_results(T2, from_next=True)
+      T2 = cibblbibbl.tournament.byID[C["prev"]]
+      yield from individual(T2, from_next=True)
   li = []
-  for S in T.get_api_schedule_data():
+  for S in T.get_api_data_schedule_data():
     team = {d["id"]: d["name"] for d in S["teams"]}
     if set(team) & excluded_teams:
       continue
@@ -59,10 +59,10 @@ def iter_raw_results(T, *, follow_prev=True, from_next=False):
         yield ID, name.strip(), key, tdd, casd
 
 
-def results_for_hth(T):
-  filler_teams = set(cibblbibbl.data_settings["filler_teams"])
+def hth_all(T):
+  filler_teams = set(cibblbibbl.settings["filler_teams"])
   li = []
-  for S in T.get_api_schedule_data():
+  for S in T.get_api_data_schedule_data():
     r_teams = S["result"]["teams"]
     if set(int(d["id"]) for d in r_teams) & filler_teams:
       continue
@@ -75,12 +75,12 @@ def results_for_hth(T):
   return li
 
 
-def standings_base(T):
+def base(T):
   C = T.get_config_data()
   CS = C.get("standings", {})
   key_pts = T.key_pts()
   d = {}
-  for t in iter_raw_results(T):
+  for t in individual(T):
     ID, name, key, tdd, casd = t
     if ID in d:
       d2 = d[ID]
@@ -118,8 +118,8 @@ def standings_base(T):
 def standings_tieb(T):
   C = T.get_config_data()
   CS = C.get("standings", {})
-  r0_hth = results_for_hth(T)
-  B = standings_base(T)
+  r0_hth = hth_all(T)
+  B = base(T)
   B = copy.copy(B)
   if not B:
     return B
@@ -128,7 +128,7 @@ def standings_tieb(T):
   curr_hth_teams = set()
   pts0 = B[0]["pts"]
   def apply_hth():
-    r1_hth = team_results_for_hth(r0_hth, *curr_hth_teams)
+    r1_hth = hth_group(r0_hth, *curr_hth_teams)
     hth = pytourney.tie.hth.calculate(r1_hth)
     for ID, hth_val in hth.items():
         CST = CS.get(str(ID), {})  # apply custom if set
@@ -154,10 +154,10 @@ def standings_tieb(T):
   return [d[ID] for ID in IDs]
 
 
-def team_results_for_hth(results_for_hth, *team_IDs):
+def hth_group(hth_all, *team_IDs):
   team_IDs = set(team_IDs)
   li = [{str(ID): 0} for ID in team_IDs]  # ensure nodes
-  for r0 in results_for_hth:
+  for r0 in hth_all:
     r1 = {
         str(ID): score
         for ID, score in r0.items()

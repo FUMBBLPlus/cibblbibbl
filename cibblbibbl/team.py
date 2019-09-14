@@ -20,27 +20,27 @@ class Team:
 
   @property
   def name(self):
-    s = self.get_api_data()["name"]
+    s = self.get_api_data_data()["name"]
     return cibblbibbl._helper.norm_name(s)
 
   @property
   def coach_name(self):
-    s = self.get_api_data()["coach"]["name"]
+    s = self.get_api_data_data()["coach"]["name"]
     return cibblbibbl._helper.norm_name(s)
 
   @property
   def roster_id(self):
-    return self.get_api_data()["roster"]["id"]
+    return self.get_api_data_data()["roster"]["id"]
 
   @property
   def roster_name(self):
-    s = self.get_api_data()["roster"]["name"]
+    s = self.get_api_data_data()["roster"]["name"]
     s = re.sub('\s*\(.+$', '', s)
     return cibblbibbl._helper.norm_name(s)
 
 
-  def get_api_data(self, reload=False):
-    return cibblbibbl._helper.get_api(
+  def get_api_data_data(self, reload=False):
+    return cibblbibbl._helper.get_api_data(
         self.ID,
         "cache/api-team",
         pyfumbbl.team.get,

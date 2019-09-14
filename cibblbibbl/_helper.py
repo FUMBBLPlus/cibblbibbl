@@ -14,22 +14,12 @@ def norm_name(s):
   return s
 
 
-def get_api(ID, dir_path, api_func, *, reload=False):
+def get_api_data(ID, dir_path, api_func, *, reload=False):
   filename = f'{ID:0>8}.json'
-  data_path = cibblbibbl.settings["cibblbibbl-data.path"]
-  p = pathlib.Path(data_path) / dir_path / filename
-  if not reload and p.is_file() and p.stat().st_size:
-    with p.open(encoding="utf8") as f:
-      o = json.load(f)
-  else:
-    o = api_func(ID)
-    if p.parent.is_dir():
-      with p.open("w", encoding="utf8") as f:
-        json.dump(
-          o,
-          f,
-          ensure_ascii = False,
-          indent = "\t",
-          sort_keys = True,
-        )
-  return o
+  p = cibblbibbl.data.path / dir_path / filename
+  jf = cibblbibbl.data.jsonfile(p)
+  if reload or not p.is_file() or not p.stat().st_size:
+    jf.dump_kwargs = cibblbibbl.settings.dump_kwargs
+    jf.data = api_func(ID)
+    jf.save()
+  return jf.data

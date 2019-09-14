@@ -1,100 +1,85 @@
-import json
 import pathlib
 
+from .jsonfile import jsonfile
 
-class BaseSettings:
+import cibblbibbl
 
-  def __init__(self):
-    self._settings = {p: dict() for p in self.files}
-    self.refresh()
+
+dump_kwargs = dict(
+    ensure_ascii = False,
+    indent = "\t",
+    sort_keys = True,
+)
+
+
+class Settings:
+
+  def __init__(self, files):
+    self.jsonfiles = []
+    for fp in files:
+      jf = jsonfile(fp,
+          default_data = {},
+          autosave = True,
+          dump_kwargs = dump_kwargs,
+      )
+      self.jsonfiles.append(jf)
+
+  def __delitem__(self, key):
+    value, i = self._getitem_with_idx(key)
+    if i is not None:
+      del self.jsonfiles[i].data[key]
+    else:
+      raise KeyError(str(value))
 
   def __getitem__(self, key):
-    exc = None
-    if hasattr(self, "prefix") and self.prefix:
-      key = f'{self.prefix}.{key}'
-    for p in self.files:
-      try:
-        return self._settings[p][key]
-      except KeyError as exc_:
-        exc = exc_
+    value, i = self._getitem_with_idx(key)
+    return value
 
   def __setitem__(self, key, value):
-    p = self.files[0]
-    if hasattr(self, "prefix") and self.prefix:
-      key = f'{self.prefix}.{key}'
-    self._settings[p][key] = value
-    p.parent.mkdir(parents=True, exist_ok=True)  # ensure dir
-    with p.open("w", encoding="utf8") as f:
-      json.dump(
-          self._settings[p],
-          f,
-          indent="\t",
-          ensure_ascii=False,
-          sort_keys=True,
-      )
+    self.jsonfiles[0].data[key] = value
+
+  def _getitem_with_idx(self, key):
+    for i, jf in enumerate(self.jsonfiles):
+      try:
+        return jf.data[key], i
+      except KeyError:
+        pass
+    return None, None
 
   def refresh(self):
-    for p in self.files:
-      if p.is_file():
-        with p.open(encoding="utf8") as f:
-          self._settings[p] = json.load(f)
+    for jf in self.jsonfiles:
+      jf.reload()
 
 
-class Settings(BaseSettings):
+def files(group_key=None):
+  files_ = []
+  if group_key is not None:
+    files_.append(cibblbibbl.data.path / group_key / "settings.json")
+  files_.append(cibblbibbl.data.path / "settings.json")
+  return files_
 
-  files = (
-      (
-          pathlib.Path.home()
-          / ".fumbblplus/cibblbibblsettings.json"
-      ),
-      (
-          pathlib.Path(__file__).parent
-          / "cibblbibblsettings.default.json"
-      ),
+def groupsettings(group_key):
+  # looks for key in group settings only
+  jf = jsonfile(
+      cibblbibbl.data.path / group_key / "settings.json",
+      default_data = {},
+      autosave = True,
+      dump_kwargs = dump_kwargs,
   )
-settings = Settings()  # singleton
+  return jf.data
 
-class LoginSettings(BaseSettings):
+def settings(group_key=None):
+  # looks for key in group settings first, then main settings
+  files_ = files(group_key=group_key)
+  s = Settings(files_)
+  return s
 
-  files = (
-      pathlib.Path.home() / ".fumbblplus/login.json",
+def mainsettings():
+  # looks for key in the main settings only
+  jf = jsonfile(
+      cibblbibbl.data.path / "settings.json",
+      default_data = {},
+      autosave = True,
+      dump_kwargs = dump_kwargs,
   )
-loginsettings = LoginSettings()  # singleton
-
-
-class DataSettings(BaseSettings):
-
-  @property
-  def files(self):
-    data_path = settings["cibblbibbl-data.path"]
-    p = pathlib.Path(data_path)
-    p /= "settings.json"
-    return (p,)
-
-data_settings = DataSettings()  # singleton
-
-
-class DataBIBBLSettings(BaseSettings):
-
-  @property
-  def files(self):
-    data_path = settings["cibblbibbl-data.path"]
-    p = pathlib.Path(data_path)
-    p /= "bibbl"
-    p /= "settings.json"
-    return (p,)
-
-data_bibbl_settings = DataBIBBLSettings()  # singleton
-
-
-class DataCIBBLSettings(BaseSettings):
-
-  @property
-  def files(self):
-    data_path = settings["cibblbibbl-data.path"]
-    p = pathlib.Path(data_path)
-    p /= "cibbl"
-    p /= "settings.json"
-    return (p,)
-
-data_cibbl_settings = DataCIBBLSettings()  # singleton
+  return jf.data
