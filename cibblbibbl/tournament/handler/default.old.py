@@ -8,7 +8,7 @@ from tabulate import tabulate
 import pyfumbbl
 
 import cibblbibbl
-import cibblbibbl._helper
+import cibblbibbl.helper
 
 
 class Tournament(cibblbibbl.tournament.handler.RealTournament):
@@ -18,9 +18,9 @@ class Tournament(cibblbibbl.tournament.handler.RealTournament):
 
 #
 #  @property
-#  def PPOS(self):
+#  def ppos(self):
 #    C = self.get_config_data()
-#    return C.get("PPOS", [])
+#    return C.get("ppos", [])
 #
 #  @property
 #  def season(self):
@@ -41,21 +41,23 @@ class Tournament(cibblbibbl.tournament.handler.RealTournament):
 #
 #  @property
 #  def status(self):
-#    return self.get_api_data_data()["status"]
+#    return self.apiget["status"]
 #
 #  @property
 #  def style(self):
-#    style_idx = int(self.get_api_data_data()["type"]) - 1
+#    style_idx = int(self.apiget["type"]) - 1
 #    return pyfumbbl.tournament.styles[style_idx]
 #
 #  @property
 #  def year(self):
-#    return int(self.get_api_data_data()["season"])
+#    return int(self.apiget["season"])
 #
+
+
 #  def calculate_prestiges(self):
 #    winter = ("winter" in self.name.lower())
 #    key_prestige = self.key_prestige()
-#    iter_PPOS = itertools.chain(self.PPOS, itertools.repeat(0))
+#    iter_ppos = itertools.chain(self.ppos, itertools.repeat(0))
 #    S = self.standings()
 #    P = []
 #    for Sr in S:
@@ -65,8 +67,8 @@ class Tournament(cibblbibbl.tournament.handler.RealTournament):
 #        for key in Pr["perf"]:
 #          perf_prestige += key_prestige.get(key, 0)
 #      Pr["PGAM"] = perf_prestige
-#      Pr["PPOS"] = next(iter_PPOS)
-#      Pr["P"] = sum(Pr[k] for k in ("PGAM", "PPOS"))
+#      Pr["ppos"] = next(iter_ppos)
+#      Pr["P"] = sum(Pr[k] for k in ("PGAM", "ppos"))
 #      # TODO: achievements
 #      Pr["A+"] = 0
 #      Pr["A-"] = 0
@@ -89,7 +91,7 @@ class Tournament(cibblbibbl.tournament.handler.RealTournament):
 #    return s
 #
 #  def get_api_data_data(self, reload=False):
-#    return cibblbibbl._helper.get_api_data(
+#    return cibblbibbl.helper.get_api_data(
 #        self.ID,
 #        "cache/api-tournament",
 #        pyfumbbl.tournament.get,
@@ -97,7 +99,7 @@ class Tournament(cibblbibbl.tournament.handler.RealTournament):
 #    )
 #
 #  def get_api_data_schedule_data(self, reload=False):
-#    return cibblbibbl._helper.get_api_data(
+#    return cibblbibbl.helper.get_api_data(
 #        self.ID,
 #        "cache/api-tournament-schedule",
 #        pyfumbbl.tournament.schedule,
@@ -150,7 +152,7 @@ class Tournament(cibblbibbl.tournament.handler.RealTournament):
 #        CP_d = CP[ID]
 #        Pr.update(CP_d)
 #        if not "P" in CP_d:
-#          Pr["P"] = sum(Pr[k] for k in ("PGAM", "PPOS"))
+#          Pr["P"] = sum(Pr[k] for k in ("PGAM", "ppos"))
 #        if not "P+A" in CP_d:
 #          Pr["P+A"] = Pr["P"] + Pr["A+"] - Pr["A-"]
 #    return P
@@ -320,7 +322,7 @@ class Tournament(cibblbibbl.tournament.handler.RealTournament):
 #        "Coach",
 #        "Perf.",
 #        "PGAM",
-#        "PPOS",
+#        "ppos",
 #        "P",
 #        "A+",
 #        "A-",
@@ -350,7 +352,7 @@ class Tournament(cibblbibbl.tournament.handler.RealTournament):
 #          Te.coach_name,
 #          r["perf"],
 #          (r["PGAM"] if r["PGAM"] else ""),
-#          (r["PPOS"] if r["PPOS"] else ""),
+#          (r["ppos"] if r["ppos"] else ""),
 #          r["P"],
 #          (r["A+"] if r["A+"] else ""),
 #          (r["A-"] if r["A-"] else ""),

@@ -4,7 +4,7 @@ on a disk with the corresponding Python object instance.
 
 Can be used to autosave JSON compatible Python data.
 """
-__version__ = "0.0.6"
+__version__ = "0.0.7"
 
 
 
@@ -34,12 +34,18 @@ class JSONFileBase:
 
   @staticmethod
   def _value_norm(value):
-    if isinstance(value, collections.abc.Mapping):
+    if isinstance(value, (
+        collections.abc.Mapping,
+        JSONFileObject,
+    )):
       return {str(k): v for k, v in value.items()}
           # JSON obejct keys must be strings
     elif isinstance(value, str):
       return value
-    elif isinstance(value, collections.abc.Sequence):
+    elif isinstance(value, (
+        collections.abc.Sequence,
+        JSONFileArray,
+    )):
       return list(value)
     else:
       return value

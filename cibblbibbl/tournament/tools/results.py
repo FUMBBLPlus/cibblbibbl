@@ -27,15 +27,12 @@ def individual(T, *, follow_prev=True, from_next=False):
     - tdd : touchdown difference
     - casd : casualties difference
   """
-  rsym_casd = T.rsym_casd()
-  rsym_tdd = T.rsym_tdd()
   excluded_teams = T.excluded_teams(with_fillers=True)
-  if not from_next and T.get("next"):
+  if not from_next and T.next:
     return
-  if follow_prev and T.get("prev"):
-      T2 = cibblbibbl.tournament.byID[T["prev"]]
-      yield from individual(T2, from_next=True)
-  for S in T.schedule():
+  if follow_prev and T.prev:
+      yield from individual(T.prev, from_next=True)
+  for S in T.schedule:
     team = {d["id"]: d["name"] for d in S["teams"]}
     if set(team) & excluded_teams:
         # ignore matchups with excluded and filler teams
@@ -51,23 +48,24 @@ def individual(T, *, follow_prev=True, from_next=False):
         ID = int(R["teams"][i]["id"])
         Te = cibblbibbl.team.Team(ID)
         oppo_ID = int(R["teams"][1-i]["id"])
+        oppo_Te = cibblbibbl.team.Team(oppo_ID)
         score = R["teams"][i]["score"]
         oppo_score = R["teams"][1-i]["score"]
         tdd = score - oppo_score
-        cas = casualties[ID]
-        oppo_cas = casualties[oppo_ID]
+        cas = casualties[Te]
+        oppo_cas = casualties[oppo_Te]
         casd = cas - oppo_cas
         if 0 < tdd:
           rsym = "W"
         elif tdd == 0:
           rsym = "D"
-        elif conceded and ID == int(conceded["id"]):
+        elif conceded is Te:
             # check for concessions on loosers first
           rsym = "C"
         else:
           rsym = "L"
-        tdd += rsym_tdd.get(rsym, 0)
-        casd += rsym_casd.get(rsym, 0)
+        tdd += T.rsym_tdd.get(rsym, 0)
+        casd += T.rsym_casd.get(rsym, 0)
         yield IndividualResult(Te, M, rsym, tdd, casd)
     else:
         # a zero ID value in a result means that the game was
@@ -79,8 +77,8 @@ def individual(T, *, follow_prev=True, from_next=False):
           rsym = "B"
         else:
           rsym = "F"
-        tdd = rsym_tdd.get(rsym, 0)
-        casd = rsym_casd.get(rsym, 0)
+        tdd = T.rsym_tdd.get(rsym, 0)
+        casd = T.rsym_casd.get(rsym, 0)
         yield IndividualResult(Te, None, rsym, tdd, casd)
 
 
@@ -105,7 +103,7 @@ def hth_all(T):
   hth = pytourney.tie.hth.calculate(o)
   """
   excluded_teams = T.excluded_teams(with_fillers=True)
-  for S in T.schedule():
+  for S in T.schedule:
     r_teams = S["result"]["teams"]
     if set(int(d["id"]) for d in r_teams) & excluded_teams:
       continue

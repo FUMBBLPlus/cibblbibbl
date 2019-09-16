@@ -108,7 +108,7 @@ def base(T):
       d2["pts"] = cst_pts
     else:
       d2["pts"] = sum(key_pts.get(key, 0) for key in d2["perf"])
-  IDs = C.get("order")
+  IDs = CS.get("order")
   if IDs is None:
     key_f = (lambda ID, d=d: T.standings_keyf(d, ID))
     IDs = sorted(d, key=key_f)
@@ -147,7 +147,7 @@ def standings_tieb(T):
       pts0 = pts1
   else:
     apply_hth()
-  IDs = C.get("order")
+  IDs = CS.get("order")
   if IDs is None:
     key_f = (lambda ID, d=d: T.standings_keyf(d, ID))
     IDs = sorted(d, key=key_f)

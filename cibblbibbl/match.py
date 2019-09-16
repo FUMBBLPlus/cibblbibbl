@@ -1,46 +1,48 @@
 import pyfumbbl
 
 import cibblbibbl
-import cibblbibbl._helper
 
 
-class Match:
+@cibblbibbl.helper.idkey
+class Match(metaclass=cibblbibbl.helper.InstanceRepeater):
 
-  def __init__(self, ID):
-    self._ID = ID
-
-  def __repr__(self):
-    return f'Match({self._ID})'
+  def __init__(self, matchId: int):
+    self._apiget = ...
 
   @property
-  def ID(self):
-    return self._ID
+  def apiget(self):
+    if self._apiget is ...:
+      self.reload_apiget()
+    return self._apiget
 
   @property
   def teams(self):
-    d = self.get_api_data_data()
-    tuple(d[f'team{n}']["id"] for n in range(1, 3))
+    d = self.apiget
+    return tuple(
+        cibblbibbl.team.Team(d[f'team{n}']["id"])
+        for n in range(1, 3)
+    )
 
-  def get_api_data_data(self, reload=False):
-    return cibblbibbl._helper.get_api_data(
+  def conceded(self):
+    d = self.apiget
+    if d["conceded"] != "None":
+      d2 = d[d["conceded"].lower()]
+      return cibblbibbl.team.Team(d2["id"])
+
+  def casualties(self):
+    d = self.apiget
+    result = {}
+    for n in range(1,3):
+      d2 = d[f'team{n}']
+      Te = cibblbibbl.team.Team(d2["id"])
+      cas = sum(d2["casualties"].values())
+      result[Te] = cas
+    return result
+
+  def reload_apiget(self, reload=False):
+    self._apiget = cibblbibbl.helper.get_api_data(
         self.ID,
         "cache/api-match",
         pyfumbbl.match.get,
         reload=reload,
     )
-
-  def conceded(self):
-    d = self.get_api_data_data()
-    if d["conceded"] != "None":
-      d2 = d[d["conceded"].lower()]
-      return {k: d2[k] for k in ("id", "name")}
-
-  def casualties(self):
-    d = self.get_api_data_data()
-    result = {}
-    for n in range(1,3):
-      d2 = d[f'team{n}']
-      ID = d2["id"]
-      cas = sum(d2["casualties"].values())
-      result[ID] = cas
-    return result

@@ -3,44 +3,42 @@ import re
 import pyfumbbl
 
 import cibblbibbl
-import cibblbibbl._helper
 
+@cibblbibbl.helper.idkey
+class Team(metaclass=cibblbibbl.helper.InstanceRepeater):
 
-class Team:
-
-  def __init__(self, ID):
-    self._ID = ID
-
-  def __repr__(self):
-    return f'Team({self._ID})'
+  def __init__(self, teamId: int):
+    self._apiget = ...
 
   @property
-  def ID(self):
-    return self._ID
+  def apiget(self):
+    if self._apiget is ...:
+      self.reload_apiget()
+    return self._apiget
 
   @property
   def name(self):
-    s = self.get_api_data_data()["name"]
-    return cibblbibbl._helper.norm_name(s)
+    s = self.apiget["name"]
+    return cibblbibbl.helper.norm_name(s)
 
   @property
   def coach_name(self):
-    s = self.get_api_data_data()["coach"]["name"]
-    return cibblbibbl._helper.norm_name(s)
+    s = self.apiget["coach"]["name"]
+    return cibblbibbl.helper.norm_name(s)
 
   @property
   def roster_id(self):
-    return self.get_api_data_data()["roster"]["id"]
+    return self.apiget["roster"]["id"]
 
   @property
   def roster_name(self):
-    s = self.get_api_data_data()["roster"]["name"]
+    s = self.apiget["roster"]["name"]
     s = re.sub('\s*\(.+$', '', s)
-    return cibblbibbl._helper.norm_name(s)
+    return cibblbibbl.helper.norm_name(s)
 
 
-  def get_api_data_data(self, reload=False):
-    return cibblbibbl._helper.get_api_data(
+  def reload_apiget(self, reload=False):
+    self._apiget = cibblbibbl.helper.get_api_data(
         self.ID,
         "cache/api-team",
         pyfumbbl.team.get,

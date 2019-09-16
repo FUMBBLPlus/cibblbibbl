@@ -33,7 +33,10 @@ class Settings:
 
   def __getitem__(self, key):
     value, i = self._getitem_with_idx(key)
-    return value
+    if i is None:
+      raise KeyError(f'{key!r}')
+    else:
+      return value
 
   def __setitem__(self, key, value):
     self.jsonfiles[0].data[key] = value
@@ -45,6 +48,13 @@ class Settings:
       except KeyError:
         pass
     return None, None
+
+  def get(self, key, default=None):
+    value, i = self._getitem_with_idx(key)
+    if i is None:
+      return default
+    else:
+      return value
 
   def refresh(self):
     for jf in self.jsonfiles:
