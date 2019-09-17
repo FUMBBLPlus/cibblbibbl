@@ -108,7 +108,7 @@ def tiebroken(T):
 
 
 def export(standings):
-  L = copy.copy(standings)
+  L = copy.deepcopy(standings)
   for d in L:
     d["id"] = d["team"].ID
     d["name"] = d["team"].name  # to help human admin

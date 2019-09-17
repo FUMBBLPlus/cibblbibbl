@@ -37,6 +37,8 @@ class InstanceRepeater(type):
             lambda self, other, k=k:
             getattr(self._KEY, k)(other._KEY)
         )
+    dict_["__copy__"] = lambda self: self
+    dict_["__deepcopy__"] = lambda self, memo: self
     return type.__new__(meta, name, bases, dict_)
 
   def __call__(cls, *args, **kwargs):

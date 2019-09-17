@@ -5,6 +5,7 @@ import pyfumbbl
 
 from . import tools
 from . import handler
+from . import export
 
 byGroup = {}
 byID = {}
