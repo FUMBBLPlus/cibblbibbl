@@ -1,3 +1,4 @@
+import collections
 import copy
 import itertools
 
@@ -81,7 +82,6 @@ def tiebroken(T):
         else:
           d[int(ID)]["hth"] = hth_val
 
-
   r0_hth = list(R.hth_all(T))
   L = base_revised(T)
   if not L:
@@ -100,8 +100,22 @@ def tiebroken(T):
       pts0 = pts1
   else:
     apply_hth()
+  # determine missing coin toss
+  key_rows = collections.defaultdict(list)
+  for ID, d2 in d.items():
+    key_val = T.standings_keyf(d, ID)
+    key_rows[key_val].append(d2)
+  miscoin_keyv = {k for k in key_rows if 1 < len(key_rows[k])}
+  for k in miscoin_keyv:
+    for d2 in key_rows[k]:
+      d2["coin"] = -112  # indicate missing
+  # sort
   IDs = CS.get("order")
   if IDs is None:
+    return [d2 for k in sorted(key_rows) for d2 in key_rows[k]]
+  else:
+    return [d[ID] for ID in IDs]
+    retun
     key_f = (lambda ID, d=d: T.standings_keyf(d, ID))
     IDs = sorted(d, key=key_f)
   return [d[ID] for ID in IDs]

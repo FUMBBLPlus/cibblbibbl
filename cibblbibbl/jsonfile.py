@@ -206,8 +206,8 @@ class JSONFileContainer(JSONFileBase):
     data = self._data[key]
     return self._get_adapter_or_value(data)
 
-  #def __repr__(self):
-  #  return self._data.__repr__()
+  def __repr__(self):
+    return self._data.__repr__()
 
   def __setitem__(self, key, value):  # has to be explicit
     m = self._change_method("__setitem__")

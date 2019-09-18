@@ -9,7 +9,7 @@ def default(T, *,
   if not S:
     return ""
   hth_trans = {-1: "", 0: "--"}
-  coin_trans = {-1: "", -112: "???"}
+  coin_trans = {-1: "", -112: "???"}  # -112: missing
   rows = []
   headers = (["ID",] if show_team_id else [])
   headers.extend((
