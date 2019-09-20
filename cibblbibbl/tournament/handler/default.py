@@ -1,3 +1,5 @@
+import copy
+
 import pyfumbbl
 
 import cibblbibbl
@@ -10,6 +12,10 @@ class BaseTournament:
 
   def __init__(self, group_key, ID):
     self._config = None
+
+  def __repr__(self):
+    clsname = self.__class__.__name__
+    return f'{clsname}({self.group_key!r},{self.ID!r})'
 
   @property
   def config(self):
@@ -29,7 +35,8 @@ class BaseTournament:
   def next(self):
     ID = self.config.get("next")
     if ID is not None:
-      return cibblbibbl.tournament.byGroup[self.group_key][ID]
+      d = cibblbibbl.tournament.byGroup[self.group_key]
+      return d[str(ID)]
   @next.setter
   def next(self, T):
     assert T.group_key == self.group_key
@@ -38,7 +45,8 @@ class BaseTournament:
     T.config["prev"] = self.ID
   @next.deleter
   def next(self):
-    T = cibblbibbl.tournament.byGroup[self.group_key][self.next]
+    d = cibblbibbl.tournament.byGroup[self.group_key]
+    T = d[str(self.next)]
     assert T.group_key == self.group_key
     assert T.config["prev"] == self.ID
     del self.config["next"], T.config["prev"]
@@ -49,17 +57,26 @@ class BaseTournament:
   def prev(self):
     ID = self.config.get("prev")
     if ID is not None:
-      return cibblbibbl.tournament.byGroup[self.group_key][ID]
+      d = cibblbibbl.tournament.byGroup[self.group_key]
+      return d[str(ID)]
   @prev.setter
   def prev(self, T):
     T.next = self
   @prev.deleter
   def prev(self):
-    T = cibblbibbl.tournament.byGroup[self.group_key][self.prev]
+    d = cibblbibbl.tournament.byGroup[self.group_key]
+    T = d[str(self.prev)]
     del T.next
 
+  @property
+  def sortID(self):
+    return self.config.get("sortID") or int(self.ID)
+  sortID = sortID.setter(tools.config.setter("sortID"))
+  sortID = sortID.deleter(tools.config.deleter("sortID"))
+
+
   def filepath(self, key):
-    if isinstance(self.ID, int):
+    if self.ID.isdecimal():
       filename = f'{self.ID:0>8}.json'
     else:
       filename = f'{self.ID}.json'
@@ -96,9 +113,13 @@ class AbstractTournament(BaseTournament):
   @property
   def season(self):
     s = self.config["season"]
-    if s and isinstance(s, list) and len(s) == 2:
+    if (
+        s
+        and isinstance(s, cibblbibbl.jsonfile.JSONFileArray)
+        and len(s) == 2
+    ):
       t = cibblbibbl.tournament.tools.types.Season
-      return t(s)
+      return t(*s)
   season = season.setter(tools.config.setter("season"))
   season = season.deleter(tools.config.deleter("season"))
 
@@ -118,9 +139,6 @@ class Tournament(
     self._apischedule = None
     self._season = None
     self._standings = None
-
-  def __repr__(self):
-    return f'Tournament({self.group_key!r},{self.ID!r})'
 
   @property
   def apiget(self):
@@ -170,7 +188,7 @@ class Tournament(
     nextID = self.config.get("next")
     if nextID is not None:
       gt = cibblbibbl.tournament.byGroup[self.group_key]
-      nextT = gt[nextID]
+      nextT = gt[str(nextID)]
       s |= nextT.excluded_teams()
     if with_fillers:
       S = cibblbibbl.settings.settings(self.group_key)
@@ -214,12 +232,6 @@ class Tournament(
         return
     self._season = t(None, "")
 
-  rsym_cad = tools.config.field("rsym_cad", {
-      "B": 0,
-      "b": 0,
-      "F": 0,
-  })
-
   def reload_standings(self):
     self._standings = tools.standings.tiebroken(self)
     dump_kwargs = cibblbibbl.settings.dump_kwargs
@@ -231,10 +243,36 @@ class Tournament(
         dump_kwargs=dump_kwargs
     )
 
+  rsym_cad = tools.config.field("rsym_cad", {
+      "B": 0,
+      "b": 0,
+      "F": 0,
+  })
+
+  @property
+  def rsym_prestige(self):
+    rsym_prestige_ = self.config.get("rsym_prestige")
+    if rsym_prestige_ is None:
+      rsym_prestige_ = {}
+      if self.season.name != "Winter":
+        rsym_prestige_ = {
+            "W": 3,
+            "B": 3,
+            "D": 1,
+            "C": -10,
+        }
+    return rsym_prestige_
+  rsym_prestige = rsym_prestige.setter(
+      tools.config.setter("rsym_prestige")
+  )
+  rsym_prestige = rsym_prestige.deleter(
+      tools.config.deleter("rsym_prestige")
+  )
+
   @property
   def rsym_pts(self):
     rsym_pts_ = self.config.get("rsym_pts")
-    if not rsym_pts_:
+    if rsym_pts_ is None:
       if self.season.name == "Summer":
         rsym_pts_ = {
           "W": 2,
@@ -250,13 +288,6 @@ class Tournament(
     return rsym_pts_
   rsym_pts = rsym_pts.setter(tools.config.setter("rsym_pts"))
   rsym_pts = rsym_pts.deleter(tools.config.deleter("rsym_pts"))
-
-  rsym_prestige = tools.config.field("rsym_prestige", {
-      "W": 3,
-      "B": 3,
-      "D": 1,
-      "C": -10,
-  })
 
   rsym_tdd = tools.config.field("rsym_tdd", {
       "B": 2,

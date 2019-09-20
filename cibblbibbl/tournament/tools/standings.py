@@ -7,18 +7,25 @@ import pytourney
 import cibblbibbl
 
 
+
 def base(T):
   R = cibblbibbl.tournament.tools.results
+  I = R.individual(T)
+  return base_from_individual_results(I)
+
+
+
+def base_from_individual_results(I):
   d = {}
-  for i, t in enumerate(R.individual(T)):
-    if t.team in d:
-      d2 = d[t.team.ID]
+  for i, t in enumerate(I):
+    if str(t.team.ID) in d:
+      d2 = d[str(t.team.ID)]
       d2["perf"] += t.rsym
       d2["matches"].append(t.match)
       d2["tdd"] += t.tdd
       d2["cad"] += t.cad
     else:
-      d[t.team.ID] = d2 = {}
+      d[str(t.team.ID)] = d2 = {}
       d2["team"] = t.team
       d2["perf"] = t.rsym
       d2["matches"] = [t.match,]
@@ -29,9 +36,9 @@ def base(T):
   return list(d.values())
 
 
-def base_revised(T):
-  L = base(T)
-  d = {d_["team"].ID: d_ for d_ in L}
+def base_revised(T, *, base_=None):
+  base_= (base_ if base_ is not None else base(T))
+  d = {str(d_["team"].ID): d_ for d_ in base_}
   CS = T.config.get("standings", {})
   for ID, d2 in d.items():
     CST = CS.get(str(ID), {})
@@ -64,10 +71,10 @@ def base_revised(T):
   if IDs is None:
     key_f = (lambda ID, d=d: T.standings_keyf(d, ID))
     IDs = sorted(d, key=key_f)
-  return [d[ID] for ID in IDs]
+  return [d[str(ID)] for ID in IDs]
 
 
-def tiebroken(T):
+def tiebroken(T, *, base_=None):
   R = cibblbibbl.tournament.tools.results
   CS = T.config.get("standings", {})
 
@@ -78,19 +85,19 @@ def tiebroken(T):
         CST = CS.get(str(ID), {})  # apply custom if set
         cst_hth = CST.get("hth")
         if cst_hth is not None:
-          d[int(ID)]["hth"] = cst_hth
+          d[str(ID)]["hth"] = cst_hth
         else:
-          d[int(ID)]["hth"] = hth_val
+          d[str(ID)]["hth"] = hth_val
 
   r0_hth = list(R.hth_all(T))
-  L = base_revised(T)
-  if not L:
-    return L
-  d = {d_["team"].ID: d_ for d_ in L}
+  base_ = base_revised(T, base_=base_)
+  if not base_:
+    return base_
+  d = {str(d_["team"].ID): d_ for d_ in base_}
   hth = {}
   curr_hth_teams = set()
-  pts0 = L[0]["pts"]
-  for r in L:
+  pts0 = base_[0]["pts"]
+  for r in base_:
     pts1 = r["pts"]
     if pts1 == pts0:
       curr_hth_teams.add(r["team"].ID)
@@ -100,7 +107,7 @@ def tiebroken(T):
       pts0 = pts1
   else:
     apply_hth()
-  # determine missing cto toss
+  # determine missing coin toss
   key_rows = collections.defaultdict(list)
   for ID, d2 in d.items():
     key_val = T.standings_keyf(d, ID)
@@ -114,7 +121,7 @@ def tiebroken(T):
   if IDs is None:
     return [d2 for k in sorted(key_rows) for d2 in key_rows[k]]
   else:
-    return [d[ID] for ID in IDs]
+    return [d[str(ID)] for ID in IDs]
     retun
     key_f = (lambda ID, d=d: T.standings_keyf(d, ID))
     IDs = sorted(d, key=key_f)

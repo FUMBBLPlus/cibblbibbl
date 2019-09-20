@@ -4,7 +4,7 @@ on a disk with the corresponding Python object instance.
 
 Can be used to autosave JSON compatible Python data.
 """
-__version__ = "0.0.7"
+__version__ = "0.0.8"
 
 
 
@@ -205,6 +205,9 @@ class JSONFileContainer(JSONFileBase):
   def __getitem__(self, key):
     data = self._data[key]
     return self._get_adapter_or_value(data)
+
+  def __len__(self):
+    return self._data.__len__()
 
   def __repr__(self):
     return self._data.__repr__()

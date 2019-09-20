@@ -7,22 +7,20 @@ if __name__ == "__main__":
       cibblbibbl.tournament.byGroup["cibbl"].values(),
       key=lambda T: T.sortID,
   )
-  exp_m = cibblbibbl.tournament.export.standings.plaintext
   texts = []
+  exp_m = cibblbibbl.tournament.export.prestiges.plaintext
   for T in Ts:
-    S = T.standings
-    if not S:
-      continue
-    s0 = exp_m.default(S, show_team_id=show_team_id)
+    P = cibblbibbl.tournament.tools.prestiges.base(T)
+    s0 = exp_m.default(P, show_team_id=show_team_id)
         # TODO: handler matching standings func
     if T.ID.isdecimal():
-      s1 = f'Standings of {T.name} ({T.ID} • {T.style})' \
+      s1 = f'Prestiges of {T.name} ({T.ID} • {T.style})' \
         f'\n\n{s0}'
     else:
       s1 = f'Prestiges of {T.name}\n\n{s0}'
     texts.append(s1)
   p = cibblbibbl.data.path
-  p /= f'{T.group_key}/tournament/standings.txt'
+  p /= f'{T.group_key}/tournament/prestiges.txt'
   text = "\n\n\n\n".join(texts)
   with p.open("w") as f:
       f.write(text)
