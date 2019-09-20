@@ -1,6 +1,6 @@
 [Open Round Robin] Standings of Y1, Winter - Friendlies (#41656)
 
-Name                                  Roster           Coach           Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                  Roster           Coach           Perf.      PTS    HTH    TDD    CAD    CTO
 ------------------------------------  ---------------  --------------  -------  -----  -----  -----  ------  ------
 .855228 Ninja Warriors                Nippon           Azure           WWW          9             8       2
 .854690 Secret Cult Of Shiamoto       Northern Nippon  Grin            WDW          7     --      6       4
@@ -22,7 +22,7 @@ Name                                  Roster           Coach           Perf.    
 
 [Round Robin] Standings of Y1, Spring - Cathay and Nippon (#41738)
 
-Name                               Roster           Coach           Perf.      PTS    HTH    TDD    CASD    COIN
+Name                               Roster           Coach           Perf.      PTS    HTH    TDD    CAD    CTO
 ---------------------------------  ---------------  --------------  -------  -----  -----  -----  ------  ------
 .855228 Ninja Warriors             Nippon           Azure           WWW          9             4       9
 .854678 Lords of the Silent Death  Clan Eshin       misterlonestar  WDL          4             1      -2
@@ -32,7 +32,7 @@ Name                               Roster           Coach           Perf.      P
 
 [Round Robin] Standings of Y1, Spring - The Chaos Wastelands (#41739)
 
-Name                                Roster    Coach          Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                Roster    Coach          Perf.      PTS    HTH    TDD    CAD    CTO
 ----------------------------------  --------  -------------  -------  -----  -----  -----  ------  ------
 .856697 Crimson Skull               Khorne    easilyamused   WWL          6      1      3       8
 .854752 Pleasure Principle          Slaanesh  jdmickleburgh  WLW          6      1      2      -6
@@ -42,7 +42,7 @@ Name                                Roster    Coach          Perf.      PTS    H
 
 [Round Robin] Standings of Y1, Spring - The Old World (#41740)
 
-Name                          Roster      Coach       Perf.      PTS    HTH    TDD    CASD    COIN
+Name                          Roster      Coach       Perf.      PTS    HTH    TDD    CAD    CTO
 ----------------------------  ----------  ----------  -------  -----  -----  -----  ------  ------
 .854600 Montetriste Noblemen  Estalia     Burnalot    WWW          9             4       0
 .855120 Trantio Dragon Hawks  Tilea       MachJacob   WLW          6             2       1
@@ -52,7 +52,7 @@ Name                          Roster      Coach       Perf.      PTS    HTH    T
 
 [Round Robin] Standings of Y1, Spring - Southlands and Araby (#41741)
 
-Name                                    Roster         Coach         Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                    Roster         Coach         Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------------  -------------  ------------  -------  -----  -----  -----  ------  ------
 .856203 Southland Scuttlers             Forest Goblin  CrudeDoodle   WWDW        10             5      -5
 .855753 Nejaz Djinn                     Araby          Matthueycamo  BWBL         9             4      -5
@@ -63,7 +63,7 @@ Name                                    Roster         Coach         Perf.      
 
 [Round Robin] Standings of Y1, Spring - Ind, Lumbria & Khuresh (#41892)
 
-Name                         Roster           Coach        Perf.      PTS    HTH    TDD    CASD    COIN
+Name                         Roster           Coach        Perf.      PTS    HTH    TDD    CAD    CTO
 ---------------------------  ---------------  -----------  -------  -----  -----  -----  ------  ------
 .859097 Bhubaneswar Rampage  Kingdoms of Ind  wallenstein  WD           4      1      2       1
 .859111 Dandaka Devas        Simyin           Alimack      WD           4      1      1       4
@@ -72,7 +72,7 @@ Name                         Roster           Coach        Perf.      PTS    HTH
 
 [Round Robin] Standings of Y1, Summer - Heart of Glory (#42038)
 
-Name                                Roster           Coach        Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                Roster           Coach        Perf.      PTS    HTH    TDD    CAD    CTO
 ----------------------------------  ---------------  -----------  -------  -----  -----  -----  ------  ------
 .855072 Carcassonne Knights         Bretonnian       meatball20   LWWW         6      1      3       2
 .854690 Secret Cult Of Shiamoto     Northern Nippon  Grin         WWWL         6      2      4       4
@@ -83,7 +83,7 @@ Name                                Roster           Coach        Perf.      PTS
 
 [Swiss] Standings of Y1, Summer - Obsidian Chalice (#42040)
 
-Name                                  Roster           Coach         Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                  Roster           Coach         Perf.      PTS    HTH    TDD    CAD    CTO
 ------------------------------------  ---------------  ------------  -------  -----  -----  -----  ------  ------
 .854600 Montetriste Noblemen          Estalia          Burnalot      WLWWW        8      1      7       7
 .859097 Bhubaneswar Rampage           Kingdoms of Ind  wallenstein   WWWLW        8      2      2      -3
@@ -97,7 +97,7 @@ Name                                  Roster           Coach         Perf.      
 
 [Round Robin] Standings of Y1, Summer - Pearl Chalice (#42041)
 
-Name                               Roster         Coach           Perf.      PTS    HTH    TDD    CASD    COIN
+Name                               Roster         Coach           Perf.      PTS    HTH    TDD    CAD    CTO
 ---------------------------------  -------------  --------------  -------  -----  -----  -----  ------  ------
 .854678 Lords of the Silent Death  Clan Eshin     misterlonestar  WWWWW       10             7       3
 .854257 Grand Celestial Delegate   Cathay         Calthor         WWLLW        6             4      -1
@@ -109,7 +109,7 @@ Name                               Roster         Coach           Perf.      PTS
 
 [Open Round Robin] Standings of Y1, Spring/Summer - The Great Ocean (#42239)
 
-Name                       Roster              Coach    Perf.      PTS    HTH    TDD    CASD    COIN
+Name                       Roster              Coach    Perf.      PTS    HTH    TDD    CAD    CTO
 -------------------------  ------------------  -------  -------  -----  -----  -----  ------  ------
 .863440 Doom of Athelorn   Pirates of Sartosa  Mr_Foxx  DWW          5     --      7       2
 .863441 Tor Anroc Anglers  Sea Elf             neubau   DWW          5     --      2       2
@@ -119,7 +119,7 @@ Name                       Roster              Coach    Perf.      PTS    HTH   
 
 [Round Robin] Standings of Y1, Autumn - Copper Division (#42425)
 
-Name                                    Roster      Coach      Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                    Roster      Coach      Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------------  ----------  ---------  -------  -----  -----  -----  ------  ------
 .867862 Everlasting Vultures of Settra  Zandri      DatMonsta  DDWWW       11             4      14
 .867030 Sport Spawning Zlatlan          Skink       dorfeus    WWWLL        9             3     -13
@@ -131,7 +131,7 @@ Name                                    Roster      Coach      Perf.      PTS   
 
 [Round Robin] Standings of Y1, Autumn - Bronze Division (#42426)
 
-Name                                Roster          Coach        Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                Roster          Coach        Perf.      PTS    HTH    TDD    CAD    CTO
 ----------------------------------  --------------  -----------  -------  -----  -----  -----  ------  ------
 .854502 Spartak Bolgasgrad          Kislev          ubaten       WWWWLD      13             3      -1
 .859122 Flying Drop Bears           Lumbria         Zabriskie69  DWWDWD      12             6      13
@@ -144,7 +144,7 @@ Name                                Roster          Coach        Perf.      PTS 
 
 [Round Robin] Standings of Y1, Autumn - Silver Division (#42427)
 
-Name                             Roster           Coach         Perf.      PTS    HTH    TDD    CASD    COIN
+Name                             Roster           Coach         Perf.      PTS    HTH    TDD    CAD    CTO
 -------------------------------  ---------------  ------------  -------  -----  -----  -----  ------  ------
 .859111 Dandaka Devas            Simyin           Alimack       WDL          4      1      0       7
 .854690 Secret Cult Of Shiamoto  Northern Nippon  Grin          LWD          4      1      0       4
@@ -154,7 +154,7 @@ Name                             Roster           Coach         Perf.      PTS  
 
 [Round Robin] Standings of Y1, Autumn - Gold Division (#42428)
 
-Name                               Roster           Coach           Perf.      PTS    HTH    TDD    CASD    COIN
+Name                               Roster           Coach           Perf.      PTS    HTH    TDD    CAD    CTO
 ---------------------------------  ---------------  --------------  -------  -----  -----  -----  ------  ------
 .855228 Ninja Warriors             Nippon           Azure           WDWWDD      12             3       6
 .856697 Crimson Skull              Khorne           easilyamused    WWLWDL      10             3      15
@@ -167,7 +167,7 @@ Name                               Roster           Coach           Perf.      P
 
 [Round Robin] Standings of Y1, Autumn - Youngbloods I (#42529)
 
-Name                              Roster    Coach    Perf.      PTS    HTH    TDD    CASD    COIN
+Name                              Roster    Coach    Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------  --------  -------  -------  -----  -----  -----  ------  ------
 .868977 Athel Loren Red Saplings  Dryad     b4nshee  DWW          7             2       6
 .869156 Talsyn Tramplers          Zoat      Sinnyil  WLW          6             1      -4
@@ -177,7 +177,7 @@ Name                              Roster    Coach    Perf.      PTS    HTH    TD
 
 [Round Robin] Standings of Y1, Autumn - Youngbloods II (#42660)
 
-Name                                Roster        Coach         Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                Roster        Coach         Perf.      PTS    HTH    TDD    CAD    CTO
 ----------------------------------  ------------  ------------  -------  -----  -----  -----  ------  ------
 .871172 Nachthafen Nightlords       Von Carstein  Danish_Dan    WLWW         9      1      4      -1
 .870410 Settra's Goats              Khemri        Manzoo        LWWW         9      2      1       2
@@ -188,7 +188,7 @@ Name                                Roster        Coach         Perf.      PTS  
 
 [Round Robin] Standings of Y1, Autumn - Youngbloods III (#42748)
 
-Name                               Roster    Coach                Perf.      PTS    HTH    TDD    CASD    COIN
+Name                               Roster    Coach                Perf.      PTS    HTH    TDD    CAD    CTO
 ---------------------------------  --------  -------------------  -------  -----  -----  -----  ------  ------
 .872524 Silver Pinnacle Renegades  Lahmian   Crook666             WDW          7             2       0
 .872475 True Roots of Khaine       Treemen   Quarion8             WWL          6             2       5
@@ -198,7 +198,7 @@ Name                               Roster    Coach                Perf.      PTS
 
 [Open Round Robin] Standings of Y2, Winter - Friendlies (High TW) (#42804)
 
-Name                             Roster           Coach         Perf.      PTS    HTH    TDD    CASD    COIN
+Name                             Roster           Coach         Perf.      PTS    HTH    TDD    CAD    CTO
 -------------------------------  ---------------  ------------  -------  -----  -----  -----  ------  ------
 .863441 Tor Anroc Anglers        Sea Elf          neubau        W            3     --      1       1
 .855120 Trantio Dragon Hawks     Tilea            MachJacob     W            3     --      1       0
@@ -212,7 +212,7 @@ Name                             Roster           Coach         Perf.      PTS  
 
 [Open Round Robin] Standings of Y2, Winter - Friendlies (Mid TW) (#42805)
 
-Name                                    Roster        Coach       Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                    Roster        Coach       Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------------  ------------  ----------  -------  -----  -----  -----  ------  ------
 .871172 Nachthafen Nightlords           Von Carstein  Danish_Dan  WW           6     --      7       3
 .867862 Everlasting Vultures of Settra  Zandri        DatMonsta   WW           6     --      3      -6
@@ -231,7 +231,7 @@ Name                                    Roster        Coach       Perf.      PTS
 
 [Open Round Robin] Standings of Y2, Winter - Friendlies (Low TW) (#42806)
 
-Name                                  Roster          Coach                Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                  Roster          Coach                Perf.      PTS    HTH    TDD    CAD    CTO
 ------------------------------------  --------------  -------------------  -------  -----  -----  -----  ------  ------
 .873090 Clan MacCraddle               Beastmen        Grin                 WDW          7     --      5      -6
 .873420 Nordberg Boozehounds          Centigor        Sinnyil              WDW          7     --      4       3
@@ -262,7 +262,7 @@ Name                                  Roster          Coach                Perf.
 
 [Round Robin] Standings of Y2, Spring - Albion and Norsca (#42882)
 
-Name                             Roster        Coach         Perf.      PTS    HTH    TDD    CASD    COIN
+Name                             Roster        Coach         Perf.      PTS    HTH    TDD    CAD    CTO
 -------------------------------  ------------  ------------  -------  -----  -----  -----  ------  ------
 .873945 Warhird Huscarls         Norse Dwarf   Garion        DDWW         8             3      -2
 .874317 Misty Isle Gators        Fimir         Araznaroth    WDLW         7             1       2
@@ -273,7 +273,7 @@ Name                             Roster        Coach         Perf.      PTS    H
 
 [Round Robin] Standings of Y2, Spring - Athel Loren (#42883)
 
-Name                                Roster    Coach     Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                Roster    Coach     Perf.      PTS    HTH    TDD    CAD    CTO
 ----------------------------------  --------  --------  -------  -----  -----  -----  ------  ------
 .872475 True Roots of Khaine        Treemen   Quarion8  WWW          9             3       7
 .869156 Talsyn Tramplers            Zoat      Sinnyil   WLW          6             3      -2
@@ -283,7 +283,7 @@ Name                                Roster    Coach     Perf.      PTS    HTH   
 
 [Round Robin] Standings of Y2, Spring - Cathay and Nippon (#42884)
 
-Name                               Roster           Coach           Perf.      PTS    HTH    TDD    CASD    COIN
+Name                               Roster           Coach           Perf.      PTS    HTH    TDD    CAD    CTO
 ---------------------------------  ---------------  --------------  -------  -----  -----  -----  ------  ------
 .855228 Ninja Warriors             Nippon           Azure           WWW          9             5       2
 .854257 Grand Celestial Delegate   Cathay           Calthor         LWW          6             3       1
@@ -293,7 +293,7 @@ Name                               Roster           Coach           Perf.      P
 
 [Round Robin] Standings of Y2, Spring - The Chaos Wastelands (#42885)
 
-Name                                Roster          Coach                Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                Roster          Coach                Perf.      PTS    HTH    TDD    CAD    CTO
 ----------------------------------  --------------  -------------------  -------  -----  -----  -----  ------  ------
 .871787 Malignant Curators          Malal           ArrestedDevelopment  DWWW        10             4       9
 .856697 Crimson Skull               Khorne          easilyamused         WDDL         5      1      1       3
@@ -304,7 +304,7 @@ Name                                Roster          Coach                Perf.  
 
 [Round Robin] Standings of Y2, Spring - The Deep Caverns (#42886)
 
-Name                                    Roster      Coach             Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                    Roster      Coach             Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------------  ----------  ----------------  -------  -----  -----  -----  ------  ------
 .874985 Red Crag Redcaps                Squig       captainmalkor     DDW          5             1       0
 .874602 Goblin Revolushunary Kommittee  Goblin      pokrjax           DWL          4      1      1       1
@@ -314,7 +314,7 @@ Name                                    Roster      Coach             Perf.     
 
 [Round Robin] Standings of Y2, Spring - The Empire (#42887)
 
-Name                                 Roster    Coach           Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                 Roster    Coach           Perf.      PTS    HTH    TDD    CAD    CTO
 -----------------------------------  --------  --------------  -------  -----  -----  -----  ------  ------
 .874302 Grasparossa B.B.C            Human     iena            DWWD         8             3       5
 .873361 Blood-Ground Blackhorns      Beastmen  Pizzapocalypse  DWWL         7             1      -7
@@ -325,7 +325,7 @@ Name                                 Roster    Coach           Perf.      PTS   
 
 [Round Robin] Standings of Y2, Spring - Ind, Lumbria & Khuresh (#42889)
 
-Name                               Roster           Coach        Perf.      PTS    HTH    TDD    CASD    COIN
+Name                               Roster           Coach        Perf.      PTS    HTH    TDD    CAD    CTO
 ---------------------------------  ---------------  -----------  -------  -----  -----  -----  ------  ------
 .859097 Bhubaneswar Rampage        Kingdoms of Ind  wallenstein  WWD          7             4      10
 .859111 Dandaka Devas              Simyin           Alimack      LWW          6            -1      -6
@@ -335,7 +335,7 @@ Name                               Roster           Coach        Perf.      PTS 
 
 [Round Robin] Standings of Y2, Spring - Lands of the Dead (#42890)
 
-Name                                    Roster    Coach      Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                    Roster    Coach      Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------------  --------  ---------  -------  -----  -----  -----  ------  ------
 .867862 Everlasting Vultures of Settra  Zandri    DatMonsta  DWW          7             4       5
 .870410 Settra's Goats                  Khemri    Manzoo     DLW          4             0       4
@@ -345,7 +345,7 @@ Name                                    Roster    Coach      Perf.      PTS    H
 
 [Round Robin] Standings of Y2, Spring - The Old World (#42891)
 
-Name                          Roster          Coach      Perf.      PTS    HTH    TDD    CASD    COIN
+Name                          Roster          Coach      Perf.      PTS    HTH    TDD    CAD    CTO
 ----------------------------  --------------  ---------  -------  -----  -----  -----  ------  ------
 .854600 Montetriste Noblemen  Estalia         Burnalot   LWD          4      1      0       4
 .855120 Trantio Dragon Hawks  Tilea           MachJacob  WDL          4      1      0       0       1
@@ -355,7 +355,7 @@ Name                          Roster          Coach      Perf.      PTS    HTH  
 
 [Round Robin] Standings of Y2, Spring - Southlands and Araby (#42892)
 
-Name                            Roster         Coach         Perf.      PTS    HTH    TDD    CASD    COIN
+Name                            Roster         Coach         Perf.      PTS    HTH    TDD    CAD    CTO
 ------------------------------  -------------  ------------  -------  -----  -----  -----  ------  ------
 .855753 Nejaz Djinn             Araby          Matthueycamo  WDW          7             5       2
 .874437 Bigwood Tree Shmashaz   Savage Orc     Teppich       WDL          4             0      -1
@@ -365,7 +365,7 @@ Name                            Roster         Coach         Perf.      PTS    H
 
 [Round Robin] Standings of Y2, Spring - Sylvania (#42893)
 
-Name                               Roster        Coach        Perf.      PTS    HTH    TDD    CASD    COIN
+Name                               Roster        Coach        Perf.      PTS    HTH    TDD    CAD    CTO
 ---------------------------------  ------------  -----------  -------  -----  -----  -----  ------  ------
 .871312 Tower of the Necromancer   Necrarch      badenprinz   WLWDW       10      1      5      -2
 .871172 Nachthafen Nightlords      Von Carstein  Danish_Dan   LWWDW       10      1      3      -6
@@ -377,7 +377,7 @@ Name                               Roster        Coach        Perf.      PTS    
 
 [Round Robin] Standings of Y2, Spring - The Great Ocean (#43089)
 
-Name                             Roster          Coach    Perf.      PTS    HTH    TDD    CASD    COIN
+Name                             Roster          Coach    Perf.      PTS    HTH    TDD    CAD    CTO
 -------------------------------  --------------  -------  -------  -----  -----  -----  ------  ------
 .863441 Tor Anroc Anglers        Sea Elf         neubau   WWW          9             5       3
 .864291 Norscan Curse            Undead Pirates  darkjul  LBL          3            -1       0
@@ -386,7 +386,7 @@ Name                             Roster          Coach    Perf.      PTS    HTH 
 
 [Round Robin] Standings of Y2, Summer - The Little Cup (#43149)
 
-Name                            Roster               Coach       Perf.      PTS    HTH    TDD    CASD    COIN
+Name                            Roster               Coach       Perf.      PTS    HTH    TDD    CAD    CTO
 ------------------------------  -------------------  ----------  -------  -----  -----  -----  ------  ------
 .879779 Nightmares Made Flesh   Lahmian              Tooby       WDDW         6             3       1
 .878945 Eternal Ecstasy         Daemons of Slaanesh  Nightbreed  WWLL         4      1      3       5
@@ -397,7 +397,7 @@ Name                            Roster               Coach       Perf.      PTS 
 
 [Swiss] Standings of Y2, Summer - Bloodskull Chalice (#43150)
 
-Name                                    Roster               Coach        Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                    Roster               Coach        Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------------  -------------------  -----------  -------  -----  -----  -----  ------  ------
 .876774 Congregation of Holy Touchdown  Sisters of Sigmar    Fanky        WWLWW        8      1      4       9
 .874966 Modryn's Midnight Meddlers      Wood Elf             bram         WLWWW        8      2      6      -3
@@ -411,7 +411,7 @@ Name                                    Roster               Coach        Perf. 
 
 [Swiss] Standings of Y2, Summer - Conjoined Blue Eagle I (#43151)
 
-Name                                    Roster          Coach           Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                    Roster          Coach           Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------------  --------------  --------------  -------  -----  -----  -----  ------  ------
 .855120 Trantio Dragon Hawks            Tilea           MachJacob       WWWWW       10            11       0
 .865063 Oyxl Great Pyramid Heroes       Snakemen        sonrises        LWWWD        7             4      -2
@@ -425,7 +425,7 @@ Name                                    Roster          Coach           Perf.   
 
 [Swiss] Standings of Y2, Summer - Conjoined Blue Eagle II (#43152)
 
-Name                              Roster          Coach             Perf.      PTS    HTH    TDD    CASD    COIN
+Name                              Roster          Coach             Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------  --------------  ----------------  -------  -----  -----  -----  ------  ------
 .873349 Reik River Kicking Mules  Half-Elf        Arale             LWWWW        8            10      10
 .872044 Strigos Elită             Strigoi         Arcayn            DWWLW        7             3       2
@@ -439,7 +439,7 @@ Name                              Roster          Coach             Perf.      P
 
 [Swiss] Standings of Y2, Summer - Altdorf College Cup (#43153)
 
-Name                               Roster           Coach           Perf.      PTS    HTH    TDD    CASD    COIN
+Name                               Roster           Coach           Perf.      PTS    HTH    TDD    CAD    CTO
 ---------------------------------  ---------------  --------------  -------  -----  -----  -----  ------  ------
 .854690 Secret Cult Of Shiamoto    Northern Nippon  Grin            WWWWW       10             6      20
 .859111 Dandaka Devas              Simyin           Alimack         WLWWB        8             4       0
@@ -457,7 +457,7 @@ Name                               Roster           Coach           Perf.      P
 
 [Swiss] Standings of Y2, Summer - CabalVision Invitational (#43154)
 
-Name                                    Roster           Coach                Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                    Roster           Coach                Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------------  ---------------  -------------------  -------  -----  -----  -----  ------  ------
 .871312 Tower of the Necromancer        Necrarch         badenprinz           WWDWL        7      1      7     -12
 .863441 Tor Anroc Anglers               Sea Elf          neubau               DWDWD        7      1      5      12
@@ -475,7 +475,7 @@ Name                                    Roster           Coach                Pe
 
 [Round Robin] Standings of Y2, Autumn - Marble Division (#43561)
 
-Name                               Roster               Coach        Perf.      PTS    HTH    TDD    CASD    COIN
+Name                               Roster               Coach        Perf.      PTS    HTH    TDD    CAD    CTO
 ---------------------------------  -------------------  -----------  -------  -----  -----  -----  ------  ------
 .880378 Nurgle Plaguebearers       Daemons of Nurgle    Lewdgrip     WWWWW       15             6      10
 .879131 Sartosa Black Flags        Pirates of Sartosa   datom        LWDWW       10             6       6
@@ -487,7 +487,7 @@ Name                               Roster               Coach        Perf.      
 
 [Round Robin] Standings of Y2, Autumn - Iron Division (#43562)
 
-Name                                    Roster               Coach         Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                    Roster               Coach         Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------------  -------------------  ------------  -------  -----  -----  -----  ------  ------
 .874437 Bigwood Tree Shmashaz           Savage Orc           Teppich       WWWWWD      16             7       2
 .874545 Stone Prince's Men              Border Princes       Loew          WDWWDD      12             5      -9
@@ -500,7 +500,7 @@ Name                                    Roster               Coach         Perf.
 
 [Round Robin] Standings of Y2, Autumn - Tin Division (#43563)
 
-Name                                 Roster        Coach             Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                 Roster        Coach             Perf.      PTS    HTH    TDD    CAD    CTO
 -----------------------------------  ------------  ----------------  -------  -----  -----  -----  ------  ------
 .874452 Way of the Dragon            Blood Dragon  Nextflux          WWWWWD      16             9      15
 .854507 Coven of the Mirrored Hall   Tzeentch      AutoAxpert        WLWDWD      11             6       6
@@ -513,7 +513,7 @@ Name                                 Roster        Coach             Perf.      
 
 [Round Robin] Standings of Y2, Autumn - Copper Division (#43564)
 
-Name                                    Roster             Coach       Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                    Roster             Coach       Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------------  -----------------  ----------  -------  -----  -----  -----  ------  ------
 .873945 Warhird Huscarls                Norse Dwarf        Garion      WLWWWF      12             2       5
 .874302 Grasparossa B.B.C               Human              iena        LLWWDW      10             2      -1
@@ -526,7 +526,7 @@ Name                                    Roster             Coach       Perf.    
 
 [Round Robin] Standings of Y2, Autumn - Bronze Division (#43565)
 
-Name                               Roster          Coach           Perf.      PTS    HTH    TDD    CASD    COIN
+Name                               Roster          Coach           Perf.      PTS    HTH    TDD    CAD    CTO
 ---------------------------------  --------------  --------------  -------  -----  -----  -----  ------  ------
 .869156 Talsyn Tramplers           Zoat            Sinnyil         DWWWWD      14      1      7      14
 .872475 True Roots of Khaine       Treemen         Quarion8        DWWWDW      14      1      5       5
@@ -539,7 +539,7 @@ Name                               Roster          Coach           Perf.      PT
 
 [Round Robin] Standings of Y2, Autumn - Silver Division (#43566)
 
-Name                                    Roster           Coach                Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                    Roster           Coach                Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------------  ---------------  -------------------  -------  -----  -----  -----  ------  ------
 .855753 Nejaz Djinn                     Araby            Matthueycamo         DWLWLW      10      1     -1      -3
 .854678 Lords of the Silent Death       Clan Eshin       misterlonestar       WWDLLW      10      2      1     -14
@@ -552,7 +552,7 @@ Name                                    Roster           Coach                Pe
 
 [Round Robin] Standings of Y2, Autumn - Gold Division (#43567)
 
-Name                              Roster           Coach         Perf.      PTS    HTH    TDD    CASD    COIN
+Name                              Roster           Coach         Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------  ---------------  ------------  -------  -----  -----  -----  ------  ------
 .856697 Crimson Skull             Khorne           easilyamused  WBWBWDD     17      1     10      18
 .854600 Montetriste Noblemen      Estalia          Burnalot      WWBDWWD     17      1      7       6
@@ -566,7 +566,7 @@ Name                              Roster           Coach         Perf.      PTS 
 
 [Round Robin] Standings of Y2, Autumn - Youngbloods IV (#43665)
 
-Name                              Roster              Coach       Perf.      PTS    HTH    TDD    CASD    COIN
+Name                              Roster              Coach       Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------  ------------------  ----------  -------  -----  -----  -----  ------  ------
 .886002 Doom Glade Demons         Dark Elf            Meanandugl  DWW          7             4       9
 .886114 Eye and Arrow             Avelorn             Aniur       WWL          6             1      -1
@@ -576,7 +576,7 @@ Name                              Roster              Coach       Perf.      PTS
 
 [Round Robin] Standings of Y2, Autumn - Youngbloods V (#43821)
 
-Name                              Roster        Coach        Perf.      PTS    HTH    TDD    CASD    COIN
+Name                              Roster        Coach        Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------  ------------  -----------  -------  -----  -----  -----  ------  ------
 .888344 Masqueraded Magnificence  Pro Elf       Aimless      WWW          9             7       0
 .888009 Londinium's Lunatics      Albion        razzlestorm  WLW          6             3       1
@@ -586,7 +586,7 @@ Name                              Roster        Coach        Perf.      PTS    H
 
 [Knockout] Standings of Y2, Autumn - Granite Division (#43860)
 
-Name                                 Roster    Coach               Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                 Roster    Coach               Perf.      PTS    HTH    TDD    CAD    CTO
 -----------------------------------  --------  ------------------  -------  -----  -----  -----  ------  ------
 .883751 Slaves of the Serpent Queen  Lybaras   Gozer_the_Gozerian  WWWWLL      12      2      1       4
 .883051 Vostok Iron Head             Norse     Nabster             WWWLLW      12      1      5       5
@@ -600,7 +600,7 @@ Name                                 Roster    Coach               Perf.      PT
 
 [Round Robin] Standings of Y2, Autumn - Youngbloods VI (#43868)
 
-Name                            Roster             Coach               Perf.      PTS    HTH    TDD    CASD    COIN
+Name                            Roster             Coach               Perf.      PTS    HTH    TDD    CAD    CTO
 ------------------------------  -----------------  ------------------  -------  -----  -----  -----  ------  ------
 .888760 Brothers Of Malice      Daemons of Malal   Throweck            LWW          6      1      3      -1
 .889002 Offa's Hearthweru       Vampire            rodney_dangerfield  WWL          6      1      2       0
@@ -610,7 +610,7 @@ Name                            Roster             Coach               Perf.    
 
 [Round Robin] Standings of Y2, Autumn - Youngbloods VII (#43883)
 
-Name                        Roster             Coach           Perf.      PTS    HTH    TDD    CASD    COIN
+Name                        Roster             Coach           Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------  -----------------  --------------  -------  -----  -----  -----  ------  ------
 .889206 Tsunami Terrors     Elemental - Water  SpecialOne      WWW          9             4       2
 .888994 Beerbog Behemoths   Giant              Rbthma          WWL          6             2       2
@@ -620,7 +620,7 @@ Name                        Roster             Coach           Perf.      PTS   
 
 [Open Round Robin] Standings of Y3, Winter - Friendlies (High TW) (#43990)
 
-Name                                    Roster          Coach         Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                    Roster          Coach         Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------------  --------------  ------------  -------  -----  -----  -----  ------  ------
 .854600 Montetriste Noblemen            Estalia         Burnalot      W            3     --      2       5
 .873349 Reik River Kicking Mules        Half-Elf        Arale         W            3     --      2       3
@@ -636,7 +636,7 @@ Name                                    Roster          Coach         Perf.     
 
 [Open Round Robin] Standings of Y3, Winter - Friendlies (Mid TW) (#43991)
 
-Name                                    Roster               Coach             Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                    Roster               Coach             Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------------  -------------------  ----------------  -------  -----  -----  -----  ------  ------
 .878945 Eternal Ecstasy                 Daemons of Slaanesh  Nightbreed        WW           6     --      5       4
 .873698 Pleasure Strings                Slaanesh             Laskas            WW           6     --      5       2
@@ -656,7 +656,7 @@ Name                                    Roster               Coach             P
 
 [Open Round Robin] Standings of Y3, Winter - Friendlies (Low TW) (#43992)
 
-Name                                 Roster             Coach               Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                 Roster             Coach               Perf.      PTS    HTH    TDD    CAD    CTO
 -----------------------------------  -----------------  ------------------  -------  -----  -----  -----  ------  ------
 .886002 Doom Glade Demons            Dark Elf           Meanandugl          WWW          9     --      6       6
 .886114 Eye and Arrow                Avelorn            Aniur               WWW          9     --      5      -4
@@ -681,7 +681,7 @@ Name                                 Roster             Coach               Perf
 
 [Round Robin] Standings of Y3, Spring - Albion and Norsca (#44060)
 
-Name                          Roster    Coach        Perf.      PTS    HTH    TDD    CASD    COIN
+Name                          Roster    Coach        Perf.      PTS    HTH    TDD    CAD    CTO
 ----------------------------  --------  -----------  -------  -----  -----  -----  ------  ------
 .874317 Misty Isle Gators     Fimir     Araznaroth   WWW          9             5       4
 .888994 Beerbog Behemoths     Giant     Rbthma       WLD          4      1      0      -4
@@ -691,7 +691,7 @@ Name                          Roster    Coach        Perf.      PTS    HTH    TD
 
 [Round Robin] Standings of Y3, Spring - Athel Loren (#44061)
 
-Name                                Roster    Coach             Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                Roster    Coach             Perf.      PTS    HTH    TDD    CAD    CTO
 ----------------------------------  --------  ----------------  -------  -----  -----  -----  ------  ------
 .874966 Modryn's Midnight Meddlers  Wood Elf  bram              WLW          6      1      2       4
 .869156 Talsyn Tramplers            Zoat      Sinnyil           LWW          6      1      1       2
@@ -701,7 +701,7 @@ Name                                Roster    Coach             Perf.      PTS  
 
 [Round Robin] Standings of Y3, Spring - Cathay and Nippon (#44062)
 
-Name                               Roster           Coach           Perf.      PTS    HTH    TDD    CASD    COIN
+Name                               Roster           Coach           Perf.      PTS    HTH    TDD    CAD    CTO
 ---------------------------------  ---------------  --------------  -------  -----  -----  -----  ------  ------
 .854690 Secret Cult Of Shiamoto    Northern Nippon  Grin            DWW          7             2       4
 .854678 Lords of the Silent Death  Clan Eshin       misterlonestar  WLW          6             2      -4
@@ -711,7 +711,7 @@ Name                               Roster           Coach           Perf.      P
 
 [Round Robin] Standings of Y3, Spring - The Chaos Wastelands (#44063)
 
-Name                                Roster          Coach                Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                Roster          Coach                Perf.      PTS    HTH    TDD    CAD    CTO
 ----------------------------------  --------------  -------------------  -------  -----  -----  -----  ------  ------
 .854507 Coven of the Mirrored Hall  Tzeentch        AutoAxpert           WWWB        12             6      -6
 .871787 Malignant Curators          Malal           ArrestedDevelopment  WLLW         6      1      2      17
@@ -722,7 +722,7 @@ Name                                Roster          Coach                Perf.  
 
 [Round Robin] Standings of Y3, Spring - The Deep Caverns (#44064)
 
-Name                                    Roster        Coach             Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                    Roster        Coach             Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------------  ------------  ----------------  -------  -----  -----  -----  ------  ------
 .874602 Goblin Revolushunary Kommittee  Goblin        pokrjax           DWW          7      1      4      -6
 .888421 Gobskrav Alliance               Underworld    SupaStar          DWW          7      1      3       0
@@ -732,7 +732,7 @@ Name                                    Roster        Coach             Perf.   
 
 [Round Robin] Standings of Y3, Spring - The Empire (#44066)
 
-Name                                    Roster             Coach           Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                    Roster             Coach           Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------------  -----------------  --------------  -------  -----  -----  -----  ------  ------
 .873361 Blood-Ground Blackhorns         Beastmen           Pizzapocalypse  WWWL         9             2      -3
 .876774 Congregation of Holy Touchdown  Sisters of Sigmar  Fanky           LWLW         6      1      0       7
@@ -743,7 +743,7 @@ Name                                    Roster             Coach           Perf.
 
 [Round Robin] Standings of Y3, Spring - The Great Ocean (#44067)
 
-Name                         Roster              Coach       Perf.      PTS    HTH    TDD    CASD    COIN
+Name                         Roster              Coach       Perf.      PTS    HTH    TDD    CAD    CTO
 ---------------------------  ------------------  ----------  -------  -----  -----  -----  ------  ------
 .863441 Tor Anroc Anglers    Sea Elf             neubau      WWW          9             4       6
 .879131 Sartosa Black Flags  Pirates of Sartosa  datom       WLW          6             3       0
@@ -753,7 +753,7 @@ Name                         Roster              Coach       Perf.      PTS    H
 
 [Round Robin] Standings of Y3, Spring - Ind, Lumbria, Khuresh (#44068)
 
-Name                               Roster           Coach           Perf.      PTS    HTH    TDD    CASD    COIN
+Name                               Roster           Coach           Perf.      PTS    HTH    TDD    CAD    CTO
 ---------------------------------  ---------------  --------------  -------  -----  -----  -----  ------  ------
 .865063 Oyxl Great Pyramid Heroes  Snakemen         sonrises        WDW          7             3      -4
 .859097 Bhubaneswar Rampage        Kingdoms of Ind  wallenstein     LWW          6             2       2
@@ -763,7 +763,7 @@ Name                               Roster           Coach           Perf.      P
 
 [Round Robin] Standings of Y3, Spring - The Old World (#44070)
 
-Name                             Roster          Coach         Perf.      PTS    HTH    TDD    CASD    COIN
+Name                             Roster          Coach         Perf.      PTS    HTH    TDD    CAD    CTO
 -------------------------------  --------------  ------------  -------  -----  -----  -----  ------  ------
 .873759 Knightly Virtues         Bretonnian      Guardikai     WDWW        10             5       0
 .874545 Stone Prince's Men       Border Princes  Loew          LDWW         7             2       0
@@ -774,7 +774,7 @@ Name                             Roster          Coach         Perf.      PTS   
 
 [Round Robin] Standings of Y3, Spring - The Realms of Chaos (#44071)
 
-Name                          Roster               Coach        Perf.      PTS    HTH    TDD    CASD    COIN
+Name                          Roster               Coach        Perf.      PTS    HTH    TDD    CAD    CTO
 ----------------------------  -------------------  -----------  -------  -----  -----  -----  ------  ------
 .888760 Brothers Of Malice    Daemons of Malal     Throweck     LWW          6      1      0      -5
 .878945 Eternal Ecstasy       Daemons of Slaanesh  Nightbreed   WLW          6      2      5       1
@@ -784,7 +784,7 @@ Name                          Roster               Coach        Perf.      PTS  
 
 [Round Robin] Standings of Y3, Spring - Southlands & Araby (#44072)
 
-Name                                 Roster         Coach         Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                 Roster         Coach         Perf.      PTS    HTH    TDD    CAD    CTO
 -----------------------------------  -------------  ------------  -------  -----  -----  -----  ------  ------
 .889245 Shroomwood Attercops         Forest Goblin  Shraaaag      WWWL         9             3      -2
 .855753 Nejaz Djinn                  Araby          Matthueycamo  WLDW         7      1      3       0
@@ -795,7 +795,7 @@ Name                                 Roster         Coach         Perf.      PTS
 
 [Round Robin] Standings of Y3, Spring - Sylvania (#44073)
 
-Name                              Roster        Coach               Perf.      PTS    HTH    TDD    CASD    COIN
+Name                              Roster        Coach               Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------  ------------  ------------------  -------  -----  -----  -----  ------  ------
 .871312 Tower of the Necromancer  Necrarch      badenprinz          WWW          9             4      -1
 .872044 Strigos Elită             Strigoi       Arcayn              WLL          3      1     -1       3
@@ -805,7 +805,7 @@ Name                              Roster        Coach               Perf.      P
 
 [Round Robin] Standings of Y3, Spring - Ulthuan & Naggaroth (#44074)
 
-Name                                Roster              Coach       Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                Roster              Coach       Perf.      PTS    HTH    TDD    CAD    CTO
 ----------------------------------  ------------------  ----------  -------  -----  -----  -----  ------  ------
 .886114 Eye and Arrow               Avelorn             Aniur       WWWWW       15            14       7
 .886167 Clar Karond Black Widows    Witch Elf           Manzoo      WWLWW       12             1      -1
@@ -817,7 +817,7 @@ Name                                Roster              Coach       Perf.      P
 
 [Round Robin] Standings of Y3, Spring - Lands of the Dead II (#44172)
 
-Name                                    Roster    Coach               Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                    Roster    Coach               Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------------  --------  ------------------  -------  -----  -----  -----  ------  ------
 .867862 Everlasting Vultures of Settra  Zandri    DatMonsta           WWW          9             6       3
 .882382 Ali's Anarchists                Numas     AdyBrooke           WLL          3            -3      -4
@@ -826,7 +826,7 @@ Name                                    Roster    Coach               Perf.     
 
 [Round Robin] Standings of Y3, Spring - Elemental Planes II (#44207)
 
-Name                            Roster             Coach       Perf.      PTS    HTH    TDD    CASD    COIN
+Name                            Roster             Coach       Perf.      PTS    HTH    TDD    CAD    CTO
 ------------------------------  -----------------  ----------  -------  -----  -----  -----  ------  ------
 .889232 Lost Golems of Grungni  Elemental - Earth  Kzarik      WDWL         7             2       2
 .889206 Tsunami Terrors         Elemental - Water  SpecialOne  LDDW         5             0      -1
@@ -835,7 +835,7 @@ Name                            Roster             Coach       Perf.      PTS   
 
 [Round Robin] Standings of Y3, Spring - Youngbloods VIII (#44232)
 
-Name                       Roster               Coach        Perf.      PTS    HTH    TDD    CASD    COIN
+Name                       Roster               Coach        Perf.      PTS    HTH    TDD    CAD    CTO
 -------------------------  -------------------  -----------  -------  -----  -----  -----  ------  ------
 .893818 Grim Queens        Lahmian              abolafia     WWW          9             9       3
 .895015 Springbok Sprites  Kurnous              JackH        WWL          6             2       0
@@ -845,7 +845,7 @@ Name                       Roster               Coach        Perf.      PTS    H
 
 [Round Robin] Standings of Y3, Spring - Youngbloods IX (#44269)
 
-Name                            Roster          Coach         Perf.      PTS    HTH    TDD    CASD    COIN
+Name                            Roster          Coach         Perf.      PTS    HTH    TDD    CAD    CTO
 ------------------------------  --------------  ------------  -------  -----  -----  -----  ------  ------
 .895806 Black Chasm Overlords   Clan Pestilens  Soul_Thief    DWW          7             2       3
 .896228 Gardeners of Nurgle     Nurgle          EnglishJake   WWL          6             1       3
@@ -855,7 +855,7 @@ Name                            Roster          Coach         Perf.      PTS    
 
 [Round Robin] Standings of Y3, Spring - Youngbloods X (#44270)
 
-Name                                    Roster        Coach            Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                    Roster        Coach            Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------------  ------------  ---------------  -------  -----  -----  -----  ------  ------
 .896134 Rotfall Ironworks Rocketeers    Clan Skryre   King_Mad         WWL          6      1      0      -4
 .895870 Mordkin Headtakers              Skaven        chimp2010        WLW          6      2      7       1
@@ -865,7 +865,7 @@ Name                                    Roster        Coach            Perf.    
 
 [Swiss] Standings of Y3, Summer - Greater Dragon Grapple (#44378)
 
-Name                              Roster           Coach         Perf.      PTS    HTH    TDD    CASD    COIN
+Name                              Roster           Coach         Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------  ---------------  ------------  -------  -----  -----  -----  ------  ------
 .874302 Grasparossa B.B.C         Human            iena          WWLWW        8             7      13
 .855120 Trantio Dragon Hawks      Tilea            MachJacob     WWWLD        7             1      -5
@@ -879,7 +879,7 @@ Name                              Roster           Coach         Perf.      PTS 
 
 [Round Robin] Standings of Y3, Summer - Lesser Dragon Grapple (#44379)
 
-Name                                    Roster              Coach         Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                    Roster              Coach         Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------------  ------------------  ------------  -------  -----  -----  -----  ------  ------
 .876774 Congregation of Holy Touchdown  Sisters of Sigmar   Fanky         WWLWW        8             5       8
 .873759 Knightly Virtues                Bretonnian          Guardikai     WWDWL        7             2      -3
@@ -891,7 +891,7 @@ Name                                    Roster              Coach         Perf. 
 
 [Round Robin] Standings of Y3, Summer - Exotic Creature Challenge (A) (#44380)
 
-Name                               Roster    Coach       Perf.      PTS    HTH    TDD    CASD    COIN
+Name                               Roster    Coach       Perf.      PTS    HTH    TDD    CAD    CTO
 ---------------------------------  --------  ----------  -------  -----  -----  -----  ------  ------
 .874317 Misty Isle Gators          Fimir     Araznaroth  WBWD         7             4       7
 .869156 Talsyn Tramplers           Zoat      Sinnyil     WDDB         6             4      -2
@@ -902,7 +902,7 @@ Name                               Roster    Coach       Perf.      PTS    HTH  
 
 [Round Robin] Standings of Y3, Summer - Exotic Creature Challenge (B) (#44381)
 
-Name                                    Roster             Coach          Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                    Roster             Coach          Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------------  -----------------  -------------  -------  -----  -----  -----  ------  ------
 .896277 Thirteenth Circle Abominations  Clan Moulder       jdmickleburgh  WWLW         6             1      -8
 .889245 Shroomwood Attercops            Forest Goblin      Shraaaag       LDWW         5             2      -9
@@ -913,7 +913,7 @@ Name                                    Roster             Coach          Perf. 
 
 [Open Round Robin] Standings of Y3, Summer - Exotic Creature Challenge R5 (#44382)
 
-Name                                    Roster         Coach          Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                    Roster         Coach          Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------------  -------------  -------------  -------  -----  -----  -----  ------  ------
 .874317 Misty Isle Gators               Fimir          Araznaroth     W            2     --      2       2
 (!) .888994 Beerbog Behemoths           Giant          Rbthma         W            2     --      1       4
@@ -927,7 +927,7 @@ Name                                    Roster         Coach          Perf.     
 
 [Swiss] Standings of Y3, Summer - Vile Cauldron (#44383)
 
-Name                                    Roster               Coach       Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                    Roster               Coach       Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------------  -------------------  ----------  -------  -----  -----  -----  ------  ------
 .871312 Tower of the Necromancer        Necrarch             badenprinz  WWWWW       10            11      -3
 .867862 Everlasting Vultures of Settra  Zandri               DatMonsta   WWLWD        7             0      12
@@ -945,7 +945,7 @@ Name                                    Roster               Coach       Perf.  
 
 [Round Robin] Standings of Y3, Summer - Styles Clash (A) (#44384)
 
-Name                                Roster      Coach           Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                Roster      Coach           Perf.      PTS    HTH    TDD    CAD    CTO
 ----------------------------------  ----------  --------------  -------  -----  -----  -----  ------  ------
 .863441 Tor Anroc Anglers           Sea Elf     neubau          WWWD         7             3       2
 .854507 Coven of the Mirrored Hall  Tzeentch    AutoAxpert      WLBD         5             2      -2
@@ -956,7 +956,7 @@ Name                                Roster      Coach           Perf.      PTS  
 
 [Round Robin] Standings of Y3, Summer - Styles Clash (B) (#44385)
 
-Name                             Roster           Coach                Perf.      PTS    HTH    TDD    CASD    COIN
+Name                             Roster           Coach                Perf.      PTS    HTH    TDD    CAD    CTO
 -------------------------------  ---------------  -------------------  -------  -----  -----  -----  ------  ------
 .854690 Secret Cult Of Shiamoto  Northern Nippon  Grin                 DWWW         7             3       7
 .874437 Bigwood Tree Shmashaz    Savage Orc       Teppich              WLDW         5             1      -4
@@ -967,7 +967,7 @@ Name                             Roster           Coach                Perf.    
 
 [Open Round Robin] Standings of Y3, Summer - Styles Clash R5 (#44386)
 
-Name                                Roster           Coach                Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                Roster           Coach                Perf.      PTS    HTH    TDD    CAD    CTO
 ----------------------------------  ---------------  -------------------  -------  -----  -----  -----  ------  ------
 .874966 Modryn's Midnight Meddlers  Wood Elf         bram                 W            2     --      3       2
 .863441 Tor Anroc Anglers           Sea Elf          neubau               W            2     --      2      -1
@@ -983,7 +983,7 @@ Name                                Roster           Coach                Perf. 
 
 [Swiss] Standings of Y3, Summer - Explosion's Edge (#44387)
 
-Name                                    Roster             Coach        Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                    Roster             Coach        Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------------  -----------------  -----------  -------  -----  -----  -----  ------  ------
 .882382 Ali's Anarchists                Numas              AdyBrooke    WWWWD        9             7      11
 .879790 Unfettered Fury                 Daemons of Khorne  Bullroarer4  WLWWL        6      1      2       8
@@ -997,7 +997,7 @@ Name                                    Roster             Coach        Perf.   
 
 [Round Robin] Standings of Y3, Summer - Cup of Ancient Knowledge (#44388)
 
-Name                                 Roster             Coach               Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                 Roster             Coach               Perf.      PTS    HTH    TDD    CAD    CTO
 -----------------------------------  -----------------  ------------------  -------  -----  -----  -----  ------  ------
 .889002 Offa's Hearthweru            Vampire            rodney_dangerfield  WDWLD        6      1      2      -3
 .889232 Lost Golems of Grungni       Elemental - Earth  Kzarik              LWLWW        6      2      2       9
@@ -1010,7 +1010,7 @@ Name                                 Roster             Coach               Perf
 
 [Swiss] Standings of Y3, Summer - Mushroom Scramble (#44389)
 
-Name                              Roster          Coach             Perf.      PTS    HTH    TDD    CASD    COIN
+Name                              Roster          Coach             Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------  --------------  ----------------  -------  -----  -----  -----  ------  ------
 .895015 Springbok Sprites         Kurnous         JackH             DWWWW        9             8       3
 .893818 Grim Queens               Lahmian         abolafia          WBWLD        7             5      -5
@@ -1024,7 +1024,7 @@ Name                              Roster          Coach             Perf.      P
 
 [Swiss] Standings of Y3, Summer - Youngblood Scramble (#44390)
 
-Name                                Roster               Coach          Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                Roster               Coach          Perf.      PTS    HTH    TDD    CAD    CTO
 ----------------------------------  -------------------  -------------  -------  -----  -----  -----  ------  ------
 .897376 Darkenwood Sentinels        Dryad                captainmalkor  LBWWW        8             6       2
 .897379 Karak Kadrin Slayers        Slayer               bigf           WDWDD        7             3       7
@@ -1038,7 +1038,7 @@ Name                                Roster               Coach          Perf.   
 
 [Round Robin] Standings of Y3, Summer - Youngbloods XI (#44462)
 
-Name                                Roster        Coach            Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                Roster        Coach            Perf.      PTS    HTH    TDD    CAD    CTO
 ----------------------------------  ------------  ---------------  -------  -----  -----  -----  ------  ------
 .898507 Leicheberg Lycans           Necromantic   GorbadIronclaw   WWWDD        8             3       2
 .898506 Shambling Revenants         Undead        MisterDog        LLWWW        6             3       6
@@ -1050,7 +1050,7 @@ Name                                Roster        Coach            Perf.      PT
 
 [Round Robin] Standings of Y3, Summer - Youngbloods XII (#44560)
 
-Name                                  Roster        Coach       Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                  Roster        Coach       Perf.      PTS    HTH    TDD    CAD    CTO
 ------------------------------------  ------------  ----------  -------  -----  -----  -----  ------  ------
 .899682 K'r'shh Sl'ppr'ss             Snakemen      det         DWW          5             3      -8
 .900708 Tartarik Kowaz                Orc           muaddib68   WLW          4             2       4
@@ -1060,7 +1060,7 @@ Name                                  Roster        Coach       Perf.      PTS  
 
 [Round Robin] Standings of Y3, Autumn - Cloth Division (#44743)
 
-Name                                  Roster               Coach          Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                  Roster               Coach          Perf.      PTS    HTH    TDD    CAD    CTO
 ------------------------------------  -------------------  -------------  -------  -----  -----  -----  ------  ------
 .901773 Rikek Revenge                 Skaven               Buu88          WWWWWW      18            15       6
 .903276 Kislev Last Hope              Kislev               hobekotkas505  DWLDDW       9             0       4
@@ -1073,7 +1073,7 @@ Name                                  Roster               Coach          Perf. 
 
 [Round Robin] Standings of Y3, Autumn - Wood Division (#44744)
 
-Name                                Roster              Coach       Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                Roster              Coach       Perf.      PTS    HTH    TDD    CAD    CTO
 ----------------------------------  ------------------  ----------  -------  -----  -----  -----  ------  ------
 .900747 Black Monolith Worshippers  Chaos Pact          Hollaender  WWLFWB      12             5       5
 .903587 Aqshy's Flames              Elemental - Fire    YishWaagh   BDWBLL      10             1       1
@@ -1086,7 +1086,7 @@ Name                                Roster              Coach       Perf.      P
 
 [Round Robin] Standings of Y3, Autumn - Clay Division (#44745)
 
-Name                                Roster          Coach             Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                Roster          Coach             Perf.      PTS    HTH    TDD    CAD    CTO
 ----------------------------------  --------------  ----------------  -------  -----  -----  -----  ------  ------
 .891237 Dukes of Earthquake Valley  High Elf        Sampittu          WWWLBW      15      1      5      -5
 .896972 Seekers of Transcendence    Spawn of Chaos  The_Carthaginian  LWWWBB      15      2      8       3
@@ -1099,7 +1099,7 @@ Name                                Roster          Coach             Perf.     
 
 [Round Robin] Standings of Y3, Autumn - Granite Division (#44746)
 
-Name                                  Roster           Coach            Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                  Roster           Coach            Perf.      PTS    HTH    TDD    CAD    CTO
 ------------------------------------  ---------------  ---------------  -------  -----  -----  -----  ------  ------
 .898337 Mahrak Maulers                Mahrak           stowelly         WWBBLW      15             6       7
 .897353 Court of Shu                  Elemental - Air  SzieberthAdam    WDLWBW      13             4       1
@@ -1112,7 +1112,7 @@ Name                                  Roster           Coach            Perf.   
 
 [Round Robin] Standings of Y3, Autumn - Marble Division (#44747)
 
-Name                                    Roster          Coach           Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                    Roster          Coach           Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------------  --------------  --------------  -------  -----  -----  -----  ------  ------
 .896277 Thirteenth Circle Abominations  Clan Moulder    jdmickleburgh   DLWDWWW     14      1      5       3
 .898507 Leicheberg Lycans               Necromantic     GorbadIronclaw  DWWWDWL     14      2      2     -13
@@ -1126,7 +1126,7 @@ Name                                    Roster          Coach           Perf.   
 
 [Round Robin] Standings of Y3, Autumn - Iron Division (#44748)
 
-Name                                  Roster             Coach               Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                  Roster             Coach               Perf.      PTS    HTH    TDD    CAD    CTO
 ------------------------------------  -----------------  ------------------  -------  -----  -----  -----  ------  ------
 .889002 Offa's Hearthweru             Vampire            rodney_dangerfield  LBWWWWD     16             6      -2
 .879790 Unfettered Fury               Daemons of Khorne  Bullroarer4         WDLWDWB     14      1      5      24
@@ -1140,7 +1140,7 @@ Name                                  Roster             Coach               Per
 
 [Round Robin] Standings of Y3, Autumn - Tin Division (#44749)
 
-Name                              Roster             Coach       Perf.      PTS    HTH    TDD    CASD    COIN
+Name                              Roster             Coach       Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------  -----------------  ----------  -------  -----  -----  -----  ------  ------
 .886002 Doom Glade Demons         Dark Elf           Meanandugl  LWWDWWW     16             7       8
 .886167 Clar Karond Black Widows  Witch Elf          Manzoo      WWWDBDL     14             3      -9
@@ -1154,7 +1154,7 @@ Name                              Roster             Coach       Perf.      PTS 
 
 [Round Robin] Standings of Y3, Autumn - Copper Division (#44750)
 
-Name                                Roster               Coach       Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                Roster               Coach       Perf.      PTS    HTH    TDD    CAD    CTO
 ----------------------------------  -------------------  ----------  -------  -----  -----  -----  ------  ------
 .874545 Stone Prince's Men          Border Princes       Loew        WWWLDWD     14             4       9
 .886114 Eye and Arrow               Avelorn              Aniur       DLLWWDW     11      1      4       2
@@ -1168,7 +1168,7 @@ Name                                Roster               Coach       Perf.      
 
 [Round Robin] Standings of Y3, Autumn - Bronze Division (#44751)
 
-Name                                Roster             Coach                Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                Roster             Coach                Perf.      PTS    HTH    TDD    CAD    CTO
 ----------------------------------  -----------------  -------------------  -------  -----  -----  -----  ------  ------
 .874452 Way of the Dragon           Blood Dragon       Nextflux             WWDWWWW     19             7       8
 .871787 Malignant Curators          Malal              ArrestedDevelopment  LWDDWWL     11             0       1
@@ -1182,7 +1182,7 @@ Name                                Roster             Coach                Perf
 
 [Round Robin] Standings of Y3, Autumn - Silver Division (#44752)
 
-Name                                    Roster             Coach           Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                    Roster             Coach           Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------------  -----------------  --------------  -------  -----  -----  -----  ------  ------
 .855228 Ninja Warriors                  Nippon             Azure           WWDLWWD     14      1      4       5
 .874317 Misty Isle Gators               Fimir              Araznaroth      DLDWWWW     14      1      2       2
@@ -1196,7 +1196,7 @@ Name                                    Roster             Coach           Perf.
 
 [Round Robin] Standings of Y3, Autumn - Gold Division (#44753)
 
-Name                                    Roster           Coach         Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                    Roster           Coach         Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------------  ---------------  ------------  -------  -----  -----  -----  ------  ------
 .854600 Montetriste Noblemen            Estalia          Burnalot      WDWDWWD     15             4       7
 .869156 Talsyn Tramplers                Zoat             Sinnyil       WDWWWLL     13      1      5       6
@@ -1210,7 +1210,7 @@ Name                                    Roster           Coach         Perf.    
 
 [Round Robin] Standings of Y3, Summer - Youngbloods XIII (#44910)
 
-Name                               Roster        Coach          Perf.      PTS    HTH    TDD    CASD    COIN
+Name                               Roster        Coach          Perf.      PTS    HTH    TDD    CAD    CTO
 ---------------------------------  ------------  -------------  -------  -----  -----  -----  ------  ------
 .904411 Ynys Morion Mabsantwyr     Four Nations  ArthurWynne    WDWW         7             4      -4
 .905886 Sabre Mountain Rattlers    Ogre          jdmickleburgh  WDWL         5             2      10
@@ -1221,7 +1221,7 @@ Name                               Roster        Coach          Perf.      PTS  
 
 [Open Round Robin] Standings of Y4, Winter - Friendlies (High) (#45173)
 
-Name                                    Roster               Coach        Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                    Roster               Coach        Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------------  -------------------  -----------  -------  -----  -----  -----  ------  ------
 .874545 Stone Prince's Men              Border Princes       Loew         W            3     --      2       2
 .879131 Sartosa Black Flags             Pirates of Sartosa   datom        W            3     --      1       3
@@ -1239,7 +1239,7 @@ Name                                    Roster               Coach        Perf. 
 
 [Open Round Robin] Standings of Y4, Winter - Friendlies (Mid)  (#45174)
 
-Name                                    Roster             Coach           Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                    Roster             Coach           Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------------  -----------------  --------------  -------  -----  -----  -----  ------  ------
 .888994 Beerbog Behemoths               Giant              Rbthma          WW           6             4      -3
 .899682 K'r'shh Sl'ppr'ss               Snakemen           det             DW           4             2       4
@@ -1262,7 +1262,7 @@ Name                                    Roster             Coach           Perf.
 
 [Open Round Robin] Standings of Y4, Winter - Friendlies (Low) (#45175)
 
-Name                                  Roster               Coach             Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                  Roster               Coach             Perf.      PTS    HTH    TDD    CAD    CTO
 ------------------------------------  -------------------  ----------------  -------  -----  -----  -----  ------  ------
 .855120 Trantio Dragon Hawks          Tilea                MachJacob         DWW          7     --      5       3
 .904377 Aurons                        Rasetra              awambawamb        DWW          7     --      2       4
@@ -1293,7 +1293,7 @@ Name                                  Roster               Coach             Per
 
 [Round Robin] Standings of Y4, Spring - Albion and Norsca (#45192)
 
-Name                            Roster        Coach        Perf.      PTS    HTH    TDD    CASD    COIN
+Name                            Roster        Coach        Perf.      PTS    HTH    TDD    CAD    CTO
 ------------------------------  ------------  -----------  -------  -----  -----  -----  ------  ------
 .888994 Beerbog Behemoths       Giant         Rbthma       DWW          7             4       0
 .883051 Vostok Iron Head        Norse         Nabster      DLW          4            -1      -7
@@ -1303,7 +1303,7 @@ Name                            Roster        Coach        Perf.      PTS    HTH
 
 [Round Robin] Standings of Y4, Spring - Athel Loren (#45193)
 
-Name                                Roster    Coach          Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                Roster    Coach          Perf.      PTS    HTH    TDD    CAD    CTO
 ----------------------------------  --------  -------------  -------  -----  -----  -----  ------  ------
 .897376 Darkenwood Sentinels        Dryad     captainmalkor  WWD          7             3       7
 .872475 True Roots of Khaine        Treemen   Quarion8       WLD          4            -1       3
@@ -1313,7 +1313,7 @@ Name                                Roster    Coach          Perf.      PTS    H
 
 [Round Robin] Standings of Y4, Spring - Cathay and Nippon (#45194)
 
-Name                               Roster           Coach           Perf.      PTS    HTH    TDD    CASD    COIN
+Name                               Roster           Coach           Perf.      PTS    HTH    TDD    CAD    CTO
 ---------------------------------  ---------------  --------------  -------  -----  -----  -----  ------  ------
 .854690 Secret Cult Of Shiamoto    Northern Nippon  Grin            DWW          7             3       9
 .854257 Grand Celestial Delegate   Cathay           Calthor         DLW          4             0      11
@@ -1323,7 +1323,7 @@ Name                               Roster           Coach           Perf.      P
 
 [Round Robin] Standings of Y4, Spring - The Chaos Wastelands (#45195)
 
-Name                                Roster          Coach             Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                Roster          Coach             Perf.      PTS    HTH    TDD    CAD    CTO
 ----------------------------------  --------------  ----------------  -------  -----  -----  -----  ------  ------
 .854507 Coven of the Mirrored Hall  Tzeentch        AutoAxpert        WWWW        12             9      -4
 .896228 Gardeners of Nurgle         Nurgle          EnglishJake       WWLD         7             1       5
@@ -1334,7 +1334,7 @@ Name                                Roster          Coach             Perf.     
 
 [Round Robin] Standings of Y4, Spring - Eastern Steppes and Mountains (#45218)
 
-Name                                  Roster       Coach          Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                  Roster       Coach          Perf.      PTS    HTH    TDD    CAD    CTO
 ------------------------------------  -----------  -------------  -------  -----  -----  -----  ------  ------
 .905886 Sabre Mountain Rattlers       Ogre         jdmickleburgh  LWBW         9             4       7
 .900747 Black Monolith Worshippers    Chaos Pact   Hollaender     WBDD         8             3      -5
@@ -1345,7 +1345,7 @@ Name                                  Roster       Coach          Perf.      PTS
 
 [Round Robin] Standings of Y4, Spring - Elemental Planes (#45219)
 
-Name                               Roster             Coach          Perf.      PTS    HTH    TDD    CASD    COIN
+Name                               Roster             Coach          Perf.      PTS    HTH    TDD    CAD    CTO
 ---------------------------------  -----------------  -------------  -------  -----  -----  -----  ------  ------
 .889206 Tsunami Terrors            Elemental - Water  SpecialOne     WDB          7             3       2
 .889232 Lost Golems of Grungni     Elemental - Earth  Kzarik         LBW          6             3      -1
@@ -1355,7 +1355,7 @@ Name                               Roster             Coach          Perf.      
 
 [Round Robin] Standings of Y4, Spring - Empire (#45220)
 
-Name                                    Roster             Coach           Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                    Roster             Coach           Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------------  -----------------  --------------  -------  -----  -----  -----  ------  ------
 .876774 Congregation of Holy Touchdown  Sisters of Sigmar  Fanky           WWWBW       15             7      13
 .873349 Reik River Kicking Mules        Half-Elf           Arale           WWFFW        9             3       0
@@ -1367,7 +1367,7 @@ Name                                    Roster             Coach           Perf.
 
 [Round Robin] Standings of Y4, Spring - Great Ocean (A) (#45221)
 
-Name                         Roster              Coach       Perf.      PTS    HTH    TDD    CASD    COIN
+Name                         Roster              Coach       Perf.      PTS    HTH    TDD    CAD    CTO
 ---------------------------  ------------------  ----------  -------  -----  -----  -----  ------  ------
 .879131 Sartosa Black Flags  Pirates of Sartosa  datom       WD           4      1      1       2
 .863441 Tor Anroc Anglers    Sea Elf             neubau      WD           4      1      1      -3
@@ -1376,7 +1376,7 @@ Name                         Roster              Coach       Perf.      PTS    H
 
 [Round Robin] Standings of Y4, Spring - Great Ocean (B) (#45232)
 
-Name                         Roster              Coach       Perf.      PTS    HTH    TDD    CASD    COIN
+Name                         Roster              Coach       Perf.      PTS    HTH    TDD    CAD    CTO
 ---------------------------  ------------------  ----------  -------  -----  -----  -----  ------  ------
 .892248 Crimson Fins         Sons of Stromfels   Sweep12121  WW           6             3       3
 .879131 Sartosa Black Flags  Pirates of Sartosa  datom       LW           3             2      -1
@@ -1385,7 +1385,7 @@ Name                         Roster              Coach       Perf.      PTS    H
 
 [Round Robin] Standings of Y4, Spring - Haunted Hills (#45233)
 
-Name                            Roster       Coach            Perf.      PTS    HTH    TDD    CASD    COIN
+Name                            Roster       Coach            Perf.      PTS    HTH    TDD    CAD    CTO
 ------------------------------  -----------  ---------------  -------  -----  -----  -----  ------  ------
 .898507 Leicheberg Lycans       Necromantic  GorbadIronclaw   WWW          9             3       7
 .906259 Livin' Thing            Undead       GotrekSlayer     DWL          4             1      -5
@@ -1395,7 +1395,7 @@ Name                            Roster       Coach            Perf.      PTS    
 
 [Round Robin] Standings of Y4, Spring - Ind, Lumbria, Khuresh (#45234)
 
-Name                         Roster           Coach           Perf.      PTS    HTH    TDD    CASD    COIN
+Name                         Roster           Coach           Perf.      PTS    HTH    TDD    CAD    CTO
 ---------------------------  ---------------  --------------  -------  -----  -----  -----  ------  ------
 .891260 Library of Indra     Simyin           GreenSkinElite  WWD          7             2       4
 .899682 K'r'shh Sl'ppr'ss    Snakemen         det             LWD          4      1      0      -3
@@ -1405,7 +1405,7 @@ Name                         Roster           Coach           Perf.      PTS    
 
 [Round Robin] Standings of Y4, Spring - Land of the Dead (#45235)
 
-Name                                    Roster    Coach             Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                    Roster    Coach             Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------------  --------  ----------------  -------  -----  -----  -----  ------  ------
 .898337 Mahrak Maulers                  Mahrak    stowelly          DWWLW       10             2       1
 .907864 Nehekhara Knightmares           Ka-Sabar  SerenadeOfSorrow  LWLWW        9      1      0       4
@@ -1417,7 +1417,7 @@ Name                                    Roster    Coach             Perf.      P
 
 [Round Robin] Standings of Y4, Spring - Old World (#45236)
 
-Name                           Roster          Coach          Perf.      PTS    HTH    TDD    CASD    COIN
+Name                           Roster          Coach          Perf.      PTS    HTH    TDD    CAD    CTO
 -----------------------------  --------------  -------------  -------  -----  -----  -----  ------  ------
 .855120 Trantio Dragon Hawks   Tilea           MachJacob      WDBW        10             6       5
 .854600 Montetriste Noblemen   Estalia         Burnalot       BWLW         9             3      -4
@@ -1428,7 +1428,7 @@ Name                           Roster          Coach          Perf.      PTS    
 
 [Round Robin] Standings of Y4, Spring - Realms of Chaos (#45237)
 
-Name                          Roster               Coach        Perf.      PTS    HTH    TDD    CASD    COIN
+Name                          Roster               Coach        Perf.      PTS    HTH    TDD    CAD    CTO
 ----------------------------  -------------------  -----------  -------  -----  -----  -----  ------  ------
 .878945 Eternal Ecstasy       Daemons of Slaanesh  Nightbreed   WWWB        12             8       9
 .888760 Brothers Of Malice    Daemons of Malal     Throweck     BLWD         7             1      -9
@@ -1439,7 +1439,7 @@ Name                          Roster               Coach        Perf.      PTS  
 
 [Round Robin] Standings of Y4, Spring - Skavenblight (#45238)
 
-Name                                  Roster          Coach         Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                  Roster          Coach         Perf.      PTS    HTH    TDD    CAD    CTO
 ------------------------------------  --------------  ------------  -------  -----  -----  -----  ------  ------
 .896134 Rotfall Ironworks Rocketeers  Clan Skryre     King_Mad      DWW          7             4       3
 .895929 Fangsnapper's Clawpack        Clan Mors       flashman1234  WLW          6             1       3
@@ -1449,7 +1449,7 @@ Name                                  Roster          Coach         Perf.      P
 
 [Round Robin] Standings of Y4, Spring - Southlands and Araby (#45239)
 
-Name                           Roster         Coach         Perf.      PTS    HTH    TDD    CASD    COIN
+Name                           Roster         Coach         Perf.      PTS    HTH    TDD    CAD    CTO
 -----------------------------  -------------  ------------  -------  -----  -----  -----  ------  ------
 .904377 Aurons                 Rasetra        awambawamb    LWB          6      1      1       1
 .889245 Shroomwood Attercops   Forest Goblin  Shraaaag      WLB          6      2      2      -9
@@ -1459,7 +1459,7 @@ Name                           Roster         Coach         Perf.      PTS    HT
 
 [Round Robin] Standings of Y4, Spring - Sylvania (#45240)
 
-Name                              Roster        Coach               Perf.      PTS    HTH    TDD    CASD    COIN
+Name                              Roster        Coach               Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------  ------------  ------------------  -------  -----  -----  -----  ------  ------
 .874452 Way of the Dragon         Blood Dragon  Nextflux            DWWWW       13             6       6
 .871312 Tower of the Necromancer  Necrarch      badenprinz          WLWWW       12             3      -2
@@ -1471,7 +1471,7 @@ Name                              Roster        Coach               Perf.      P
 
 [Round Robin] Standings of Y4, Spring - Ulthuan & Naggaroth (#45241)
 
-Name                                Roster              Coach       Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                Roster              Coach       Perf.      PTS    HTH    TDD    CAD    CTO
 ----------------------------------  ------------------  ----------  -------  -----  -----  -----  ------  ------
 .886002 Doom Glade Demons           Dark Elf            Meanandugl  WDWWW       13             7       9
 .886167 Clar Karond Black Widows    Witch Elf           Manzoo      WDWLW       10             2       5
@@ -1483,7 +1483,7 @@ Name                                Roster              Coach       Perf.      P
 
 [Round Robin] Standings of Y4, Spring - World Edge Caverns (#45242)
 
-Name                          Roster      Coach         Perf.      PTS    HTH    TDD    CASD    COIN
+Name                          Roster      Coach         Perf.      PTS    HTH    TDD    CAD    CTO
 ----------------------------  ----------  ------------  -------  -----  -----  -----  ------  ------
 .897379 Karak Kadrin Slayers  Slayer      bigf          BWWL         9      1      4       6
 .908615 Barak Varr Voyagers   Dwarf       YishWaagh     WLBW         9      2      3       3
@@ -1494,7 +1494,7 @@ Name                          Roster      Coach         Perf.      PTS    HTH   
 
 [Swiss] Standings of Y4, Summer - SCRIBBL Climax Qualifier I (#45568)
 
-Name                                    Roster               Coach       Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                    Roster               Coach       Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------------  -------------------  ----------  -------  -----  -----  -----  ------  ------
 .886114 Eye and Arrow                   Avelorn              Aniur       DWWDW        8             6      -6
 .874545 Stone Prince's Men              Border Princes       Loew        DWWDD        7             3     -13
@@ -1508,7 +1508,7 @@ Name                                    Roster               Coach       Perf.  
 
 [Swiss] Standings of Y4, Summer - SCRIBBL Climax Qualifier II (#45569)
 
-Name                                    Roster             Coach       Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                    Roster             Coach       Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------------  -----------------  ----------  -------  -----  -----  -----  ------  ------
 .874966 Modryn's Midnight Meddlers      Wood Elf           bram        WWDWW        9             5       1
 .867862 Everlasting Vultures of Settra  Zandri             DatMonsta   WLWWD        7             4      -9
@@ -1522,7 +1522,7 @@ Name                                    Roster             Coach       Perf.    
 
 [Swiss] Standings of Y4, Summer - SCRIBBL Climax Qualifier III (#45570)
 
-Name                                Roster           Coach           Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                Roster           Coach           Perf.      PTS    HTH    TDD    CAD    CTO
 ----------------------------------  ---------------  --------------  -------  -----  -----  -----  ------  ------
 .854678 Lords of the Silent Death   Clan Eshin       misterlonestar  DWWWW        9             5      -2
 .854507 Coven of the Mirrored Hall  Tzeentch         AutoAxpert      WDLWB        7             5       1
@@ -1536,7 +1536,7 @@ Name                                Roster           Coach           Perf.      
 
 [Swiss] Standings of Y4, Summer - SCRIBBL Climax Qualifier IV (#45571)
 
-Name                                  Roster             Coach               Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                  Roster             Coach               Perf.      PTS    HTH    TDD    CAD    CTO
 ------------------------------------  -----------------  ------------------  -------  -----  -----  -----  ------  ------
 .854257 Grand Celestial Delegate      Cathay             Calthor             WWDWW        9             7       6
 .882382 Ali's Anarchists              Numas              AdyBrooke           WLDWW        7             4      11
@@ -1550,7 +1550,7 @@ Name                                  Roster             Coach               Per
 
 [Swiss] Standings of Y4, Summer - SCRIBBL Climax Qualifier V (#45572)
 
-Name                              Roster              Coach                Perf.      PTS    HTH    TDD    CASD    COIN
+Name                              Roster              Coach                Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------  ------------------  -------------------  -------  -----  -----  -----  ------  ------
 .897376 Darkenwood Sentinels      Dryad               captainmalkor        WWWWW       10             8       9
 .874302 Grasparossa B.B.C         Human               iena                 LWWLW        6      1      1       0
@@ -1564,7 +1564,7 @@ Name                              Roster              Coach                Perf.
 
 [Swiss] Standings of Y4, Summer - SCRIBBL Climax Qualifier VI (#45573)
 
-Name                                Roster     Coach           Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                Roster     Coach           Perf.      PTS    HTH    TDD    CAD    CTO
 ----------------------------------  ---------  --------------  -------  -----  -----  -----  ------  ------
 .895929 Fangsnapper's Clawpack      Clan Mors  flashman1234    WWWLW        8             4       1
 .896564 Thoughts of Thoth           Khemri     Nohistor        LDWWW        7             2       9
@@ -1578,7 +1578,7 @@ Name                                Roster     Coach           Perf.      PTS   
 
 [Swiss] Standings of Y4, Summer - SCRIBBL Climax Qualifier VII (#45574)
 
-Name                                Roster              Coach             Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                Roster              Coach             Perf.      PTS    HTH    TDD    CAD    CTO
 ----------------------------------  ------------------  ----------------  -------  -----  -----  -----  ------  ------
 .904411 Ynys Morion Mabsantwyr      Four Nations        ArthurWynne       WWWWD        9             6      -1
 .892248 Crimson Fins                Sons of Stromfels   Sweep12121        WWLWL        6      1      3       1
@@ -1592,7 +1592,7 @@ Name                                Roster              Coach             Perf. 
 
 [Swiss] Standings of Y4, Summer - SCRIBBL Climax Qualifier VIII (#45575)
 
-Name                               Roster    Coach            Perf.      PTS    HTH    TDD    CASD    COIN
+Name                               Roster    Coach            Perf.      PTS    HTH    TDD    CAD    CTO
 ---------------------------------  --------  ---------------  -------  -----  -----  -----  ------  ------
 .903654 Scions of Neferata         Lahmian   Weresquid        WWDWW        9             9       3
 .898574 Revenge Street Reapers     Ethereal  krazeeEyezKilla  WWDDD        7      1      3      -5
@@ -1606,7 +1606,7 @@ Name                               Roster    Coach            Perf.      PTS    
 
 [Swiss] Standings of Y4, Summer - SCRIBBL Climax Qualifier IX (#45577)
 
-Name                                  Roster               Coach         Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                  Roster               Coach         Perf.      PTS    HTH    TDD    CAD    CTO
 ------------------------------------  -------------------  ------------  -------  -----  -----  -----  ------  ------
 .910344 Vlad's Vampheroes             Von Carstein         The_Demon     WWWDW        9             7      12
 .907600 Deluge-Bearers                Clan Pestilens       Cerebrosus    LDWBW        7             5       2
@@ -1623,7 +1623,7 @@ Name                                  Roster               Coach         Perf.  
 
 [Swiss] Standings of Y4, Summer - SCRIBBL Climax Qualifier X (#45586)
 
-Name                                Roster             Coach           Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                Roster             Coach           Perf.      PTS    HTH    TDD    CAD    CTO
 ----------------------------------  -----------------  --------------  -------  -----  -----  -----  ------  ------
 .912296 Grutnik Scavengers          Underworld         Sharkrudi       DWWWW        9             8       6
 .914971 Ulthuan Barracudas          Sea Elf            Civ             DWWLW        7             3       4
@@ -1639,7 +1639,7 @@ Name                                Roster             Coach           Perf.    
 
 [Round Robin] Standings of Y4, Summer - Youngbloods XIV (#45662)
 
-Name                                Roster      Coach        Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                Roster      Coach        Perf.      PTS    HTH    TDD    CAD    CTO
 ----------------------------------  ----------  -----------  -------  -----  -----  -----  ------  ------
 .916031 Gorthor's Prophets Of Mork  Savage Orc  asteflix     WWD          5             4      -2
 .916230 Mourkain Kings              Strigoi     Wozzaa       WLD          3      1      1       0
@@ -1649,7 +1649,7 @@ Name                                Roster      Coach        Perf.      PTS    H
 
 [Round Robin] Standings of Y4, Autumn - Cloth Division (#45878)
 
-Name                                    Roster        Coach        Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                    Roster        Coach        Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------------  ------------  -----------  -------  -----  -----  -----  ------  ------
 .919813 Gal Duur Forge Iron Anvils      Dwarf         grunth       WWWDBL      13             2       5
 .919543 Ubersreik Scramblers            Skaven        ivan-hr      WLWDDW      11      1     10     -10
@@ -1662,7 +1662,7 @@ Name                                    Roster        Coach        Perf.      PT
 
 [Round Robin] Standings of Y4, Autumn - Wood Division (#45879)
 
-Name                                Roster            Coach           Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                Roster            Coach           Perf.      PTS    HTH    TDD    CAD    CTO
 ----------------------------------  ----------------  --------------  -------  -----  -----  -----  ------  ------
 .916230 Mourkain Kings              Strigoi           Wozzaa          WWWBBW      18             8      -1
 .916217 Cloven Clan                 Beastmen          Chivite         BWLWBD      13             6      -3
@@ -1675,7 +1675,7 @@ Name                                Roster            Coach           Perf.     
 
 [Round Robin] Standings of Y4, Autumn - Clay Division (#45880)
 
-Name                                Roster               Coach         Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                Roster               Coach         Perf.      PTS    HTH    TDD    CAD    CTO
 ----------------------------------  -------------------  ------------  -------  -----  -----  -----  ------  ------
 .908529 ICBM Warpspawns             Daemons of Tzeentch  Aimless       WWWWWW      18             8       4
 .905924 Squill's Squig Pitt         Squig                King_Joffrey  WWLWLW      12             4       8
@@ -1688,7 +1688,7 @@ Name                                Roster               Coach         Perf.    
 
 [Round Robin] Standings of Y4, Autumn - Granite Division (#45881)
 
-Name                                  Roster          Coach        Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                  Roster          Coach        Perf.      PTS    HTH    TDD    CAD    CTO
 ------------------------------------  --------------  -----------  -------  -----  -----  -----  ------  ------
 .906026 Karak Azog Outlaws            Goblin          lautrehamon  LWWWWW      15             3      -6
 .905606 Serpent-Guards of Khalida     Lybaras         Klazam       WWDDBW      14             6       9
@@ -1701,7 +1701,7 @@ Name                                  Roster          Coach        Perf.      PT
 
 [Round Robin] Standings of Y4, Autumn - Marble Division (#45882)
 
-Name                            Roster              Coach            Perf.      PTS    HTH    TDD    CASD    COIN
+Name                            Roster              Coach            Perf.      PTS    HTH    TDD    CAD    CTO
 ------------------------------  ------------------  ---------------  -------  -----  -----  -----  ------  ------
 .909966 Spite Reach Corsairs    Khainite Assassins  Tzalaran         WWLWWWD     16            13       8
 .898574 Revenge Street Reapers  Ethereal            krazeeEyezKilla  WDWDWDW     15             6      -6
@@ -1715,7 +1715,7 @@ Name                            Roster              Coach            Perf.      
 
 [Round Robin] Standings of Y4, Autumn - Iron Division (#45883)
 
-Name                                Roster           Coach             Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                Roster           Coach             Perf.      PTS    HTH    TDD    CAD    CTO
 ----------------------------------  ---------------  ----------------  -------  -----  -----  -----  ------  ------
 .910344 Vlad's Vampheroes           Von Carstein     The_Demon         DDWWWDW     15             5      -4
 .903654 Scions of Neferata          Lahmian          Weresquid         DDWWLWW     14             8       4
@@ -1729,7 +1729,7 @@ Name                                Roster           Coach             Perf.    
 
 [Round Robin] Standings of Y4, Autumn - Tin Division (#45884)
 
-Name                            Roster             Coach           Perf.      PTS    HTH    TDD    CASD    COIN
+Name                            Roster             Coach           Perf.      PTS    HTH    TDD    CAD    CTO
 ------------------------------  -----------------  --------------  -------  -----  -----  -----  ------  ------
 .889232 Lost Golems of Grungni  Elemental - Earth  Kzarik          WLWLDWW     13             1      -6
 .867030 Sport Spawning Zlatlan  Skink              dorfeus         WLWWDDD     12      1      5      -7
@@ -1743,7 +1743,7 @@ Name                            Roster             Coach           Perf.      PT
 
 [Round Robin] Standings of Y4, Autumn - Copper Division (#45885)
 
-Name                                  Roster              Coach        Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                  Roster              Coach        Perf.      PTS    HTH    TDD    CAD    CTO
 ------------------------------------  ------------------  -----------  -------  -----  -----  -----  ------  ------
 .892248 Crimson Fins                  Sons of Stromfels   Sweep12121   WDWWWDW     17             7      16
 .859097 Bhubaneswar Rampage           Kingdoms of Ind     wallenstein  DWWLWWW     16            10      16
@@ -1757,7 +1757,7 @@ Name                                  Roster              Coach        Perf.    
 
 [Round Robin] Standings of Y4, Autumn - Bronze Division (#45886)
 
-Name                              Roster               Coach                Perf.      PTS    HTH    TDD    CASD    COIN
+Name                              Roster               Coach                Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------  -------------------  -------------------  -------  -----  -----  -----  ------  ------
 .895929 Fangsnapper's Clawpack    Clan Mors            flashman1234         WWDWWWL     16      1      6       8
 .878945 Eternal Ecstasy           Daemons of Slaanesh  Nightbreed           WLWWDWW     16      2     10       6
@@ -1771,7 +1771,7 @@ Name                              Roster               Coach                Perf
 
 [Round Robin] Standings of Y4, Autumn - Silver Division (#45887)
 
-Name                                Roster           Coach           Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                Roster           Coach           Perf.      PTS    HTH    TDD    CAD    CTO
 ----------------------------------  ---------------  --------------  -------  -----  -----  -----  ------  ------
 .854678 Lords of the Silent Death   Clan Eshin       misterlonestar  WWLWWWW     18      1     10       4
 .854690 Secret Cult Of Shiamoto     Northern Nippon  Grin            WWWWWLW     18      2     10      23
@@ -1785,7 +1785,7 @@ Name                                Roster           Coach           Perf.      
 
 [Round Robin] Standings of Y4, Autumn - Gold Division (#45888)
 
-Name                                    Roster             Coach       Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                    Roster             Coach       Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------------  -----------------  ----------  -------  -----  -----  -----  ------  ------
 .886114 Eye and Arrow                   Avelorn            Aniur       DWWLWWW     16            10      -5
 .867862 Everlasting Vultures of Settra  Zandri             DatMonsta   WWWDWLD     14             3      -5
@@ -1799,7 +1799,7 @@ Name                                    Roster             Coach       Perf.    
 
 [Round Robin] Standings of Y4, Autumn - Youngbloods XV (#46022)
 
-Name                                  Roster             Coach              Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                  Roster             Coach              Perf.      PTS    HTH    TDD    CAD    CTO
 ------------------------------------  -----------------  -----------------  -------  -----  -----  -----  ------  ------
 .922869 Still Waters Run Deep         Elemental - Water  marksman0          WWD          7             2       6
 .922682 Northern Blood Fiends         Hung               Kaze               DLW          4             0      -4
@@ -1809,7 +1809,7 @@ Name                                  Roster             Coach              Perf
 
 [Round Robin] Standings of Y4, Autumn - Youngbloods XVI (#46047)
 
-Name                             Roster        Coach            Perf.      PTS    HTH    TDD    CASD    COIN
+Name                             Roster        Coach            Perf.      PTS    HTH    TDD    CAD    CTO
 -------------------------------  ------------  ---------------  -------  -----  -----  -----  ------  ------
 .922672 Gazbag's Hunters         Orc           Christy          WWW          9             5       9
 .922971 Great Maw's Priests      Ogre Kingdom  ScarsTheVampire  WDL          4            -2      -2
@@ -1819,7 +1819,7 @@ Name                             Roster        Coach            Perf.      PTS  
 
 [Open Round Robin] Standings of Y5, Winter - Friendlies (High) (#46299)
 
-Name                                    Roster               Coach           Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                    Roster               Coach           Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------------  -------------------  --------------  -------  -----  -----  -----  ------  ------
 .886114 Eye and Arrow                   Avelorn              Aniur           W            3     --      2       2
 .888994 Beerbog Behemoths               Giant                Rbthma          W            3     --      1       2
@@ -1837,7 +1837,7 @@ Name                                    Roster               Coach           Per
 
 [Open Round Robin] Standings of Y5, Winter - Friendlies (Mid) (#46300)
 
-Name                                  Roster           Coach             Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                  Roster           Coach             Perf.      PTS    HTH    TDD    CAD    CTO
 ------------------------------------  ---------------  ----------------  -------  -----  -----  -----  ------  ------
 .874966 Modryn's Midnight Meddlers    Wood Elf         bram              WW           6     --      3       2
 .916031 Gorthor's Prophets Of Mork    Savage Orc       asteflix          WW           6     --      2       0
@@ -1867,7 +1867,7 @@ Name                                  Roster           Coach             Perf.  
 
 [Open Round Robin] Standings of Y5, Winter - Friendlies (Low) (#46301)
 
-Name                                    Roster             Coach              Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                    Roster             Coach              Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------------  -----------------  -----------------  -------  -----  -----  -----  ------  ------
 .922869 Still Waters Run Deep           Elemental - Water  marksman0          WWW          9     --      8      -3
 .924841 Under-Nuln Bells                Skaven             neubau             WWW          9     --      5      -1
@@ -1903,7 +1903,7 @@ Name                                    Roster             Coach              Pe
 
 [Round Robin] Standings of Y5, Spring - Albion and Norsca (#46389)
 
-Name                            Roster        Coach        Perf.      PTS    HTH    TDD    CASD    COIN
+Name                            Roster        Coach        Perf.      PTS    HTH    TDD    CAD    CTO
 ------------------------------  ------------  -----------  -------  -----  -----  -----  ------  ------
 .904411 Ynys Morion Mabsantwyr  Four Nations  ArthurWynne  BWWWD       13             5       0
 .888994 Beerbog Behemoths       Giant         Rbthma       WWLBL        9      1      4       0
@@ -1915,7 +1915,7 @@ Name                            Roster        Coach        Perf.      PTS    HTH
 
 [Round Robin] Standings of Y5, Spring - Athel Loren (#46390)
 
-Name                                Roster    Coach          Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                Roster    Coach          Perf.      PTS    HTH    TDD    CAD    CTO
 ----------------------------------  --------  -------------  -------  -----  -----  -----  ------  ------
 .897376 Darkenwood Sentinels        Dryad     captainmalkor  WDBW        10             5       1
 .874966 Modryn's Midnight Meddlers  Wood Elf  bram           BWLW         9             2       0
@@ -1926,7 +1926,7 @@ Name                                Roster    Coach          Perf.      PTS    H
 
 [Round Robin] Standings of Y5, Spring - Cathay and Nippon (#46391)
 
-Name                               Roster           Coach           Perf.      PTS    HTH    TDD    CASD    COIN
+Name                               Roster           Coach           Perf.      PTS    HTH    TDD    CAD    CTO
 ---------------------------------  ---------------  --------------  -------  -----  -----  -----  ------  ------
 .854257 Grand Celestial Delegate   Cathay           Calthor         WWDB        10             7      10
 .854678 Lords of the Silent Death  Clan Eshin       misterlonestar  LWBB         9             3      -2
@@ -1937,7 +1937,7 @@ Name                               Roster           Coach           Perf.      P
 
 [Round Robin] Standings of Y5, Spring - The Chaos Wastelands (#46392)
 
-Name                                Roster          Coach                Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                Roster          Coach                Perf.      PTS    HTH    TDD    CAD    CTO
 ----------------------------------  --------------  -------------------  -------  -----  -----  -----  ------  ------
 .871787 Malignant Curators          Malal           ArrestedDevelopment  WWWWW       15             8       7
 .896228 Gardeners of Nurgle         Nurgle          EnglishJake          DWLWB       10             6       7
@@ -1949,7 +1949,7 @@ Name                                Roster          Coach                Perf.  
 
 [Round Robin] Standings of Y5, Spring - The Dark Lands (#46393)
 
-Name                             Roster             Coach          Perf.      PTS    HTH    TDD    CASD    COIN
+Name                             Roster             Coach          Perf.      PTS    HTH    TDD    CAD    CTO
 -------------------------------  -----------------  -------------  -------  -----  -----  -----  ------  ------
 .924405 Wolf Lands Slavers       Hobgoblin Slavers  luxyluxo       WDWW        10             5      -2
 .924441 Zharrduk Hellcannons     Black Dwarf        Manzoo         WDDW         8             2      11
@@ -1960,7 +1960,7 @@ Name                             Roster             Coach          Perf.      PT
 
 [Round Robin] Standings of Y5, Spring - The Deep Caverns (#46394)
 
-Name                             Roster        Coach           Perf.      PTS    HTH    TDD    CASD    COIN
+Name                             Roster        Coach           Perf.      PTS    HTH    TDD    CAD    CTO
 -------------------------------  ------------  --------------  -------  -----  -----  -----  ------  ------
 .905924 Squill's Squig Pitt      Squig         King_Joffrey    WDWW        10             5       6
 .923140 Dreadpeak's Delusionals  Night Goblin  Lasgalen        WDLB         7             1       6
@@ -1971,7 +1971,7 @@ Name                             Roster        Coach           Perf.      PTS   
 
 [Round Robin] Standings of Y5, Spring - Eastern Steppes and Mountains (#46395)
 
-Name                                  Roster        Coach            Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                  Roster        Coach            Perf.      PTS    HTH    TDD    CAD    CTO
 ------------------------------------  ------------  ---------------  -------  -----  -----  -----  ------  ------
 .900800 Haunted Forest Sons of Chaos  Chaos         sonrises         DWWD         8             3       5
 .900747 Black Monolith Worshippers    Chaos Pact    Hollaender       DWDD         6      1      2      16
@@ -1982,7 +1982,7 @@ Name                                  Roster        Coach            Perf.      
 
 [Round Robin] Standings of Y5, Spring - Elemental Planes (#46396)
 
-Name                            Roster             Coach          Perf.      PTS    HTH    TDD    CASD    COIN
+Name                            Roster             Coach          Perf.      PTS    HTH    TDD    CAD    CTO
 ------------------------------  -----------------  -------------  -------  -----  -----  -----  ------  ------
 .925504 Ichabod's Infernals     Elemental - Fire   gfelt          WWD          7             4       0
 .889232 Lost Golems of Grungni  Elemental - Earth  Kzarik         LWW          6             0      12
@@ -1992,7 +1992,7 @@ Name                            Roster             Coach          Perf.      PTS
 
 [Round Robin] Standings of Y5, Spring - The Empire (#46397)
 
-Name                                    Roster             Coach     Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                    Roster             Coach     Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------------  -----------------  --------  -------  -----  -----  -----  ------  ------
 .916217 Cloven Clan                     Beastmen           Chivite   WWWDW       13             6       7
 .876774 Congregation of Holy Touchdown  Sisters of Sigmar  Fanky     WLWWW       12             5      10
@@ -2004,7 +2004,7 @@ Name                                    Roster             Coach     Perf.      
 
 [Round Robin] Standings of Y5, Spring - The Great Ocean (#46398)
 
-Name                         Roster              Coach         Perf.      PTS    HTH    TDD    CASD    COIN
+Name                         Roster              Coach         Perf.      PTS    HTH    TDD    CAD    CTO
 ---------------------------  ------------------  ------------  -------  -----  -----  -----  ------  ------
 .892248 Crimson Fins         Sons of Stromfels   Sweep12121    DWWW        10             6      17
 .879131 Sartosa Black Flags  Pirates of Sartosa  datom         DWWL         7      1      1       1
@@ -2015,7 +2015,7 @@ Name                         Roster              Coach         Perf.      PTS   
 
 [Round Robin] Standings of Y5, Spring - The Haunted Hills (#46399)
 
-Name                               Roster       Coach            Perf.      PTS    HTH    TDD    CASD    COIN
+Name                               Roster       Coach            Perf.      PTS    HTH    TDD    CAD    CTO
 ---------------------------------  -----------  ---------------  -------  -----  -----  -----  ------  ------
 .898574 Revenge Street Reapers     Ethereal     krazeeEyezKilla  WDB          7             3       1
 .906259 Livin' Thing               Undead       GotrekSlayer     DDW          5             2       7
@@ -2025,7 +2025,7 @@ Name                               Roster       Coach            Perf.      PTS 
 
 [Round Robin] Standings of Y5, Spring - Ind, Lumbria & Khuresh (#46400)
 
-Name                         Roster           Coach           Perf.      PTS    HTH    TDD    CASD    COIN
+Name                         Roster           Coach           Perf.      PTS    HTH    TDD    CAD    CTO
 ---------------------------  ---------------  --------------  -------  -----  -----  -----  ------  ------
 .899682 K'r'shh Sl'ppr'ss    Snakemen         det             DWD          5             2       3
 .859097 Bhubaneswar Rampage  Kingdoms of Ind  wallenstein     DLW          4      1     -1      -2
@@ -2035,7 +2035,7 @@ Name                         Roster           Coach           Perf.      PTS    
 
 [Round Robin] Standings of Y5, Spring - Lands of the Dead (#46401)
 
-Name                                    Roster    Coach      Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                    Roster    Coach      Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------------  --------  ---------  -------  -----  -----  -----  ------  ------
 .867862 Everlasting Vultures of Settra  Zandri    DatMonsta  WWBWW       15            10      13
 .896564 Thoughts of Thoth               Khemri    Nohistor   WLWLB        9      1      1      -1
@@ -2047,7 +2047,7 @@ Name                                    Roster    Coach      Perf.      PTS    H
 
 [Round Robin] Standings of Y5, Spring - Lustria [A] (#46402)
 
-Name                             Roster     Coach      Perf.      PTS    HTH    TDD    CASD    COIN
+Name                             Roster     Coach      Perf.      PTS    HTH    TDD    CAD    CTO
 -------------------------------  ---------  ---------  -------  -----  -----  -----  ------  ------
 .926053 Servants of Sacrifice    Lizardman  Gamma310   WW           6             2       2
 .926717 Handmaids of the Gods    Amazon     Arcayn     WL           3             0      -2
@@ -2056,7 +2056,7 @@ Name                             Roster     Coach      Perf.      PTS    HTH    
 
 [Round Robin] Standings of Y5, Spring - Lustria [B] (#46403)
 
-Name                             Roster     Coach      Perf.      PTS    HTH    TDD    CASD    COIN
+Name                             Roster     Coach      Perf.      PTS    HTH    TDD    CAD    CTO
 -------------------------------  ---------  ---------  -------  -----  -----  -----  ------  ------
 .926717 Handmaids of the Gods    Amazon     Arcayn     BW           6             3       0
 .926362 Huah-Huah's Honor Guard  Slann      Salad_Bar  BL           3             1       0
@@ -2065,7 +2065,7 @@ Name                             Roster     Coach      Perf.      PTS    HTH    
 
 [Round Robin] Standings of Y5, Spring - The Old World (#46404)
 
-Name                           Roster          Coach       Perf.      PTS    HTH    TDD    CASD    COIN
+Name                           Roster          Coach       Perf.      PTS    HTH    TDD    CAD    CTO
 -----------------------------  --------------  ----------  -------  -----  -----  -----  ------  ------
 .874545 Stone Prince's Men     Border Princes  Loew        WWLWW       12             5     -11
 .855120 Trantio Dragon Hawks   Tilea           MachJacob   DWWLW       10             4      -3
@@ -2077,7 +2077,7 @@ Name                           Roster          Coach       Perf.      PTS    HTH
 
 [Round Robin] Standings of Y5, Spring - The Realms of Chaos (#46405)
 
-Name                          Roster               Coach       Perf.      PTS    HTH    TDD    CASD    COIN
+Name                          Roster               Coach       Perf.      PTS    HTH    TDD    CAD    CTO
 ----------------------------  -------------------  ----------  -------  -----  -----  -----  ------  ------
 .878945 Eternal Ecstasy       Daemons of Slaanesh  Nightbreed  WDWW        10             7       2
 .880378 Nurgle Plaguebearers  Daemons of Nurgle    Lewdgrip    WWDL         7             0      10
@@ -2088,7 +2088,7 @@ Name                          Roster               Coach       Perf.      PTS   
 
 [Round Robin] Standings of Y5, Spring - Skavenblight (#46406)
 
-Name                                    Roster          Coach         Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                    Roster          Coach         Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------------  --------------  ------------  -------  -----  -----  -----  ------  ------
 .895929 Fangsnapper's Clawpack          Clan Mors       flashman1234  WWLW         9             4       8
 .919573 Ragtag Animal Training Sartors  Clan Moulder    razzlestorm   LWLW         6      1     -1       3
@@ -2099,7 +2099,7 @@ Name                                    Roster          Coach         Perf.     
 
 [Round Robin] Standings of Y5, Spring - The Southlands and Araby (#46407)
 
-Name                                Roster      Coach         Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                Roster      Coach         Perf.      PTS    HTH    TDD    CAD    CTO
 ----------------------------------  ----------  ------------  -------  -----  -----  -----  ------  ------
 .867030 Sport Spawning Zlatlan      Skink       dorfeus       WDW          7             3       3
 .904377 Aurons                      Rasetra     awambawamb    DDD          3             0       3
@@ -2109,7 +2109,7 @@ Name                                Roster      Coach         Perf.      PTS    
 
 [Round Robin] Standings of Y5, Spring - Sylvania (#46408)
 
-Name                              Roster        Coach       Perf.      PTS    HTH    TDD    CASD    COIN
+Name                              Roster        Coach       Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------  ------------  ----------  -------  -----  -----  -----  ------  ------
 .903654 Scions of Neferata        Lahmian       Weresquid   WWDW        10             6       5
 .874452 Way of the Dragon         Blood Dragon  Nextflux    WWLW         9             3       4
@@ -2120,7 +2120,7 @@ Name                              Roster        Coach       Perf.      PTS    HT
 
 [Round Robin] Standings of Y5, Spring - Ulthuan and Naggaroth (#46409)
 
-Name                                Roster              Coach         Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                Roster              Coach         Perf.      PTS    HTH    TDD    CAD    CTO
 ----------------------------------  ------------------  ------------  -------  -----  -----  -----  ------  ------
 .909966 Spite Reach Corsairs        Khainite Assassins  Tzalaran      WWLWW       12             6       0
 .886114 Eye and Arrow               Avelorn             Aniur         WWWLD       10             4       1
@@ -2132,7 +2132,7 @@ Name                                Roster              Coach         Perf.     
 
 [Round Robin] Standings of Y5, Spring - World Edge Mountains [A] (#46410)
 
-Name                                Roster        Coach              Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                Roster        Coach              Perf.      PTS    HTH    TDD    CAD    CTO
 ----------------------------------  ------------  -----------------  -------  -----  -----  -----  ------  ------
 .914744 Mugrec's Mechanical Madmen  Engineers     Pizzapocalypse     DB           4      1      2       1
 .897379 Karak Kadrin Slayers        Slayer        bigf               DB           4      1      2      -1
@@ -2141,7 +2141,7 @@ Name                                Roster        Coach              Perf.      
 
 [Round Robin] Standings of Y5, Spring - World Edge Mountains [B] (#46411)
 
-Name                                Roster        Coach              Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                Roster        Coach              Perf.      PTS    HTH    TDD    CAD    CTO
 ----------------------------------  ------------  -----------------  -------  -----  -----  -----  ------  ------
 .914744 Mugrec's Mechanical Madmen  Engineers     Pizzapocalypse     DB           4      1      2       2
 .897379 Karak Kadrin Slayers        Slayer        bigf               BD           4      1      2      -2
@@ -2150,7 +2150,7 @@ Name                                Roster        Coach              Perf.      
 
 [Round Robin] Standings of Y5, Spring - Youngbloods XVII (#46505)
 
-Name                                Roster       Coach          Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                Roster       Coach          Perf.      PTS    HTH    TDD    CAD    CTO
 ----------------------------------  -----------  -------------  -------  -----  -----  -----  ------  ------
 .928360 Gorequeen's Raiders         Norse        Roto           WWDW        10             3      14
 .928392 Piranha Swamp Warriors      Pygmy        burnsy87       DWWL         7             1      -4
@@ -2161,7 +2161,7 @@ Name                                Roster       Coach          Perf.      PTS  
 
 [Swiss] Standings of Y5, Summer - SCRIBBL Climax - West (#46687)
 
-Name                                Roster               Coach                Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                Roster               Coach                Perf.      PTS    HTH    TDD    CAD    CTO
 ----------------------------------  -------------------  -------------------  -------  -----  -----  -----  ------  ------
 .874966 Modryn's Midnight Meddlers  Wood Elf             bram                 WLWDW        7      1      3      -4
 .874545 Stone Prince's Men          Border Princes       Loew                 DWDDW        7      1      2      -8
@@ -2177,7 +2177,7 @@ Name                                Roster               Coach                Pe
 
 [Swiss] Standings of Y5, Summer - SCRIBBL Climax - East (#46688)
 
-Name                                    Roster              Coach          Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                    Roster              Coach          Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------------  ------------------  -------------  -------  -----  -----  -----  ------  ------
 .897376 Darkenwood Sentinels            Dryad               captainmalkor  WWDDW        8             5      -5
 .867862 Everlasting Vultures of Settra  Zandri              DatMonsta      WLDWW        7             1      12
@@ -2193,7 +2193,7 @@ Name                                    Roster              Coach          Perf.
 
 [Swiss] Standings of Y5, Summer - Mammoth Gate (#46705)
 
-Name                                    Roster              Coach          Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                    Roster              Coach          Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------------  ------------------  -------------  -------  -----  -----  -----  ------  ------
 .876774 Congregation of Holy Touchdown  Sisters of Sigmar   Fanky          LWWWW        8      1      4       7
 .886002 Doom Glade Demons               Dark Elf            Meanandugl     BBWWL        8      2      5       2
@@ -2211,7 +2211,7 @@ Name                                    Roster              Coach          Perf.
 
 [Swiss] Standings of Y5, Summer - Twin Gates [Black] (#46706)
 
-Name                                Roster             Coach           Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                Roster             Coach           Perf.      PTS    HTH    TDD    CAD    CTO
 ----------------------------------  -----------------  --------------  -------  -----  -----  -----  ------  ------
 .924441 Zharrduk Hellcannons        Black Dwarf        Manzoo          WDWDW        8             4       6
 .914744 Mugrec's Mechanical Madmen  Engineers          Pizzapocalypse  WDLWB        7     --      2      10
@@ -2227,7 +2227,7 @@ Name                                Roster             Coach           Perf.    
 
 [Swiss] Standings of Y5, Summer - Twin Gates [White] (#46707)
 
-Name                                  Roster           Coach          Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                  Roster           Coach          Perf.      PTS    HTH    TDD    CAD    CTO
 ------------------------------------  ---------------  -------------  -------  -----  -----  -----  ------  ------
 .897353 Court of Shu                  Elemental - Air  SzieberthAdam  WDWWD        8      1      3       1
 .916217 Cloven Clan                   Beastmen         Chivite        WWWLW        8      2      4      15
@@ -2243,7 +2243,7 @@ Name                                  Roster           Coach          Perf.     
 
 [Swiss] Standings of Y5, Summer - Feather's Gate (#46708)
 
-Name                             Roster            Coach           Perf.      PTS    HTH    TDD    CASD    COIN
+Name                             Roster            Coach           Perf.      PTS    HTH    TDD    CAD    CTO
 -------------------------------  ----------------  --------------  -------  -----  -----  -----  ------  ------
 .926362 Huah-Huah's Honor Guard  Slann             Salad_Bar       DDBBW        8     --      5       1
 .922672 Gazbag's Hunters         Orc               Christy         DWWWD        8     --      3       7
@@ -2259,7 +2259,7 @@ Name                             Roster            Coach           Perf.      PT
 
 [Swiss] Standings of Y5, Summer - Sleeper's Gate (#46709)
 
-Name                                  Roster    Coach            Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                  Roster    Coach            Perf.      PTS    HTH    TDD    CAD    CTO
 ------------------------------------  --------  ---------------  -------  -----  -----  -----  ------  ------
 .871312 Tower of the Necromancer      Necrarch  badenprinz       WWDWW        9             7      -7
 .882382 Ali's Anarchists              Numas     AdyBrooke        LDBWW        7             3       0
@@ -2277,7 +2277,7 @@ Name                                  Roster    Coach            Perf.      PTS 
 
 [Swiss] Standings of Y5, Summer - Lost Gate (#46710)
 
-Name                                    Roster             Coach             Perf.      PTS    HTH    TDD    CASD    COIN
+Name                                    Roster             Coach             Perf.      PTS    HTH    TDD    CAD    CTO
 --------------------------------------  -----------------  ----------------  -------  -----  -----  -----  ------  ------
 .922608 Horsemen of The Great Kurgan    Kurgan             SpecialOne        DWDWW        8             5      -6
 .907600 Deluge-Bearers                  Clan Pestilens     Cerebrosus        WWDWL        7      1      2      11
@@ -2295,7 +2295,7 @@ Name                                    Roster             Coach             Per
 
 [Swiss] Standings of Y5, Summer - Mushroom Gate (#46711)
 
-Name                            Roster        Coach           Perf.      PTS    HTH    TDD    CASD    COIN
+Name                            Roster        Coach           Perf.      PTS    HTH    TDD    CAD    CTO
 ------------------------------  ------------  --------------  -------  -----  -----  -----  ------  ------
 .924841 Under-Nuln Bells        Skaven        neubau          DLWWW        7      1      4       2
 .930817 Ogham White Ravens      Albion        Subs            WLDWW        7      2      5       0
@@ -2313,7 +2313,7 @@ Name                            Roster        Coach           Perf.      PTS    
 
 [Knockout] Standings of Y5, Summer - SCRIBBL Climax - Final (#47062)
 
-Name                               Roster      Coach           Perf.      PTS    HTH    TDD    CASD    COIN
+Name                               Roster      Coach           Perf.      PTS    HTH    TDD    CAD    CTO
 ---------------------------------  ----------  --------------  -------  -----  -----  -----  ------  ------
 .897376 Darkenwood Sentinels       Dryad       captainmalkor   W            2             1       5
 .854678 Lords of the Silent Death  Clan Eshin  misterlonestar  L            0            -1      -5

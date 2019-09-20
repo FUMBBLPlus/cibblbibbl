@@ -83,8 +83,8 @@ class BaseTournament:
       -row["pts"],
       +row["hth"],
       -row["tdd"],
-      -row["casd"],
-      -row["coin"]
+      -row["cad"],
+      -row["cto"]
   )
 
 
@@ -214,7 +214,7 @@ class Tournament(
         return
     self._season = t(None, "")
 
-  rsym_casd = tools.config.field("rsym_casd", {
+  rsym_cad = tools.config.field("rsym_cad", {
       "B": 0,
       "b": 0,
       "F": 0,

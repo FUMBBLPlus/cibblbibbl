@@ -179,15 +179,15 @@ class Tournament(cibblbibbl.tournament.handler.RealTournament):
 #        sort_keys = True,
 #      )
 #
-#  def standings(self, check_for_coin_toss=True):
+#  def standings(self, check_for_cto_toss=True):
 #    S = self.get_standings_data()
-#    if check_for_coin_toss:
-#      li = self._coin_toss_missing(S)
+#    if check_for_cto_toss:
+#      li = self._cto_toss_missing(S)
 #      for IDs in li:
-#        s = "Coin toss missing for "
+#        s = "Cto toss missing for "
 #        s += f'{self.name}: {", ".join(str(ID) for ID in IDs)}'
 #        warnings.warn(s)
-#      p = self._cointoss_data_path()
+#      p = self._ctotoss_data_path()
 #      if li:
 #        with p.open("w", encoding="utf8") as f:
 #          json.dump(
@@ -201,7 +201,7 @@ class Tournament(cibblbibbl.tournament.handler.RealTournament):
 #        p.unlink()
 #    return S
 #
-#  def _coin_toss_missing(self, S):
+#  def _cto_toss_missing(self, S):
 #    li = []
 #    d = {d_["id"]: d_ for d_ in S}
 #    key_rows = {}
@@ -213,8 +213,8 @@ class Tournament(cibblbibbl.tournament.handler.RealTournament):
 #        li.append(sorted(r["id"] for r in li2))
 #    return li
 #
-#  def _cointoss_data_path(self):
-#    filename = f'{self.ID:0>8}.cointoss.json'
+#  def _ctotoss_data_path(self):
+#    filename = f'{self.ID:0>8}.ctotoss.json'
 #    data_path = cibblbibbl.settings["cibblbibbl-data.path"]
 #    p = cibblbibbl.data.path
 #    p /= f'{self.group_key}/tournament/standings/{filename}'
@@ -252,20 +252,20 @@ class Tournament(cibblbibbl.tournament.handler.RealTournament):
 #      -row["pts"],
 #      +row["hth"],
 #      -row["tdd"],
-#      -row["casd"],
-#      -row["coin"]
+#      -row["cad"],
+#      -row["cto"]
 #  )
 #
-#  def key_casd(self):
+#  def key_cad(self):
 #    c = self.get_config_data()
-#    key_casd = c.get("key_casd")
-#    if not key_casd:
-#      key_casd = {
+#    key_cad = c.get("key_cad")
+#    if not key_cad:
+#      key_cad = {
 #        "B": 0,
 #        "b": 0,
 #        "F": 0,
 #      }
-#    return key_casd
+#    return key_cad
 #
 #  def key_pts(self):
 #    c = self.get_config_data()
@@ -376,10 +376,10 @@ class Tournament(cibblbibbl.tournament.handler.RealTournament):
 #    if not S:
 #      return ""
 #    hth_trans = {-1: "", 0: "--"}
-#    coin_trans = {-1: ""}
-#    cointoss_team_IDs = {
+#    cto_trans = {-1: ""}
+#    ctotoss_team_IDs = {
 #        ID
-#        for li in self._coin_toss_missing(S)
+#        for li in self._cto_toss_missing(S)
 #        for ID in li
 #    }
 #    rows = []
@@ -391,8 +391,8 @@ class Tournament(cibblbibbl.tournament.handler.RealTournament):
 #        "PTS",
 #        "HTH",
 #        "TDD",
-#        "CASD",
-#        "COIN",
+#        "CAD",
+#        "CTO",
 #    )
 #    colalign=(
 #      "left",
@@ -407,7 +407,7 @@ class Tournament(cibblbibbl.tournament.handler.RealTournament):
 #    )
 #    for r in S:
 #      Te = cibblbibbl.team.Team(r["id"])
-#      ct_str = ("(!) " if r["id"] in cointoss_team_IDs else "")
+#      ct_str = ("(!) " if r["id"] in ctotoss_team_IDs else "")
 #      if show_team_id:
 #        team_id_str = f'{Te.ID:.>7} '
 #      else:
@@ -420,8 +420,8 @@ class Tournament(cibblbibbl.tournament.handler.RealTournament):
 #          r["pts"],
 #          hth_trans.get(r["hth"], r["hth"]),
 #          r["tdd"],
-#          r["casd"],
-#          coin_trans.get(r["coin"], r["coin"]),
+#          r["cad"],
+#          cto_trans.get(r["cto"], r["cto"]),
 #      ]
 #      rows.append(row)
 #    tabulate_s = tabulate(

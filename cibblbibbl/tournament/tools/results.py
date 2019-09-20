@@ -5,7 +5,7 @@ import cibblbibbl
 
 IndividualResult = collections.namedtuple(
     "IndividualResult",
-    ("team", "match", "rsym", "tdd", "casd")
+    ("team", "match", "rsym", "tdd", "cad")
 )
 
 
@@ -25,7 +25,7 @@ def individual(T, *, follow_prev=True, from_next=False):
                 B : bye
                 F : forfeit
     - tdd : touchdown difference
-    - casd : casualties difference
+    - cad : casualties difference
   """
   excluded_teams = T.excluded_teams(with_fillers=True)
   if not from_next and T.next:
@@ -54,7 +54,7 @@ def individual(T, *, follow_prev=True, from_next=False):
         tdd = score - oppo_score
         cas = casualties[Te]
         oppo_cas = casualties[oppo_Te]
-        casd = cas - oppo_cas
+        cad = cas - oppo_cas
         if 0 < tdd:
           rsym = "W"
         elif tdd == 0:
@@ -65,8 +65,8 @@ def individual(T, *, follow_prev=True, from_next=False):
         else:
           rsym = "L"
         tdd += T.rsym_tdd.get(rsym, 0)
-        casd += T.rsym_casd.get(rsym, 0)
-        yield IndividualResult(Te, M, rsym, tdd, casd)
+        cad += T.rsym_cad.get(rsym, 0)
+        yield IndividualResult(Te, M, rsym, tdd, cad)
     else:
         # a zero ID value in a result means that the game was
         # forfeited
@@ -78,8 +78,8 @@ def individual(T, *, follow_prev=True, from_next=False):
         else:
           rsym = "F"
         tdd = T.rsym_tdd.get(rsym, 0)
-        casd = T.rsym_casd.get(rsym, 0)
-        yield IndividualResult(Te, None, rsym, tdd, casd)
+        cad = T.rsym_cad.get(rsym, 0)
+        yield IndividualResult(Te, None, rsym, tdd, cad)
 
 
 def hth_all(T):

@@ -16,16 +16,16 @@ def base(T):
       d2["perf"] += t.rsym
       d2["matches"].append(t.match)
       d2["tdd"] += t.tdd
-      d2["casd"] += t.casd
+      d2["cad"] += t.cad
     else:
       d[t.team.ID] = d2 = {}
       d2["team"] = t.team
       d2["perf"] = t.rsym
       d2["matches"] = [t.match,]
       d2["tdd"] = t.tdd
-      d2["casd"] = t.casd
+      d2["cad"] = t.cad
     d2["hth"] = -1  # these are not yet resolved
-    d2["coin"] = -1
+    d2["cto"] = -1
   return list(d.values())
 
 
@@ -36,7 +36,7 @@ def base_revised(T):
   for ID, d2 in d.items():
     CST = CS.get(str(ID), {})
     # custom values override the calculated ones
-    for k in ("perf", "tdd", "casd", "hth", "coin"):
+    for k in ("perf", "tdd", "cad", "hth", "cto"):
       try:
         cst_val = CST[k]
       except KeyError:
@@ -100,15 +100,15 @@ def tiebroken(T):
       pts0 = pts1
   else:
     apply_hth()
-  # determine missing coin toss
+  # determine missing cto toss
   key_rows = collections.defaultdict(list)
   for ID, d2 in d.items():
     key_val = T.standings_keyf(d, ID)
     key_rows[key_val].append(d2)
-  miscoin_keyv = {k for k in key_rows if 1 < len(key_rows[k])}
-  for k in miscoin_keyv:
+  miscto_keyv = {k for k in key_rows if 1 < len(key_rows[k])}
+  for k in miscto_keyv:
     for d2 in key_rows[k]:
-      d2["coin"] = -112  # indicate missing
+      d2["cto"] = -112  # indicate missing
   # sort
   IDs = CS.get("order")
   if IDs is None:
