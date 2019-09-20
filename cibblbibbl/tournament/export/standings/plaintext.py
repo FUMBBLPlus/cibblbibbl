@@ -5,8 +5,8 @@ def default(standings_obj, *,
     show_team_id = False,
 ):
   S = standings_obj
-  hth_trans = {-1: "", 0: "--"}
   cto_trans = {-1: "", -112: "???"}  # -112: missing
+  hth_trans = {-1: "", 0: "--"}
   nr_cto_trans = {-112: "?"}  # -112: missing
   params = [
       (" #", "a", "r", 2,),
@@ -36,6 +36,9 @@ def default(standings_obj, *,
   rows = []
   for nr, r in enumerate(S, 1):
     Te = r["team"]
+    pts = r["pts"]
+    if 1000000 <= pts:
+      pts = f'W{pts-1000000}'
     row = [
         nr_cto_trans.get(r["cto"], f'{nr}'),
         str(Te.ID),
@@ -43,7 +46,7 @@ def default(standings_obj, *,
         Te.roster_name,
         Te.coach_name,
         r["perf"],
-        r["pts"],
+        pts,
         hth_trans.get(r["hth"], r["hth"]),
         r["tdd"],
         r["cad"],

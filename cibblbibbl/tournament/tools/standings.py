@@ -74,7 +74,11 @@ def base_revised(T, *, base_=None):
   return [d[str(ID)] for ID in IDs]
 
 
-def tiebroken(T, *, base_=None):
+def tiebroken(T, *,
+    base_ = None,
+    base_revised_ = None,
+    hth_all = None,
+):
   R = cibblbibbl.tournament.tools.results
   CS = T.config.get("standings", {})
 
@@ -89,8 +93,13 @@ def tiebroken(T, *, base_=None):
         else:
           d[str(ID)]["hth"] = hth_val
 
-  r0_hth = list(R.hth_all(T))
-  base_ = base_revised(T, base_=base_)
+  r0_hth = hth_all
+  if r0_hth is None:
+    r0_hth = list(R.hth_all(T))
+  if base_revised_:
+    base_ = base_revised_
+  else:
+    base_ = base_revised(T, base_=base_)
   if not base_:
     return base_
   d = {str(d_["team"].ID): d_ for d_ in base_}

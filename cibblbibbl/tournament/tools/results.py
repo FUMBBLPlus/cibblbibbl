@@ -9,7 +9,11 @@ IndividualResult = collections.namedtuple(
 )
 
 
-def individual(T, *, follow_prev=True, from_next=False):
+
+def individual(T, *,
+    follow_prev=True,
+    from_next=False,
+):
   """
   Generate individual results of teams.
 
@@ -32,7 +36,17 @@ def individual(T, *, follow_prev=True, from_next=False):
     return
   if follow_prev and T.prev:
       yield from individual(T.prev, from_next=True)
-  for S in T.schedule:
+  yield from individual_from_schedule(T, T.schedule,
+      excluded_teams = excluded_teams,
+  )
+
+
+def individual_from_schedule(T, schedule, *,
+    excluded_teams = None,
+):
+  if excluded_teams is None:
+    excluded_teams = T.excluded_teams(with_fillers=True)
+  for S in schedule:
     team = {d["id"]: d["name"] for d in S["teams"]}
     if set(team) & excluded_teams:
         # ignore matchups with excluded and filler teams
@@ -82,7 +96,10 @@ def individual(T, *, follow_prev=True, from_next=False):
         yield IndividualResult(Te, None, rsym, tdd, cad)
 
 
-def hth_all(T):
+def hth_all(T, *,
+    excluded_teams = None,
+    schedule = None,
+):
   """
   Generate all result objects which are compatible with the
   pytourney.tie.hth.calculate() function.
@@ -102,8 +119,10 @@ def hth_all(T):
   o = list(hth_group(hth_all_, team_ID_1, team_ID_2, ...))
   hth = pytourney.tie.hth.calculate(o)
   """
-  excluded_teams = T.excluded_teams(with_fillers=True)
-  for S in T.schedule:
+  if excluded_teams is None:
+    excluded_teams = T.excluded_teams(with_fillers=True)
+  schedule = (schedule if schedule is not None else T.schedule)
+  for S in schedule:
     r_teams = S["result"]["teams"]
     if set(int(d["id"]) for d in r_teams) & excluded_teams:
       continue

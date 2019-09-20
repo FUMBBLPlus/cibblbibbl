@@ -7,7 +7,10 @@ import pytourney
 import cibblbibbl
 
 
-def base(T):
+def base(T, *, custom=None):
+  custom = custom or {}
+  if hasattr(T, "custom_prestiges"):
+    custom = T.custom_prestiges or {}
   iter_pos = itertools.chain(T.ppos, itertools.repeat(0))
   S = T.standings
   P = []
@@ -19,6 +22,8 @@ def base(T):
         gam += T.rsym_prestige.get(rsym, 0)
     Pr["gam"] = gam
     Pr["pos"] = next(iter_pos)
+    team = Sr["team"]
+    Pr.update(custom.get(team, {}))
     if Sr["cto"] == -112:  # handle missing coin toss
       Pr["pos"] = "?"
       Pr["p"] = "?"
