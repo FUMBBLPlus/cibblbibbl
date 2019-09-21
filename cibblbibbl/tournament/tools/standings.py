@@ -36,10 +36,15 @@ def base_from_individual_results(I):
   return list(d.values())
 
 
-def base_revised(T, *, base_=None):
+def base_revised(T, *,
+    base_ = None,
+    config_standings_key = None,
+):
   base_= (base_ if base_ is not None else base(T))
   d = {str(d_["team"].ID): d_ for d_ in base_}
-  CS = T.config.get("standings", {})
+  if config_standings_key is None:
+    config_standings_key = "standings"
+  CS = T.config.get(config_standings_key, {})
   for ID, d2 in d.items():
     CST = CS.get(str(ID), {})
     # custom values override the calculated ones

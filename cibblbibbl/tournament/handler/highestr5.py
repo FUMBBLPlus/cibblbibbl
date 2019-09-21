@@ -28,7 +28,10 @@ class HighestR5Tournament(
     I = list(f(self, self.schedule))
     f = m_stand.base_from_individual_results
     B = f(I)
-    base_rev = m_stand.base_revised(self, base_=B)
+    base_rev = m_stand.base_revised(self,
+        base_ = B,
+        config_standings_key = "thisstandings",
+    )
     d = {d["team"]: d["perf"] for d in base_rev}
     for Te, perf in d.items():
       gam = 0
