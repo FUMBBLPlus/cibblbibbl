@@ -17,18 +17,19 @@ class InstanceRepeater(type):
     keys = set(dict_)
     for b in bases:
       keys |= set(b.__dict__)
-    if "__hash__" not in keys:
-      dict_["__hash__"] = (
-          lambda self: hash(self._KEY)
-      )
+      for cls_ in (c for c in b.__mro__ if c != object):
+        keys |= set(cls_.__dict__)
     if "__eq__" not in keys:
       dict_["__eq__"] = (
           lambda self, other: hash(self) == hash(other)
       )
+    if "__ne__" not in keys:
+      dict_["__ne__"] = (
+          lambda self, other: hash(self) != hash(other)
+      )
     for k in (
         "__lt__",
         "__le__",
-        "__ne__",
         "__gt__",
         "__ge__",
     ):
@@ -37,8 +38,14 @@ class InstanceRepeater(type):
             lambda self, other, k=k:
             getattr(self._KEY, k)(other._KEY)
         )
-    dict_["__copy__"] = lambda self: self
-    dict_["__deepcopy__"] = lambda self, memo: self
+    if "__hash__" not in keys:
+      dict_["__hash__"] = (
+          lambda self: hash(self._KEY)
+      )
+    if "__copy__" not in keys:
+      dict_["__copy__"] = lambda self: self
+    if "__deepcopy__" not in keys:
+      dict_["__deepcopy__"] = lambda self, memo: self
     return type.__new__(meta, name, bases, dict_)
 
   def __call__(cls, *args, **kwargs):
@@ -59,8 +66,14 @@ class InstanceRepeater(type):
       object.__setattr__(instance, "_KEY", key)
       #print("hash(instance)")
       hash(instance)  # this raises TypeError if key is mutable
-      instance.__init__(*args, **kwargs)
       cls.__members__[key] = instance
+          # instance.__init__ might inply calls which rely the
+          # instance already being a singleton
+      try:
+        instance.__init__(*args, **kwargs)
+      except:
+        del cls.__members__[key]
+        raise
     #print("__call__", cls, args, "instance")
     return instance
 

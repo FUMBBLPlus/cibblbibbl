@@ -6,19 +6,14 @@ class Season(
 ):
 
   def __init__(self, group_key, year_nr:int, nr:int):
-    pass
+    self.tournaments = set()
 
   def __repr__(self):
     return (self.__class__.__name__ + "(" +
         ", ".join(f'{a!r}' for a in self._KEY) + ")")
 
-  @property
-  def group(self):
-    return cibblbibbl.group.Group(self.group_key)
-
-  @property
-  def group_key(self):
-    return self._KEY[0]
+  group = cibblbibbl.year.Year.group
+  group_key = cibblbibbl.year.Year.group_key
 
   @property
   def name(self):
@@ -26,13 +21,31 @@ class Season(
     return seasons[self.nr - 1]
 
   @property
+  def next(self):
+    key = (self.group_key, self.year_nr, self.nr + 1)
+    next = self.__class__.__members__.get(key)
+    if next is None and self.year.next:
+      next = sorted(self.year.next.seasons)[0]
+    return next
+
+  @property
   def nr(self):
     return self._KEY[2]
 
   @property
-  def year(self):
-    return cibblbibbl.year.Year(self.group_key, self.yearnr)
+  def prev(self):
+    key = (self.group_key, self.year_nr, self.nr - 1)
+    prev = self.__class__.__members__.get(key)
+    if prev is None and self.year.prev:
+      prev = sorted(self.year.prev.seasons)[-1]
+    return prev
 
   @property
-  def yearnr(self):
+  def year(self):
+    return cibblbibbl.year.Year(
+        self.group_key, self.year_nr
+  )
+
+  @property
+  def year_nr(self):
     return self._KEY[1]

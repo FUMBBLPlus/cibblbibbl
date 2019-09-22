@@ -7,12 +7,12 @@ class Group(
     metaclass=cibblbibbl.helper.InstanceRepeater
 ):
 
-  def __init__(self, key: str, init_tournaments=True):
+  def __init__(self, key: str, register_tournaments=True):
     self.years = set()
     self.seasons = set()
     self.tournaments = set()
-    if init_tournaments:
-       self.reload_tournaments()
+    if register_tournaments:
+       self.register_tournaments()
 
   def __repr__(self):
     return (self.__class__.__name__ + "(" +
@@ -30,7 +30,7 @@ class Group(
   def settings(self):
     return cibblbibbl.settings.groupsettings(self.key)
 
-  def reload_tournaments(self):
+  def register_tournaments(self):
     GS = self.settings
     seasons = tuple(GS["seasons"])
     get_handler_f = cibblbibbl.tournament.handler.get_handler
@@ -39,12 +39,8 @@ class Group(
         ID = str(d["id"])
         handler_ = get_handler_f(self.key, ID)
         T = handler_.init(self.key, ID)
-        self.tournaments.add(T)
-        self.years.add(T.year)
-        self.seasons.add(T.season)
+        T.register()
     for ID in GS.get("abstract_tournaments", []):
       handler_ = get_handler_f(self.key, ID)
       T = handler_.init(self.key, ID)
-      self.tournaments.add(T)
-      self.years.add(T.year)
-      self.seasons.add(T.season)
+      T.register()

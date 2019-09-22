@@ -17,21 +17,23 @@ class BaseTournament:
     clsname = self.__class__.__name__
     return f'{clsname}({self.group_key!r},{self.ID!r})'
 
+  def __lt__(self, other):
+    return (self.group_key, self.sortID).__lt__((other.group_key, other.sortID))
+  def __le__(self, other):
+    return (self.group_key, self.sortID).__le__((other.group_key, other.sortID))
+  def __gt__(self, other):
+    return (self.group_key, self.sortID).__gt__((other.group_key, other.sortID))
+  def __ge__(self, other):
+    return (self.group_key, self.sortID).__ge__((other.group_key, other.sortID))
+
   @property
   def config(self):
     if self._config is None:
       self.reload_config()
     return self._config
 
-  @property
-  def group(self):
-    return cibblbibbl.group.Group(self.group_key,
-      init_tournaments=False,  # avoid infinite loop
-    )
-
-  @property
-  def group_key(self):
-    return self._KEY[0]
+  group = cibblbibbl.year.Year.group
+  group_key = cibblbibbl.year.Year.group_key
 
   @property
   def ID(self):
@@ -76,16 +78,17 @@ class BaseTournament:
 
   @property
   def sortID(self):
-    return self.config.get("sortID") or int(self.ID)
+    sort_id = self.config.get("sortID")
+    if sort_id is None:
+      sort_id = self.ID
+    return int(sort_id)
   sortID = sortID.setter(tools.config.setter("sortID"))
   sortID = sortID.deleter(tools.config.deleter("sortID"))
 
   @property
   def season(self):
-    season_name = self.config["season"]
-    season_nr = self.group.season_names.index(season_name) + 1
     return cibblbibbl.season.Season(
-        self.group.key, self.year.nr, season_nr
+        self.group.key, self.year.nr, self.season_nr
     )
   @season.setter
   def season(self, season):
@@ -118,19 +121,24 @@ class BaseTournament:
   season = season.deleter(tools.config.deleter("season"))
 
   @property
-  def year(self):
-    yearnr = self.config["year"]
-    return cibblbibbl.year.Year(self.group.key, int(yearnr))
+  def season_nr(self):
+    season_name = self.config["season"]
+    return self.group.season_names.index(season_name) + 1
+
+  year = cibblbibbl.season.Season.year
   @year.setter
-  def year(self, year_or_yearnr):
-    Y = year_or_yearnr
-    if hasattr(Y, "nr"):
-      assert Y.group is self.group
-      yearnr = Y.nr
+  def year(self, year):
+    if hasattr(year, "nr"):
+      assert year.group is self.group
+      year_nr = year.nr
     else:
-      yearnr = int(Y)
-    self.config["year"] = yearnr
+      year_nr = int(year)
+    self.config["year"] = year_nr
   year = year.deleter(tools.config.deleter("year"))
+
+  @property
+  def year_nr(self):
+    return int(self.config["year"])
 
 
 
@@ -142,6 +150,24 @@ class BaseTournament:
     p = cibblbibbl.data.path
     p /= f'{self.group_key}/tournament/{key}/{filename}'
     return p
+
+  def deregister(self):
+    self.group.tournaments.remove(self)
+    self.year.tournaments.remove(self)
+    self.season.tournaments.remove(self)
+    if not self.season.tournaments:
+      self.group.seasons.remove(self.season)
+      self.year.seasons.remove(self.season)
+    if not self.year.tournaments:
+      self.group.years.remove(self.year)
+
+  def register(self):
+    self.group.tournaments.add(self)
+    self.year.tournaments.add(self)
+    self.season.tournaments.add(self)
+    self.group.years.add(self.year)
+    self.group.seasons.add(self.season)
+    self.year.seasons.add(self.season)
 
   def reload_config(self):
     dump_kwargs = cibblbibbl.settings.dump_kwargs
@@ -206,7 +232,7 @@ class Tournament(
     return self.apischedule
 
   @property
-  def season(self):
+  def season_nr(self):
     season_name = self.config.get("season")
     season_names = self.group.season_names
     if season_name is None:
@@ -218,16 +244,11 @@ class Tournament(
         if season_name.lower() in tournament_name:
           self.season = season_name
               # I want to save it in the config
-          return self.season  # will be returned from the config
+          return self.season_nr  # now from the config
       else:
         raise Exception(f'season not found for {self}')
     else:
-      season_nr = season_names.index(season_name) + 1
-      return cibblbibbl.season.Season(
-          self.group.key, self.year.nr, season_nr
-      )
-  season = season.setter(BaseTournament.season.fset)
-  season = season.deleter(BaseTournament.season.fdel)
+      return season_names.index(season_name) + 1
 
   @property
   def standings(self):
@@ -245,11 +266,14 @@ class Tournament(
     return pyfumbbl.tournament.styles[style_idx]
 
   @property
-  def year(self):
-    yearnr = (self.config.get("year") or self.apiget["season"])
-    return cibblbibbl.year.Year(self.group_key, int(yearnr))
-  year = year.setter(BaseTournament.year.fset)
-  year = year.deleter(BaseTournament.year.fdel)
+  def year_nr(self):
+    year_nr = self.config.get("year")
+    if year_nr is None:
+      year_nr = int(self.apiget["season"])
+      self.year = year_nr
+      return self.year_nr
+    else:
+      return int(year_nr)
 
 
   def excluded_teams(self, with_fillers=False):

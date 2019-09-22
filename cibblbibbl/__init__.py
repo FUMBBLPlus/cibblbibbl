@@ -16,4 +16,5 @@ from . import match
 
 
 from . import tournament
-tournament.init("cibbl")
+
+CIBBL = group.Group("cibbl")
