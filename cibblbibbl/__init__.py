@@ -7,6 +7,9 @@ from . import settings
 from . import helper
 
 
+from . import group
+from . import year
+from . import season
 from . import coach
 from . import team
 from . import match
