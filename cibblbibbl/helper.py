@@ -46,6 +46,13 @@ class InstanceRepeater(type):
       dict_["__copy__"] = lambda self: self
     if "__deepcopy__" not in keys:
       dict_["__deepcopy__"] = lambda self, memo: self
+    if "__repr__" not in keys:
+      dict_["__repr__"] = (lambda self: (
+          self.__class__.__name__
+          + "("
+          + ", ".join(f'{a!r}' for a in self._KEY)
+          + ")"
+      ))
     return type.__new__(meta, name, bases, dict_)
 
   def __call__(cls, *args, **kwargs):
@@ -118,14 +125,14 @@ def get_api_data(ID, dir_path, api_func, *, reload=False):
 
 
 @doublewrap
-def idkey(cls, attrname="ID", ftypecast=int):
+def idkey(cls, attrname="ID", ftypecast=int, repr=True):
   def _get_key(cls, id_: ftypecast):
     return ftypecast(id_)
   if not hasattr(cls, "_get_key"):
     setattr(cls, "_get_key", classmethod(_get_key))
   if not hasattr(cls, attrname):
     setattr(cls, attrname, property(lambda self: self._KEY))
-  if "__repr__" not in cls.__dict__:  # hasattr is always True
+  if repr:
     setattr(cls, "__repr__",
         lambda self: (
             f'{self.__class__.__name__}'

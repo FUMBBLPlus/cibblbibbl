@@ -45,11 +45,11 @@ class CBETournament(
   def partners(self, L):
     L2 = [[Te.ID for Te in p] for p in L]
     self.config["partners"] = L2
-  partners = partners.deleter(tools.config.deleter("partners"))
+  partners = partners.deleter(cibblbibbl.config.deleter("partners"))
 
   @property
   def sub(self):
-    d = cibblbibbl.tournament.byGroup[self.group_key]
+    d = {T.ID: T for T in self.group.tournaments}
     d2 = self.config.get("sub", {})
     return {name: d[str(ID)] for name, ID in d2.items()}
   @sub.setter
@@ -58,7 +58,7 @@ class CBETournament(
     assert all((T.group_key == self.group_key) for T in Ts)
     assert all((T.ID != self.ID) for T in Ts)
     self.config["sub"] = {name: T.ID for name, T in d.items()}
-  sub = sub.deleter(tools.config.deleter("sub"))
+  sub = sub.deleter(cibblbibbl.config.deleter("sub"))
 
   @property
   def schedule(self):

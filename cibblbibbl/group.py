@@ -1,3 +1,6 @@
+import bisect
+
+from .jsonfile import jsonfile
 import pyfumbbl
 
 import cibblbibbl
@@ -7,40 +10,87 @@ class Group(
     metaclass=cibblbibbl.helper.InstanceRepeater
 ):
 
+  dump_kwargs = (
+      ("ensure_ascii", False),
+      ("indent", "\t"),
+      ("sort_keys", True),
+  )
+
   def __init__(self, key: str, register_tournaments=True):
+    self._config = None
     self.years = set()
     self.seasons = set()
-    self.tournaments = set()
+    self.tournaments = {}
     if register_tournaments:
        self.register_tournaments()
 
-  def __repr__(self):
-    return (self.__class__.__name__ + "(" +
-        ", ".join(f'{a!r}' for a in self._KEY) + ")")
+  @property
+  def config(self):
+    if self._config is None:
+      self.reload_config()
+    return self._config
+
+  excluded_team_ids = cibblbibbl.config.field(
+      "excluded_teams", default=[]
+  )
+  @property
+  def excluded_teams(self):
+    return frozenset(
+        cibblbibbl.team.Team(teamID)
+        for teamID in self.config.get("excluded_teams", [])
+    )
+  @excluded_teams.setter
+  def excluded_teams(self, sequence):
+    excluded_team_ids = [Te.ID for Te in sorted(sequence)]
+  @excluded_teams.deleter
+  def excluded_teams(self):
+    excluded_team_ids = []
 
   @property
   def key(self):
     return self._KEY[0]
 
   @property
-  def season_names(self):
-    return tuple(self.settings["seasons"])
+  def matchups(self):
+    return tuple(self.itermatchups())
 
   @property
-  def settings(self):
-    return cibblbibbl.settings.groupsettings(self.key)
+  def season_names(self):
+    return tuple(self.config["seasons"])
+
+  def exclude_teams(self, *teams):
+    for Te in teams:
+      if hasattr(Te, "nr"):
+        Te = Te.nr
+      L = self.excluded_team_ids
+      bisect.insort(L, int(Te))
+      self.excluded_team_ids = L  # directly is not good
+
+  def itermatchups(self):
+    for T in self.tournaments.values():
+      yield from T.itermatchups()
 
   def register_tournaments(self):
-    GS = self.settings
-    seasons = tuple(GS["seasons"])
+    C = self.config
+    seasons = tuple(C["seasons"])
     get_handler_f = cibblbibbl.tournament.handler.get_handler
-    for groupId in GS.get("groupIds", []):
+    for groupId in C.get("groupIds", []):
       for d in pyfumbbl.group.tournaments(groupId):
         ID = str(d["id"])
         handler_ = get_handler_f(self.key, ID)
         T = handler_.init(self.key, ID)
         T.register()
-    for ID in GS.get("abstract_tournaments", []):
+    for ID in C.get("abstract_tournaments", []):
       handler_ = get_handler_f(self.key, ID)
       T = handler_.init(self.key, ID)
       T.register()
+
+  def reload_config(self):
+    dump_kwargs = cibblbibbl.settings.dump_kwargs
+    jf = jsonfile(
+        cibblbibbl.data.path / self.key / "config.json",
+        default_data = {},
+        autosave = True,
+        dump_kwargs = dump_kwargs,
+    )
+    self._config = jf.data

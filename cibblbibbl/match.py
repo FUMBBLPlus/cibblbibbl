@@ -6,7 +6,7 @@ import cibblbibbl
 @cibblbibbl.helper.idkey
 class Match(metaclass=cibblbibbl.helper.InstanceRepeater):
 
-  def __init__(self, matchId: int):
+  def __init__(self, matchID: int):
     self._apiget = ...
 
   @property

@@ -7,11 +7,7 @@ class Year(
 
   def __init__(self, group_key, nr:int):
     self.seasons = set()
-    self.tournaments = set()
-
-  def __repr__(self):
-    return (self.__class__.__name__ + "(" +
-        ", ".join(f'{a!r}' for a in self._KEY) + ")")
+    self.tournaments = {}
 
   @property
   def group(self):
@@ -22,6 +18,8 @@ class Year(
   @property
   def group_key(self):
     return self._KEY[0]
+
+  matchups = cibblbibbl.group.Group.matchups
 
   @property
   def next(self):
@@ -36,3 +34,5 @@ class Year(
   def prev(self):
     key = (self.group_key, self.nr - 1)
     return self.__class__.__members__.get(key)
+
+  itermatchups = cibblbibbl.group.Group.itermatchups
