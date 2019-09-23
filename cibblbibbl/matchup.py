@@ -96,10 +96,11 @@ class Matchup(metaclass=cibblbibbl.helper.InstanceRepeater):
     T = self.tournament
     d = self.apischedulerecord
     if (G.excluded_teams | T.excluded_teams) & self.teams:
-      D["excluded"] = "yes"
+      D["!excluded"] = "yes"
     else:
-      D["excluded"] = "no"
+      D["!excluded"] = "no"
     def subgen():  # generates the team performance dictionaries
+      tpkey = "team_performance"
       if d["result"].get("id"):
           # having a positive ID value in a result means that
           # there was a match played
@@ -108,7 +109,7 @@ class Matchup(metaclass=cibblbibbl.helper.InstanceRepeater):
         casualties = M.casualties()
         for i in range(2):
           ID = int(d["result"]["teams"][i]["id"])
-          D2 = D[str(ID)] = {}
+          D2 = D.setdefault(tpkey, {})[str(ID)] = {}
           Te = cibblbibbl.team.Team(ID)
           oppo_ID = int(d["result"]["teams"][1-i]["id"])
           oppo_Te = cibblbibbl.team.Team(oppo_ID)
@@ -133,7 +134,9 @@ class Matchup(metaclass=cibblbibbl.helper.InstanceRepeater):
           # forfeited
         winner_ID = str(d["result"]["winner"])
         for Te in self.teams:
-          D2 = D[str(Te.ID)] = {"score": 0, "cas": 0}
+          D2 = D.setdefault(tpkey, {})[str(Te.ID)] = {}
+          D2["score"] = 0
+          D2["cas"] = 0
           if str(Te.ID) == winner_ID:
             rsym = D2["rsym"] = "B"
           else:
@@ -173,6 +176,11 @@ class Matchup(metaclass=cibblbibbl.helper.InstanceRepeater):
         dump_kwargs=dict(self.dump_kwargs)
     )
     self._config = jf.data
+
+  def rewrite_config(self):
+    if self._config is None:
+      self.reload_config()
+    self._config.root.data = self.calculate_config()
 
   def update_config(self):
     if self._config is None:
