@@ -86,11 +86,10 @@ class Group(
       T.register()
 
   def reload_config(self):
-    dump_kwargs = cibblbibbl.settings.dump_kwargs
     jf = jsonfile(
         cibblbibbl.data.path / self.key / "config.json",
         default_data = {},
         autosave = True,
-        dump_kwargs = dump_kwargs,
+        dump_kwargs = dict(self.dump_kwargs),
     )
     self._config = jf.data

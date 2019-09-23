@@ -5,7 +5,7 @@ import cibblbibbl
 
 IndividualResult = collections.namedtuple(
     "IndividualResult",
-    ("team", "match", "rsym", "tdd", "cad")
+    ("team", "match", "rsym", "scorediff", "casdiff")
 )
 
 
@@ -28,8 +28,8 @@ def individual(T, *,
                 C : conceded (loss)
                 B : bye
                 F : forfeit
-    - tdd : touchdown difference
-    - cad : casualties difference
+    - scorediff : touchdown difference
+    - casdiff : casualties difference
   """
   excluded_teams = T.excluded_teams(with_fillers=True)
   if not from_next and T.next:
@@ -65,22 +65,22 @@ def individual_from_schedule(T, schedule, *,
         oppo_Te = cibblbibbl.team.Team(oppo_ID)
         score = R["teams"][i]["score"]
         oppo_score = R["teams"][1-i]["score"]
-        tdd = score - oppo_score
+        scorediff = score - oppo_score
         cas = casualties[Te]
         oppo_cas = casualties[oppo_Te]
-        cad = cas - oppo_cas
-        if 0 < tdd:
+        casdiff = cas - oppo_cas
+        if 0 < scorediff:
           rsym = "W"
-        elif tdd == 0:
+        elif scorediff == 0:
           rsym = "D"
         elif conceded is Te:
             # check for concessions on loosers first
           rsym = "C"
         else:
           rsym = "L"
-        tdd += T.rsym_tdd.get(rsym, 0)
-        cad += T.rsym_cad.get(rsym, 0)
-        yield IndividualResult(Te, M, rsym, tdd, cad)
+        scorediff += T.rsym_scorediff.get(rsym, 0)
+        casdiff += T.rsym_casdiff.get(rsym, 0)
+        yield IndividualResult(Te, M, rsym, scorediff, casdiff)
     else:
         # a zero ID value in a result means that the game was
         # forfeited
@@ -91,9 +91,9 @@ def individual_from_schedule(T, schedule, *,
           rsym = "B"
         else:
           rsym = "F"
-        tdd = T.rsym_tdd.get(rsym, 0)
-        cad = T.rsym_cad.get(rsym, 0)
-        yield IndividualResult(Te, None, rsym, tdd, cad)
+        scorediff = T.rsym_scorediff.get(rsym, 0)
+        casdiff = T.rsym_casdiff.get(rsym, 0)
+        yield IndividualResult(Te, None, rsym, scorediff, casdiff)
 
 
 def hth_all(T, *,
@@ -111,7 +111,7 @@ def hth_all(T, *,
 
   hth_all_ = list(hth_all(T))
 
-  Then, once a group of equally scored teams is known, the
+  Then, once a group of equally scorediff teams is known, the
   cached value along with the team IDs of the teams in the group
   should be used to call the group function which return the
   object nicely prepared for the HTH calculator function:
@@ -144,7 +144,7 @@ def hth_group(hth_all_, *team_IDs):
   for ID in team_IDs:
       # generate objects which will ensure that all nodes will
       # be made; as there could be a member which played none of
-      # the other equally scored members, this is necessary
+      # the other equally scorediff members, this is necessary
     yield {str(ID): 0}
         # pytourney.tie.hth.calculate requires string keys
   for r0 in hth_all_:

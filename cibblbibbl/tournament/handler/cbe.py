@@ -49,7 +49,7 @@ class CBETournament(
 
   @property
   def sub(self):
-    d = {T.ID: T for T in self.group.tournaments}
+    d = self.group.tournaments
     d2 = self.config.get("sub", {})
     return {name: d[str(ID)] for name, ID in d2.items()}
   @sub.setter
@@ -84,9 +84,9 @@ class CBETournament(
   def excluded_teams(self, *args, **kwargs):
     return set()
 
-  rsym_cad = default.Tournament.rsym_cad
+  rsym_casdiff = default.Tournament.rsym_casdiff
   rsym_pts = default.Tournament.rsym_pts
-  rsym_tdd = default.Tournament.rsym_tdd
+  rsym_scorediff = default.Tournament.rsym_scorediff
 
 
 def init(group_key, ID):

@@ -176,8 +176,8 @@ class BaseTournament:
     return (
       -row["pts"],
       +row["hth"],
-      -row["tdd"],
-      -row["cad"],
+      -row["scorediff"],
+      -row["casdiff"],
       -row["cto"]
   )
 
@@ -223,7 +223,7 @@ class Tournament(
   name = name.setter(cibblbibbl.config.setter("name"))
   name = name.deleter(cibblbibbl.config.deleter("name"))
 
-  rsym_cad = cibblbibbl.config.field("rsym_cad", {
+  rsym_casdiff = cibblbibbl.config.field("rsym_casdiff", {
       "B": 0,
       "b": 0,
       "F": 0,
@@ -273,7 +273,7 @@ class Tournament(
       cibblbibbl.config.deleter("rsym_pts")
   )
 
-  rsym_tdd = cibblbibbl.config.field("rsym_tdd", {
+  rsym_scorediff = cibblbibbl.config.field("rsym_scorediff", {
       "B": 2,
       "b": -2,
       "F": -2,

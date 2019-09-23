@@ -48,8 +48,8 @@ def default(standings_obj, *,
         r["perf"],
         pts,
         hth_trans.get(r["hth"], r["hth"]),
-        r["tdd"],
-        r["cad"],
+        r["scorediff"],
+        r["casdiff"],
         cto_trans.get(r["cto"], r["cto"]),
     ]
     if not show_team_id:

@@ -14,9 +14,9 @@ class HighestR5Tournament(
 ):
   base_standings = cbe.CBETournament.base_standings
   excluded_teams = default.Tournament.excluded_teams
-  rsym_cad = default.Tournament.rsym_cad
+  rsym_casdiff = default.Tournament.rsym_casdiff
   rsym_pts = default.Tournament.rsym_pts
-  rsym_tdd = default.Tournament.rsym_tdd
+  rsym_scorediff = default.Tournament.rsym_scorediff
   sub = cbe.CBETournament.sub
 
   @property

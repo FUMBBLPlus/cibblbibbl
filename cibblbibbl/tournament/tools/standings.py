@@ -22,15 +22,15 @@ def base_from_individual_results(I):
       d2 = d[str(t.team.ID)]
       d2["perf"] += t.rsym
       d2["matches"].append(t.match)
-      d2["tdd"] += t.tdd
-      d2["cad"] += t.cad
+      d2["scorediff"] += t.scorediff
+      d2["casdiff"] += t.casdiff
     else:
       d[str(t.team.ID)] = d2 = {}
       d2["team"] = t.team
       d2["perf"] = t.rsym
       d2["matches"] = [t.match,]
-      d2["tdd"] = t.tdd
-      d2["cad"] = t.cad
+      d2["scorediff"] = t.scorediff
+      d2["casdiff"] = t.casdiff
     d2["hth"] = -1  # these are not yet resolved
     d2["cto"] = -1
   return list(d.values())
@@ -48,7 +48,7 @@ def base_revised(T, *,
   for ID, d2 in d.items():
     CST = CS.get(str(ID), {})
     # custom values override the calculated ones
-    for k in ("perf", "tdd", "cad", "hth", "cto"):
+    for k in ("perf", "scorediff", "casdiff", "hth", "cto"):
       try:
         cst_val = CST[k]
       except KeyError:
