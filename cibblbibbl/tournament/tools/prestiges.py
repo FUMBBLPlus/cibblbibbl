@@ -19,7 +19,7 @@ def base(T, *, custom=None):
     gam = 0
     if T.season.name != "Winter":
       for rsym in Pr["perf"]:
-        gam += T.rsym_prestige.get(rsym, 0)
+        gam += T.rsym.get("prestige", {}).get(rsym, 0)
     Pr["gam"] = gam
     Pr["pos"] = next(iter_pos)
     team = Sr["team"]

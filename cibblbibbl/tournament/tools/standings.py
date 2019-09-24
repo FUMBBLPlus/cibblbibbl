@@ -68,7 +68,7 @@ def base_revised(T, *,
       cst_pts = CST["pts"]
     except KeyError:
       d2["pts"] = sum(
-          T.rsym_pts.get(rsym, 0) for rsym in d2["perf"]
+          T.rsym.get("pts", {}).get(rsym, 0) for rsym in d2["perf"]
       )
     else:
       d2["pts"] = cst_pts

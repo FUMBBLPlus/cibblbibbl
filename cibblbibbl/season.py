@@ -14,7 +14,7 @@ class Season(
 
   @property
   def name(self):
-    seasons = self.group.settings["seasons"]
+    seasons = self.group.config["seasons"]
     return seasons[self.nr - 1]
 
   @property

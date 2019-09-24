@@ -12,7 +12,6 @@ class CBETournament(
 
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
-    self.rsym_prestige = {}
 
   @property
   def base_standings(self):
@@ -45,7 +44,38 @@ class CBETournament(
   def partners(self, L):
     L2 = [[Te.ID for Te in p] for p in L]
     self.config["partners"] = L2
-  partners = partners.deleter(cibblbibbl.config.deleter("partners"))
+  partners = partners.deleter(
+      cibblbibbl.config.deleter("partners")
+  )
+
+  @property
+  def rsym(self):
+    d = self.config.get("rsym", {})
+    dpts = d.setdefault("pts", {})
+    if not dpts:
+      if self.season.name == "Summer":
+        dpts.update({
+          "W": 2,
+          "D": 1,
+          "B": 2,
+        })
+      else:
+        dpts.update({
+          "W": 3,
+          "D": 1,
+          "B": 3,
+        })
+    dscore = d.setdefault("score", {
+        "B": 2,
+    })
+    dscorediff = d.setdefault("scorediff", {
+        "B": 2,
+        "b": -2,
+        "F": -2,
+    })
+    return d
+    rsym = rsym.setter(cibblbibbl.config.setter("rsym"))
+    rsym = rsym.deleter(cibblbibbl.config.deleter("rsym"))
 
   @property
   def sub(self):
@@ -83,11 +113,6 @@ class CBETournament(
 
   def excluded_teams(self, *args, **kwargs):
     return set()
-
-  rsym_casdiff = default.Tournament.rsym_casdiff
-  rsym_pts = default.Tournament.rsym_pts
-  rsym_scorediff = default.Tournament.rsym_scorediff
-
 
 def init(group_key, ID):
   return CBETournament(group_key, ID)

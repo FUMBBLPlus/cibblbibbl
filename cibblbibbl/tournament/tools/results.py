@@ -78,8 +78,8 @@ def individual_from_schedule(T, schedule, *,
           rsym = "C"
         else:
           rsym = "L"
-        scorediff += T.rsym_scorediff.get(rsym, 0)
-        casdiff += T.rsym_casdiff.get(rsym, 0)
+        scorediff += T.rsym.get("scorediffdiff", {}).get(rsym, 0)
+        casdiff += T.rsym.get("casdiff", {}).get(rsym, 0)
         yield IndividualResult(Te, M, rsym, scorediff, casdiff)
     else:
         # a zero ID value in a result means that the game was
@@ -91,8 +91,8 @@ def individual_from_schedule(T, schedule, *,
           rsym = "B"
         else:
           rsym = "F"
-        scorediff = T.rsym_scorediff.get(rsym, 0)
-        casdiff = T.rsym_casdiff.get(rsym, 0)
+        scorediff = T.rsym.get("scorediffdiff", {}).get(rsym, 0)
+        casdiff = T.rsym.get("casdiff", {}).get(rsym, 0)
         yield IndividualResult(Te, None, rsym, scorediff, casdiff)
 
 

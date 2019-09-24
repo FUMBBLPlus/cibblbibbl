@@ -14,9 +14,7 @@ class HighestR5Tournament(
 ):
   base_standings = cbe.CBETournament.base_standings
   excluded_teams = default.Tournament.excluded_teams
-  rsym_casdiff = default.Tournament.rsym_casdiff
-  rsym_pts = default.Tournament.rsym_pts
-  rsym_scorediff = default.Tournament.rsym_scorediff
+  rsym = default.Tournament.rsym
   sub = cbe.CBETournament.sub
 
   @property
@@ -37,7 +35,7 @@ class HighestR5Tournament(
       gam = 0
       if self.season.name != "Winter":
         for rsym in perf:
-          gam += self.rsym_prestige.get(rsym, 0)
+          gam += self.rsym.get("prestige", {}).get(rsym, 0)
       r[Te].update({"gam": gam})
     return r
 

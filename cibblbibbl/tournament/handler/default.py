@@ -66,6 +66,10 @@ class BaseTournament:
     del T.next
 
   @property
+  def rsym(self):
+    return self.config.get("rsym", {})
+
+  @property
   def sortID(self):
     sort_id = self.config.get("sortID")
     if sort_id is None:
@@ -223,61 +227,42 @@ class Tournament(
   name = name.setter(cibblbibbl.config.setter("name"))
   name = name.deleter(cibblbibbl.config.deleter("name"))
 
-  rsym_casdiff = cibblbibbl.config.field("rsym_casdiff", {
-      "B": 0,
-      "b": 0,
-      "F": 0,
-  })
-
   @property
-  def rsym_prestige(self):
-    rsym_prestige_ = self.config.get("rsym_prestige")
-    if rsym_prestige_ is None:
-      rsym_prestige_ = {}
-      if self.season.name != "Winter":
-        rsym_prestige_ = {
-            "W": 3,
-            "B": 3,
-            "D": 1,
-            "C": -10,
-        }
-    return rsym_prestige_
-  rsym_prestige = rsym_prestige.setter(
-      cibblbibbl.config.setter("rsym_prestige")
-  )
-  rsym_prestige = rsym_prestige.deleter(
-      cibblbibbl.config.deleter("rsym_prestige")
-  )
-
-  @property
-  def rsym_pts(self):
-    rsym_pts_ = self.config.get("rsym_pts")
-    if rsym_pts_ is None:
+  def rsym(self):
+    d = self.config.get("rsym", {})
+    dprest = d.setdefault("prestige", {})
+    if not dprest and self.season.name != "Winter":
+      dprest.update({
+          "W": 3,
+          "B": 3,
+          "D": 1,
+          "C": -10,
+      })
+    dpts = d.setdefault("pts", {})
+    if not dpts:
       if self.season.name == "Summer":
-        rsym_pts_ = {
+        dpts.update({
           "W": 2,
           "D": 1,
           "B": 2,
-        }
+        })
       else:
-        rsym_pts_ = {
+        dpts.update({
           "W": 3,
           "D": 1,
           "B": 3,
-        }
-    return rsym_pts_
-  rsym_pts = rsym_pts.setter(
-      cibblbibbl.config.setter("rsym_pts")
-  )
-  rsym_pts = rsym_pts.deleter(
-      cibblbibbl.config.deleter("rsym_pts")
-  )
-
-  rsym_scorediff = cibblbibbl.config.field("rsym_scorediff", {
-      "B": 2,
-      "b": -2,
-      "F": -2,
-  })
+        })
+    dscore = d.setdefault("score", {
+        "B": 2,
+    })
+    dscorediff = d.setdefault("scorediff", {
+        "B": 2,
+        "b": -2,
+        "F": -2,
+    })
+    return d
+  rsym = rsym.setter(cibblbibbl.config.setter("rsym"))
+  rsym = rsym.deleter(cibblbibbl.config.deleter("rsym"))
 
   @property
   def season_nr(self):
