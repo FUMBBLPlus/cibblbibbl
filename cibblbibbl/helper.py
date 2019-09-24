@@ -117,7 +117,7 @@ def get_api_data(Id, dir_path, api_func, *, reload=False):
   #print([p, reload, p.is_file(), p.stat().st_size])
   if reload or not p.is_file() or not p.stat().st_size:
     jf.dump_kwargs = cibblbibbl.settings.dump_kwargs
-    print(f'API: {api_func}({Id})')
+    #print(f'API: {api_func}({Id})')
     jf.data = api_func(Id)
     jf.save()
   return jf.data

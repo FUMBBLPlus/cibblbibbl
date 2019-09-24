@@ -98,10 +98,18 @@ class Matchup(metaclass=cibblbibbl.helper.InstanceRepeater):
     R = self.apischedulerecord
     D = {}
     args = G, T, R, self, D
+    D.update(dict(MC.Ids(*args)))
     D["!excluded"] = MC.excluded(*args)
+    PP = D["player_performance"] = {}
+    for t in MC.player_performances(*args):
+      teamId, playerId, D2 = t
+      PP.setdefault(teamId, {})[playerId] = D2
     TP = D["team_performance"] = {}
-    for Te, D2 in MC.team_performances(*args):
-      TP[str(Te.Id)] = D2
+    for teamId, D2 in MC.team_performances(*args):
+      TP[teamId] = D2
+    Ma = self.match
+    if Ma:
+      del Ma.replaydata  # free up memory
     return D
 
   def reload_config(self):
