@@ -100,5 +100,5 @@ class HighestR5Tournament(
     self._standings = standings
 
 
-def init(group_key, ID):
-  return HighestR5Tournament(group_key, ID)
+def init(group_key, Id):
+  return HighestR5Tournament(group_key, Id)

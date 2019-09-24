@@ -15,17 +15,17 @@ def team_performances(G, T, R, Mu, D):
   RR = R["result"]
   def subgen():
     if RR.get("id"):
-        # having a positive ID value in a result means that
+        # having a positive Id value in a result means that
         # there was a match played
       M = cibblbibbl.match.Match(RR["id"])
       conceded = M.conceded()
       casualties = M.casualties()
       for i in range(2):
-        ID = int(RR["teams"][i]["id"])
-        Te = cibblbibbl.team.Team(ID)
+        Id = int(RR["teams"][i]["id"])
+        Te = cibblbibbl.team.Team(Id)
         d = {}
-        oppo_ID = int(RR["teams"][1-i]["id"])
-        oppo_Te = cibblbibbl.team.Team(oppo_ID)
+        oppo_Id = int(RR["teams"][1-i]["id"])
+        oppo_Te = cibblbibbl.team.Team(oppo_Id)
         score = d["score"] = RR["teams"][i]["score"]
         oppo_score = RR["teams"][1-i]["score"]
         scorediff = d["scorediff"] = score - oppo_score
@@ -43,14 +43,14 @@ def team_performances(G, T, R, Mu, D):
           rsym = d["rsym"] = "L"
         yield Te, d
     else:
-        # a zero ID value in a result means that the game was
+        # a zero Id value in a result means that the game was
         # forfeited
-      winner_ID = str(RR["winner"])
+      winner_Id = str(RR["winner"])
       for Te in Mu.teams:
         d = {}
         d["score"] = d["scorediff"] = 0
         d["cas"] = d["casdiff"] = 0
-        if str(Te.ID) == winner_ID:
+        if str(Te.Id) == winner_Id:
           rsym = d["rsym"] = "B"
         else:
           rsym = d["rsym"] = "F"

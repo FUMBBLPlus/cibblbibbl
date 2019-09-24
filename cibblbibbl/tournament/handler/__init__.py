@@ -10,11 +10,11 @@ __all__ = list(
 
 from . import *
 
-def get_handler(group_key, ID):
-  if str(ID).isdecimal():
-    filename = f'{ID:0>8}'
+def get_handler(group_key, Id):
+  if str(Id).isdecimal():
+    filename = f'{Id:0>8}'
   else:
-    filename = str(ID)
+    filename = str(Id)
   handlerfile = f'{group_key}/tournament/handler/{filename}'
   p = cibblbibbl.data.path / handlerfile
   p_exists = (p.is_file() and p.stat().st_size)

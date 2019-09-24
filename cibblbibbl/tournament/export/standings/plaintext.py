@@ -10,7 +10,7 @@ def default(standings_obj, *,
   nr_cto_trans = {-112: "?"}  # -112: missing
   params = [
       (" #", "a", "r", 2,),
-      ("Team ID", "i", "r", 7,),
+      ("Team Id", "i", "r", 7,),
       ("Name", "t", "l", 30,),
       ("Roster", "t", "l", 19,),
       ("Coach", "t", "l", 19,),
@@ -41,7 +41,7 @@ def default(standings_obj, *,
       pts = f'W{pts-1000000}'
     row = [
         nr_cto_trans.get(r["cto"], f'{nr}'),
-        str(Te.ID),
+        str(Te.Id),
         Te.name,
         Te.roster_name,
         Te.coach_name,

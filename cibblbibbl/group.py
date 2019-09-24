@@ -36,12 +36,12 @@ class Group(
   @property
   def excluded_teams(self):
     return frozenset(
-        cibblbibbl.team.Team(teamID)
-        for teamID in self.config.get("excluded_teams", [])
+        cibblbibbl.team.Team(teamId)
+        for teamId in self.config.get("excluded_teams", [])
     )
   @excluded_teams.setter
   def excluded_teams(self, sequence):
-    excluded_team_ids = [Te.ID for Te in sorted(sequence)]
+    excluded_team_ids = [Te.Id for Te in sorted(sequence)]
   @excluded_teams.deleter
   def excluded_teams(self):
     excluded_team_ids = []
@@ -76,13 +76,13 @@ class Group(
     get_handler_f = cibblbibbl.tournament.handler.get_handler
     for groupId in C.get("groupIds", []):
       for d in pyfumbbl.group.tournaments(groupId):
-        ID = str(d["id"])
-        handler_ = get_handler_f(self.key, ID)
-        T = handler_.init(self.key, ID)
+        Id = str(d["id"])
+        handler_ = get_handler_f(self.key, Id)
+        T = handler_.init(self.key, Id)
         T.register()
-    for ID in C.get("abstract_tournaments", []):
-      handler_ = get_handler_f(self.key, ID)
-      T = handler_.init(self.key, ID)
+    for Id in C.get("abstract_tournaments", []):
+      handler_ = get_handler_f(self.key, Id)
+      T = handler_.init(self.key, Id)
       T.register()
 
   def reload_config(self):

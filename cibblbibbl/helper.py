@@ -110,22 +110,22 @@ def doublewrap(f):
 
 
 
-def get_api_data(ID, dir_path, api_func, *, reload=False):
-  filename = f'{ID:0>8}.json'
+def get_api_data(Id, dir_path, api_func, *, reload=False):
+  filename = f'{Id:0>8}.json'
   p = cibblbibbl.data.path / dir_path / filename
   jf = cibblbibbl.data.jsonfile(p)
   #print([p, reload, p.is_file(), p.stat().st_size])
   if reload or not p.is_file() or not p.stat().st_size:
     jf.dump_kwargs = cibblbibbl.settings.dump_kwargs
-    print(f'API: {api_func}({ID})')
-    jf.data = api_func(ID)
+    print(f'API: {api_func}({Id})')
+    jf.data = api_func(Id)
     jf.save()
   return jf.data
 
 
 
 @doublewrap
-def idkey(cls, attrname="ID", ftypecast=int, repr=True):
+def idkey(cls, attrname="Id", ftypecast=int, repr=True):
   def _get_key(cls, id_: ftypecast):
     return ftypecast(id_)
   if not hasattr(cls, "_get_key"):

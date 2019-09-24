@@ -39,10 +39,10 @@ class CBETournament(
   def partners(self):
     L = self.config.get("partners")
     if L:
-      return [[cibblbibbl.team.Team(ID) for ID in p] for p in L]
+      return [[cibblbibbl.team.Team(Id) for Id in p] for p in L]
   @partners.setter
   def partners(self, L):
-    L2 = [[Te.ID for Te in p] for p in L]
+    L2 = [[Te.Id for Te in p] for p in L]
     self.config["partners"] = L2
   partners = partners.deleter(
       cibblbibbl.config.deleter("partners")
@@ -81,13 +81,13 @@ class CBETournament(
   def sub(self):
     d = self.group.tournaments
     d2 = self.config.get("sub", {})
-    return {name: d[str(ID)] for name, ID in d2.items()}
+    return {name: d[str(Id)] for name, Id in d2.items()}
   @sub.setter
   def sub(self, d):
     Ts = list(d.values())
     assert all((T.group_key == self.group_key) for T in Ts)
-    assert all((T.ID != self.ID) for T in Ts)
-    self.config["sub"] = {name: T.ID for name, T in d.items()}
+    assert all((T.Id != self.Id) for T in Ts)
+    self.config["sub"] = {name: T.Id for name, T in d.items()}
   sub = sub.deleter(cibblbibbl.config.deleter("sub"))
 
   @property
@@ -114,5 +114,5 @@ class CBETournament(
   def excluded_teams(self, *args, **kwargs):
     return set()
 
-def init(group_key, ID):
-  return CBETournament(group_key, ID)
+def init(group_key, Id):
+  return CBETournament(group_key, Id)

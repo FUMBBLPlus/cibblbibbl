@@ -7,7 +7,7 @@ def default(prestiges_obj, *,
   P = prestiges_obj
   params = [
       (" #", "a", "r", 2,),
-      ("Team ID", "i", "r", 7,),
+      ("Team Id", "i", "r", 7,),
       ("Name", "t", "l", 30,),
       ("Roster", "t", "l", 19,),
       ("Coach", "t", "l", 19,),
@@ -33,7 +33,7 @@ def default(prestiges_obj, *,
     Te = r["team"]
     row = [
         f'{nr}',
-        str(Te.ID),
+        str(Te.Id),
         Te.name,
         Te.roster_name,
         Te.coach_name,

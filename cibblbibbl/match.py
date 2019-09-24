@@ -6,7 +6,7 @@ import cibblbibbl
 @cibblbibbl.helper.idkey
 class Match(metaclass=cibblbibbl.helper.InstanceRepeater):
 
-  def __init__(self, matchID: int):
+  def __init__(self, matchId: int):
     self._apiget = ...
 
   @property
@@ -14,6 +14,10 @@ class Match(metaclass=cibblbibbl.helper.InstanceRepeater):
     if self._apiget is ...:
       self.reload_apiget()
     return self._apiget
+
+  @property
+  def replayId(self):
+    return self.apiget.get("replayId")
 
   @property
   def teams(self):
@@ -41,7 +45,7 @@ class Match(metaclass=cibblbibbl.helper.InstanceRepeater):
 
   def reload_apiget(self, reload=False):
     self._apiget = cibblbibbl.helper.get_api_data(
-        self.ID,
+        self.Id,
         "cache/api-match",
         pyfumbbl.match.get,
         reload=reload,

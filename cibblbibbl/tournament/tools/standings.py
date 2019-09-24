@@ -18,14 +18,14 @@ def base(T):
 def base_from_individual_results(I):
   d = {}
   for i, t in enumerate(I):
-    if str(t.team.ID) in d:
-      d2 = d[str(t.team.ID)]
+    if str(t.team.Id) in d:
+      d2 = d[str(t.team.Id)]
       d2["perf"] += t.rsym
       d2["matches"].append(t.match)
       d2["scorediff"] += t.scorediff
       d2["casdiff"] += t.casdiff
     else:
-      d[str(t.team.ID)] = d2 = {}
+      d[str(t.team.Id)] = d2 = {}
       d2["team"] = t.team
       d2["perf"] = t.rsym
       d2["matches"] = [t.match,]
@@ -41,12 +41,12 @@ def base_revised(T, *,
     config_standings_key = None,
 ):
   base_= (base_ if base_ is not None else base(T))
-  d = {str(d_["team"].ID): d_ for d_ in base_}
+  d = {str(d_["team"].Id): d_ for d_ in base_}
   if config_standings_key is None:
     config_standings_key = "standings"
   CS = T.config.get(config_standings_key, {})
-  for ID, d2 in d.items():
-    CST = CS.get(str(ID), {})
+  for Id, d2 in d.items():
+    CST = CS.get(str(Id), {})
     # custom values override the calculated ones
     for k in ("perf", "scorediff", "casdiff", "hth", "cto"):
       try:
@@ -72,11 +72,11 @@ def base_revised(T, *,
       )
     else:
       d2["pts"] = cst_pts
-  IDs = CS.get("order")
-  if IDs is None:
-    key_f = (lambda ID, d=d: T.standings_keyf(d, ID))
-    IDs = sorted(d, key=key_f)
-  return [d[str(ID)] for ID in IDs]
+  Ids = CS.get("order")
+  if Ids is None:
+    key_f = (lambda Id, d=d: T.standings_keyf(d, Id))
+    Ids = sorted(d, key=key_f)
+  return [d[str(Id)] for Id in Ids]
 
 
 def tiebroken(T, *,
@@ -90,13 +90,13 @@ def tiebroken(T, *,
   def apply_hth():
     r1_hth = list(R.hth_group(r0_hth, *curr_hth_teams))
     hth = pytourney.tie.hth.calculate(r1_hth)
-    for ID, hth_val in hth.items():
-        CST = CS.get(str(ID), {})  # apply custom if set
+    for Id, hth_val in hth.items():
+        CST = CS.get(str(Id), {})  # apply custom if set
         cst_hth = CST.get("hth")
         if cst_hth is not None:
-          d[str(ID)]["hth"] = cst_hth
+          d[str(Id)]["hth"] = cst_hth
         else:
-          d[str(ID)]["hth"] = hth_val
+          d[str(Id)]["hth"] = hth_val
 
   r0_hth = hth_all
   if r0_hth is None:
@@ -107,50 +107,50 @@ def tiebroken(T, *,
     base_ = base_revised(T, base_=base_)
   if not base_:
     return base_
-  d = {str(d_["team"].ID): d_ for d_ in base_}
+  d = {str(d_["team"].Id): d_ for d_ in base_}
   hth = {}
   curr_hth_teams = set()
   pts0 = base_[0]["pts"]
   for r in base_:
     pts1 = r["pts"]
     if pts1 == pts0:
-      curr_hth_teams.add(r["team"].ID)
+      curr_hth_teams.add(r["team"].Id)
     else:
       apply_hth()
-      curr_hth_teams = {r["team"].ID}
+      curr_hth_teams = {r["team"].Id}
       pts0 = pts1
   else:
     apply_hth()
   # determine missing coin toss
   key_rows = collections.defaultdict(list)
-  for ID, d2 in d.items():
-    key_val = T.standings_keyf(d, ID)
+  for Id, d2 in d.items():
+    key_val = T.standings_keyf(d, Id)
     key_rows[key_val].append(d2)
   miscto_keyv = {k for k in key_rows if 1 < len(key_rows[k])}
   for k in miscto_keyv:
     for d2 in key_rows[k]:
       d2["cto"] = -112  # indicate missing
   # sort
-  IDs = CS.get("order")
-  if IDs is None:
+  Ids = CS.get("order")
+  if Ids is None:
     return [d2 for k in sorted(key_rows) for d2 in key_rows[k]]
   else:
-    return [d[str(ID)] for ID in IDs]
+    return [d[str(Id)] for Id in Ids]
     retun
-    key_f = (lambda ID, d=d: T.standings_keyf(d, ID))
-    IDs = sorted(d, key=key_f)
-  return [d[ID] for ID in IDs]
+    key_f = (lambda Id, d=d: T.standings_keyf(d, Id))
+    Ids = sorted(d, key=key_f)
+  return [d[Id] for Id in Ids]
 
 
 def export(standings):
   L = copy.deepcopy(standings)
   for d in L:
-    d["id"] = d["team"].ID
+    d["id"] = d["team"].Id
     d["name"] = d["team"].name  # to help human admin
     del d["team"]
     if d.get("matches"):
       d["matches"] = [
-          (None if M is None else M.ID) for M in d["matches"]
+          (None if M is None else M.Id) for M in d["matches"]
       ]
   return L
 

@@ -13,10 +13,10 @@ class Matchup(metaclass=cibblbibbl.helper.InstanceRepeater):
 
   def __init__(self,
       group_key: str,
-      tournamentID: str,
+      tournamentId: str,
       round: int,
-      low_teamID:int,
-      high_teamID:int,
+      low_teamId:int,
+      high_teamId:int,
   ):
     self._config = None
 
@@ -48,16 +48,16 @@ class Matchup(metaclass=cibblbibbl.helper.InstanceRepeater):
   @property
   def highlightedteam(self):
     d = self.apischedulerecord
-    teamID = d.get("result", {}).get("winner")
-    if teamID:
-      return cibblbibbl.team.Team(teamID)
+    teamId = d.get("result", {}).get("winner")
+    if teamId:
+      return cibblbibbl.team.Team(teamId)
 
   @property
   def match(self):
     d = self.apischedulerecord
-    matchID = d.get("result", {}).get("id")
-    if matchID:
-      return cibblbibbl.match.Match(matchID)
+    matchId = d.get("result", {}).get("id")
+    if matchId:
+      return cibblbibbl.match.Match(matchId)
 
   @property
   def modified(self):
@@ -80,8 +80,8 @@ class Matchup(metaclass=cibblbibbl.helper.InstanceRepeater):
   @property
   def teams(self):
     return frozenset(
-        cibblbibbl.team.Team(teamID)
-        for teamID in self._KEY[3:5]
+        cibblbibbl.team.Team(teamId)
+        for teamId in self._KEY[3:5]
     )
 
   @property
@@ -101,7 +101,7 @@ class Matchup(metaclass=cibblbibbl.helper.InstanceRepeater):
     D["!excluded"] = MC.excluded(*args)
     TP = D["team_performance"] = {}
     for Te, D2 in MC.team_performances(*args):
-      TP[str(Te.ID)] = D2
+      TP[str(Te.Id)] = D2
     return D
 
   def reload_config(self):
@@ -111,11 +111,11 @@ class Matchup(metaclass=cibblbibbl.helper.InstanceRepeater):
         f'-{self._KEY[4]:0>7}'
         ".json"
     )
-    tournamentID = str(self._KEY[1])
-    if tournamentID.isdecimal():
-      tournament_dir = f'{tournamentID:0>8}'
+    tournamentId = str(self._KEY[1])
+    if tournamentId.isdecimal():
+      tournament_dir = f'{tournamentId:0>8}'
     else:
-      tournament_dir = tournamentID
+      tournament_dir = tournamentId
     filepath = (
         cibblbibbl.data.path
         / "matchup"

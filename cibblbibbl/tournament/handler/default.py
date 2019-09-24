@@ -10,53 +10,53 @@ from .. import tools
 
 class BaseTournament:
 
-  def __init__(self, group_key, ID):
+  def __init__(self, group_key, Id):
     self._config = None
 
   def __lt__(self, other):
-    return (self.group_key, self.sortID).__lt__((other.group_key, other.sortID))
+    return (self.group_key, self.sortId).__lt__((other.group_key, other.sortId))
   def __le__(self, other):
-    return (self.group_key, self.sortID).__le__((other.group_key, other.sortID))
+    return (self.group_key, self.sortId).__le__((other.group_key, other.sortId))
   def __gt__(self, other):
-    return (self.group_key, self.sortID).__gt__((other.group_key, other.sortID))
+    return (self.group_key, self.sortId).__gt__((other.group_key, other.sortId))
   def __ge__(self, other):
-    return (self.group_key, self.sortID).__ge__((other.group_key, other.sortID))
+    return (self.group_key, self.sortId).__ge__((other.group_key, other.sortId))
 
   config = cibblbibbl.group.Group.config
   group = cibblbibbl.year.Year.group
   group_key = cibblbibbl.year.Year.group_key
 
   @property
-  def ID(self):
+  def Id(self):
     return self._KEY[1]
 
   matchups = cibblbibbl.group.Group.matchups
 
   @property
   def next(self):
-    ID = self.config.get("next")
-    if ID is not None:
-      return self.group.tournaments[str(ID)]
+    Id = self.config.get("next")
+    if Id is not None:
+      return self.group.tournaments[str(Id)]
   @next.setter
   def next(self, T):
     assert T.group_key == self.group_key
-    assert str(T.ID) != str(self.ID)
-    self.config["next"] = T.ID
-    T.config["prev"] = self.ID
+    assert str(T.Id) != str(self.Id)
+    self.config["next"] = T.Id
+    T.config["prev"] = self.Id
   @next.deleter
   def next(self):
     T = self.group.tournaments[str(self.next)]
     assert T.group_key == self.group_key
-    assert str(T.config["prev"]) == str(self.ID)
+    assert str(T.config["prev"]) == str(self.Id)
     del self.config["next"], T.config["prev"]
 
   ppos = cibblbibbl.config.field("ppos")
 
   @property
   def prev(self):
-    ID = self.config.get("prev")
-    if ID is not None:
-      return self.group.tournaments[str(ID)]
+    Id = self.config.get("prev")
+    if Id is not None:
+      return self.group.tournaments[str(Id)]
   @prev.setter
   def prev(self, T):
     T.next = self
@@ -70,13 +70,13 @@ class BaseTournament:
     return self.config.get("rsym", {})
 
   @property
-  def sortID(self):
-    sort_id = self.config.get("sortID")
+  def sortId(self):
+    sort_id = self.config.get("sortId")
     if sort_id is None:
-      sort_id = self.ID
+      sort_id = self.Id
     return int(sort_id)
-  sortID = sortID.setter(cibblbibbl.config.setter("sortID"))
-  sortID = sortID.deleter(cibblbibbl.config.deleter("sortID"))
+  sortId = sortId.setter(cibblbibbl.config.setter("sortId"))
+  sortId = sortId.deleter(cibblbibbl.config.deleter("sortId"))
 
   @property
   def season(self):
@@ -136,18 +136,18 @@ class BaseTournament:
 
 
   def filepath(self, key):
-    if self.ID.isdecimal():
-      filename = f'{self.ID:0>8}.json'
+    if self.Id.isdecimal():
+      filename = f'{self.Id:0>8}.json'
     else:
-      filename = f'{self.ID}.json'
+      filename = f'{self.Id}.json'
     p = cibblbibbl.data.path
     p /= f'{self.group_key}/tournament/{key}/{filename}'
     return p
 
   def deregister(self):
-    del self.group.tournaments[str(self.ID)]
-    del self.year.tournaments[str(self.ID)]
-    del self.season.tournaments[str(self.ID)]
+    del self.group.tournaments[str(self.Id)]
+    del self.year.tournaments[str(self.Id)]
+    del self.season.tournaments[str(self.Id)]
     if not self.season.tournaments:
       self.group.seasons.remove(self.season)
       self.year.seasons.remove(self.season)
@@ -158,9 +158,9 @@ class BaseTournament:
     yield from []
 
   def register(self):
-    self.group.tournaments[str(self.ID)] = self
-    self.year.tournaments[str(self.ID)] = self
-    self.season.tournaments[str(self.ID)] = self
+    self.group.tournaments[str(self.Id)] = self
+    self.year.tournaments[str(self.Id)] = self
+    self.season.tournaments[str(self.Id)] = self
     self.group.years.add(self.year)
     self.group.seasons.add(self.season)
     self.year.seasons.add(self.season)
@@ -175,8 +175,8 @@ class BaseTournament:
     )
     self._config = jf.data
 
-  def standings_keyf(self, d, ID):
-    row = d[ID]
+  def standings_keyf(self, d, Id):
+    row = d[Id]
     return (
       -row["pts"],
       +row["hth"],
@@ -198,8 +198,8 @@ class Tournament(
     metaclass=cibblbibbl.helper.InstanceRepeater,
 ):
 
-  def __init__(self, group_key, ID):
-    super().__init__(group_key, ID)
+  def __init__(self, group_key, Id):
+    super().__init__(group_key, Id)
     self._apiget = None
     self._apischedule = None
     self._season = None
@@ -313,7 +313,7 @@ class Tournament(
       team_ids = sorted(d2["id"] for d2 in d["teams"])
       matchup = cibblbibbl.matchup.Matchup(
         self.group_key,
-        self.ID,
+        self.Id,
         d["round"],
         team_ids[0],
         team_ids[1],
@@ -322,7 +322,7 @@ class Tournament(
 
   def reload_apiget(self, reload=False):
     self._apiget = cibblbibbl.helper.get_api_data(
-        self.ID,
+        self.Id,
         "cache/api-tournament",
         pyfumbbl.tournament.get,
         reload=reload,
@@ -330,7 +330,7 @@ class Tournament(
 
   def reload_apischedule(self, reload=False):
     self._apischedule = cibblbibbl.helper.get_api_data(
-        self.ID,
+        self.Id,
         "cache/api-tournament-schedule",
         pyfumbbl.tournament.schedule,
         reload=reload,
@@ -353,5 +353,5 @@ class Tournament(
 
 
 
-def init(group_key, ID):
-  return Tournament(group_key, ID)
+def init(group_key, Id):
+  return Tournament(group_key, Id)

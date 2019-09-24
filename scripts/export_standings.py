@@ -5,7 +5,7 @@ if __name__ == "__main__":
   show_team_id = True
   Ts = sorted(
       cibblbibbl.tournament.byGroup["cibbl"].values(),
-      key=lambda T: T.sortID,
+      key=lambda T: T.sortId,
   )
   exp_m = cibblbibbl.tournament.export.standings.plaintext
   texts = []
@@ -15,8 +15,8 @@ if __name__ == "__main__":
       continue
     s0 = exp_m.default(S, show_team_id=show_team_id)
         # TODO: handler matching standings func
-    if T.ID.isdecimal():
-      s1 = f'Standings of {T.name} ({T.ID} • {T.style})' \
+    if T.Id.isdecimal():
+      s1 = f'Standings of {T.name} ({T.Id} • {T.style})' \
         f'\n\n{s0}'
     else:
       s1 = f'Prestiges of {T.name}\n\n{s0}'

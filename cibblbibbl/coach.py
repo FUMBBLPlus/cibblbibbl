@@ -16,7 +16,7 @@ class Coach(metaclass=cibblbibbl.helper.InstanceRepeater):
       self._name = cibblbibbl.helper.norm_name(self._name)
 
   def __repr__(self):
-    return f'Coach({self.ID}, {self.name})'
+    return f'Coach({self.Id}, {self.name})'
 
   def __str__(self):
     return self.name
@@ -24,7 +24,7 @@ class Coach(metaclass=cibblbibbl.helper.InstanceRepeater):
   @property
   def apiget(self):
     if self._apiget is ...:
-      self._apiget = pyfumbbl.coach.get(self.ID)
+      self._apiget = pyfumbbl.coach.get(self.Id)
     return self._apiget
 
   @property
@@ -36,7 +36,7 @@ class Coach(metaclass=cibblbibbl.helper.InstanceRepeater):
 
   def reload_apiget(self, reload=False):
     self._apiget = cibblbibbl.helper.get_api_data(
-        self.ID,
+        self.Id,
         "cache/api-match",
         pyfumbbl.match.get,
         reload=reload,

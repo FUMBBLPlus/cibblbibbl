@@ -27,7 +27,7 @@ class Team(metaclass=cibblbibbl.helper.InstanceRepeater):
     return cibblbibbl.helper.norm_name(s)
 
   @property
-  def rosterID(self):
+  def rosterId(self):
     return self.apiget["roster"]["id"]
 
   @property
@@ -39,7 +39,7 @@ class Team(metaclass=cibblbibbl.helper.InstanceRepeater):
 
   def reload_apiget(self, reload=False):
     self._apiget = cibblbibbl.helper.get_api_data(
-        self.ID,
+        self.Id,
         "cache/api-team",
         pyfumbbl.team.get,
         reload=reload,
@@ -52,8 +52,8 @@ class GroupOfTeams(tuple):
     return f'{self.__class__.__name__}{super().__repr__()}'
 
   @property
-  def ID(self):
-    return "\n".join(str(Te.ID) for Te in self)
+  def Id(self):
+    return "\n".join(str(Te.Id) for Te in self)
 
   @property
   def name(self):
@@ -64,8 +64,8 @@ class GroupOfTeams(tuple):
     return "\n".join(Te.coach_name for Te in self)
 
   @property
-  def rosterID(self):
-    return "\n".join(str(Te.rosterID) for Te in self)
+  def rosterId(self):
+    return "\n".join(str(Te.rosterId) for Te in self)
 
   @property
   def roster_name(self):
