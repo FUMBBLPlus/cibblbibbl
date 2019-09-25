@@ -10,6 +10,7 @@ from . import helper
 
 from . import coach
 from . import team
+from . import player
 from . import match
 
 from . import group

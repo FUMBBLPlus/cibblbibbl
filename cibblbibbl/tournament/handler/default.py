@@ -30,7 +30,9 @@ class BaseTournament:
   def Id(self):
     return self._KEY[1]
 
-  matchups = cibblbibbl.group.Group.matchups
+  @property
+  def matchups(self):
+    return tuple()
 
   @property
   def next(self):
@@ -154,9 +156,6 @@ class BaseTournament:
     if not self.year.tournaments:
       self.group.years.remove(self.year)
 
-  def itermatchups(self):
-    yield from []
-
   def register(self):
     self.group.tournaments[str(self.Id)] = self
     self.year.tournaments[str(self.Id)] = self
@@ -202,6 +201,7 @@ class Tournament(
     super().__init__(group_key, Id)
     self._apiget = None
     self._apischedule = None
+    self._matchups = None
     self._season = None
     self._standings = None
 
@@ -220,6 +220,25 @@ class Tournament(
   excluded_teams = cibblbibbl.group.Group.excluded_teams
   excluded_team_ids = cibblbibbl.group.Group.excluded_team_ids
   exclude_teams = cibblbibbl.group.Group.exclude_teams
+
+  @property
+  def matchups(self):
+    if self._matchups is None:
+      def subgen():
+        for d in self.apischedule:
+          team_ids = sorted(d2["id"] for d2 in d["teams"])
+          matchup = cibblbibbl.matchup.Matchup(
+            self.group_key,
+            self.Id,
+            d["round"],
+            team_ids[0],
+            team_ids[1],
+          )
+          yield matchup
+      self._matchups = tuple(
+          cibblbibbl.matchup.sort_by_modified(subgen())
+      )
+    return self._matchups
 
   @property
   def name(self):
@@ -307,18 +326,6 @@ class Tournament(
       return self.year_nr
     else:
       return int(year_nr)
-
-  def itermatchups(self):
-    for d in self.apischedule:
-      team_ids = sorted(d2["id"] for d2 in d["teams"])
-      matchup = cibblbibbl.matchup.Matchup(
-        self.group_key,
-        self.Id,
-        d["round"],
-        team_ids[0],
-        team_ids[1],
-      )
-      yield matchup
 
   def reload_apiget(self, reload=False):
     self._apiget = cibblbibbl.helper.get_api_data(

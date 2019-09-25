@@ -16,13 +16,20 @@ class Group(
       ("sort_keys", True),
   )
 
-  def __init__(self, key: str, register_tournaments=True):
+  def __init__(self, key: str, *,
+      register_tournaments = True,
+      register_teams = True,
+  ):
     self._config = None
+    self._matchups = ...
     self.years = set()
     self.seasons = set()
     self.tournaments = {}
+    self.teams = set()
     if register_tournaments:
        self.register_tournaments()
+    if register_teams:
+       self.register_teams()
 
   @property
   def config(self):
@@ -52,7 +59,15 @@ class Group(
 
   @property
   def matchups(self):
-    return tuple(self.itermatchups())
+    if self._matchups is ...:
+      self._matchups = tuple(
+          cibblbibbl.matchup.sort_by_modified(
+              M
+              for T in self.tournaments.values()
+              for M in T.matchups
+          )
+      )
+    return self._matchups
 
   @property
   def season_names(self):
@@ -66,9 +81,13 @@ class Group(
       bisect.insort(L, int(Te))
       self.excluded_team_ids = L  # directly is not good
 
-  def itermatchups(self):
-    for T in self.tournaments.values():
-      yield from T.itermatchups()
+  def register_teams(self):
+    for M in self.matchups:
+      for Te in M.teams:
+        if Te not in self.teams:
+          self.teams.add(Te)
+          Te._matchups[self.key] = []
+        Te._matchups[self.key].append(M)
 
   def register_tournaments(self):
     C = self.config

@@ -6,6 +6,7 @@ class Season(
 ):
 
   def __init__(self, group_key, year_nr:int, nr:int):
+    self._matchups = ...
     self.tournaments = {}
 
   group = cibblbibbl.year.Year.group
@@ -46,5 +47,3 @@ class Season(
   @property
   def year_nr(self):
     return self._KEY[1]
-
-  itermatchups = cibblbibbl.group.Group.itermatchups

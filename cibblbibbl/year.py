@@ -6,6 +6,7 @@ class Year(
 ):
 
   def __init__(self, group_key, nr:int):
+    self._matchups = ...
     self.seasons = set()
     self.tournaments = {}
 
@@ -34,5 +35,3 @@ class Year(
   def prev(self):
     key = (self.group_key, self.nr - 1)
     return self.__class__.__members__.get(key)
-
-  itermatchups = cibblbibbl.group.Group.itermatchups

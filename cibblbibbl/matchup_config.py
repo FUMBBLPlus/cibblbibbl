@@ -31,6 +31,7 @@ def player_performances(G, T, R, Mu, D):
   playerType_trans = {
     "Big Guy": "B",
     "Irregular": "I",
+    "Journeyman": "J",  # not provided; only for reference
     "Mercenary": "M",
     "RaisedFromDead": "D",
     "Regular": "R",
@@ -54,12 +55,31 @@ def player_performances(G, T, R, Mu, D):
   }
   GR = Ma.replaygameresult
   playerteam = {}
-  for s_homeaway, DTE in Ma.replayteamsdata.items():
+  for side, DTE in Ma.replayteamdata.items():
     DPD = {str(d["playerId"]): d for d in DTE["playerArray"]}
     teamId = str(DTE["teamId"])
-    DGR = GR[s_homeaway]
+    # I check the next match players to determine retired
+    # players later.
+    Te = cibblbibbl.team.Team(int(teamId))
+    Te_nextMa = Te.next_match(Ma)
+    if Te_nextMa is not None:
+      Te_nextMa_side = Te_nextMa.replayteamside[Te]
+      Te_nextMaRTD = Te_nextMa.replayteamdata[Te_nextMa_side]
+      Te_nextMa_Ps = set(
+        cibblbibbl.player.Player(int(d["playerId"]))
+        for d in Te_nextMaRTD["playerArray"]
+        if d["playerId"].isdecimal()
+      )
+      del Te_nextMa.replaydata  # free up memory
+    else:
+      Te_nextMa_Ps = None
+    DGR = GR[side]
     for PR in DGR["playerResults"]:
       playerId = PR["playerId"]
+      if playerId.isdecimal():
+        P = cibblbibbl.player.Player(int(playerId))
+      else:
+        P = None
       PD = DPD[playerId]
       playerteam[playerId] = teamId
       d = {
@@ -91,6 +111,8 @@ def player_performances(G, T, R, Mu, D):
           if PD[k]
       })
       d["type"] = playerType_trans[PD["playerType"]]
+      if 16 < PD["playerNr"] and d["type"] == "R":
+        d["type"] = "J"  # must be a Journeyman
       if PR["seriousInjury"] == "Dead (RIP)":
         riprecord = [
             PR["sendToBoxHalf"],
@@ -98,7 +120,31 @@ def player_performances(G, T, R, Mu, D):
             PR["sendToBoxReason"],
             PR["sendToBoxByPlayerId"],
         ]
-        d["died"] = riprecord
+        d["dead"] = riprecord
+      # now I check for retirements
+      if P is not None:
+        if Te_nextMa_Ps is None or P not in Te_nextMa_Ps:
+          P_status = P.status
+          if P_status == "Dead":
+            if not d.get("dead"):
+              raise Exception(
+                  f'dead mismatch: {Ma}, [{P.Id}] {d["name"]}'
+              )
+          elif P_status == "Retired":
+            print(f'{P_status} ({Ma}): [{P.Id}] {d["name"]}')
+            d["retired"] = True
+          elif P_status == "Retired Journeyman":
+            # here I know about a Journeyman for sure
+            # print(f'{P_status} ({Ma}): [{P.Id}] {d["name"]}')
+            d["type"] = "J"
+            d["retired"] = True
+          elif Te_nextMa_Ps is not None:
+            raise Exception(
+                "mssing from next but not retired: "
+                f'{Ma}, [{P.Id}] {d["name"]}, {P_status}'
+            )
+
+
       yield teamId, playerId, d
 
 
@@ -113,7 +159,7 @@ def team_performances(G, T, R, Mu, D):
         # having a positive Id value in a result means that
         # there was a match played
       M = cibblbibbl.match.Match(RR["id"])
-      rd = {d["teamId"]: d for d in M.replayteamsdata.values()}
+      rd = {d["teamId"]: d for d in M.replayteamdata.values()}
       conceded = M.conceded()
       casualties = M.casualties()
       for i in range(2):

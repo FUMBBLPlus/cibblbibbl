@@ -9,12 +9,27 @@ class Team(metaclass=cibblbibbl.helper.InstanceRepeater):
 
   def __init__(self, teamId: int):
     self._apiget = ...
+    self._apimatches = ...
+    self._matchups = {}
 
   @property
   def apiget(self):
     if self._apiget is ...:
       self.reload_apiget()
     return self._apiget
+
+  @property
+  def apimatches(self):
+    if self._apimatches is ...:
+      self.reload_apimatches()
+    return self._apimatches
+
+  @property
+  def matches(self):
+    return tuple(
+        cibblbibbl.match.Match(int(d["id"]))
+        for d in reversed(self.apimatches)
+    )
 
   @property
   def name(self):
@@ -36,6 +51,35 @@ class Team(metaclass=cibblbibbl.helper.InstanceRepeater):
     s = re.sub('\s*\(.+$', '', s)
     return cibblbibbl.helper.norm_name(s)
 
+  def matchups(self, group_key):
+    return tuple(self._matchups.get(group_key, []))
+
+  def next_match(self, match):
+    matchId = int(match.Id if hasattr(match, "Id") else match)
+    gen = iter(self.apimatches)
+    prev_d = None
+    for d in gen:
+      if int(d["id"]) == matchId:
+        break
+      else:
+        prev_d = d
+    else:
+      raise ValueError(f'match #{match} not found')
+    if prev_d:
+      return cibblbibbl.match.Match(int(prev_d["id"]))
+
+  def prev_match(self, match):
+    matchId = int(match.Id if hasattr(match, "Id") else match)
+    gen = iter(self.apimatches)
+    for d in gen:
+      if int(d["id"]) == matchId:
+        break
+    else:
+      raise ValueError(f'match #{match} not found')
+    try:
+      return cibblbibbl.match.Match(int(next(gen)["id"]))
+    except StopIteration:
+      pass
 
   def reload_apiget(self, reload=False):
     self._apiget = cibblbibbl.helper.get_api_data(
@@ -44,6 +88,14 @@ class Team(metaclass=cibblbibbl.helper.InstanceRepeater):
         pyfumbbl.team.get,
         reload=reload,
     )
+
+  def reload_apimatches(self, reload=False):
+    self._apimatches = tuple(cibblbibbl.helper.get_api_data(
+        self.Id,
+        "cache/api-team-matches",
+        pyfumbbl.team.get_all_matches,
+        reload=reload,
+    ))
 
 
 class GroupOfTeams(tuple):

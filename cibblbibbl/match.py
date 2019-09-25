@@ -10,6 +10,7 @@ class Match(metaclass=cibblbibbl.helper.InstanceRepeater):
   def __init__(self, matchId: int):
     self._apiget = ...
     self._replaydata = ...
+    self._matchup = ...
 
   @property
   def apiget(self):
@@ -29,13 +30,6 @@ class Match(metaclass=cibblbibbl.helper.InstanceRepeater):
     self._replaydata = ...
 
   @property
-  def replayteams(self):
-    return {
-        k: cibblbibbl.team.Team(int(d["teamId"]))
-        for k, d in self.replayteamsdata.items()
-    }
-
-  @property
   def replaygamedata(self):
     for d in self.replaydata:
       try:
@@ -44,7 +38,21 @@ class Match(metaclass=cibblbibbl.helper.InstanceRepeater):
         pass
 
   @property
-  def replayteamsdata(self):
+  def replayteam(self):
+    return {
+        k: cibblbibbl.team.Team(int(d["teamId"]))
+        for k, d in self.replayteamdata.items()
+    }
+
+  @property
+  def replayteamside(self):
+    return {
+        cibblbibbl.team.Team(int(d["teamId"])): k
+        for k, d in self.replayteamdata.items()
+    }
+
+  @property
+  def replayteamdata(self):
     return {
         s: self.replaygamedata[f'team{s}']._data
         for s in ("Home", "Away")
@@ -101,7 +109,7 @@ class Match(metaclass=cibblbibbl.helper.InstanceRepeater):
     jf = cibblbibbl.data.jsonfile(p)
     if reload or not p.is_file() or not p.stat().st_size:
       jf.dump_kwargs = cibblbibbl.settings.dump_kwargs
-      print(f'REPLAY: {api_func}({Id})')
+      print(f'REPLAY {self.Id} - {self.replayId}')
       jf.data = fumbblreplay.get_replay_data(self.replayId)
       jf.save()
     self._replaydata = jf.data

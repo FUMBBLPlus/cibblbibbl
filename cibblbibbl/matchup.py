@@ -17,8 +17,11 @@ class Matchup(metaclass=cibblbibbl.helper.InstanceRepeater):
       round: int,
       low_teamId:int,
       high_teamId:int,
+      *,
+      register_match = True,
   ):
     self._config = None
+    self._match = ...
 
   @property
   def apischedulerecord(self):
@@ -54,10 +57,14 @@ class Matchup(metaclass=cibblbibbl.helper.InstanceRepeater):
 
   @property
   def match(self):
-    d = self.apischedulerecord
-    matchId = d.get("result", {}).get("id")
-    if matchId:
-      return cibblbibbl.match.Match(matchId)
+    if self._match is ...:
+      self._match = None
+      d = self.apischedulerecord
+      matchId = d.get("result", {}).get("id")
+      if matchId:
+        self._match = Ma = cibblbibbl.match.Match(matchId)
+        Ma._matchup = self
+    return self._match
 
   @property
   def modified(self):
@@ -147,3 +154,7 @@ class Matchup(metaclass=cibblbibbl.helper.InstanceRepeater):
     if self._config is None:
       self.reload_config()
     self._config.root.data.update(self.calculate_config())
+
+
+def sort_by_modified(matchups):
+  return sorted(matchups, key=lambda M: M.modified)
