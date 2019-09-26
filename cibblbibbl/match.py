@@ -10,6 +10,7 @@ class Match(metaclass=cibblbibbl.helper.InstanceRepeater):
   def __init__(self, matchId: int):
     self._apiget = ...
     self._replaydata = ...
+    self._replaygamedata = ...
     self._matchup = ...
 
   @property
@@ -31,11 +32,30 @@ class Match(metaclass=cibblbibbl.helper.InstanceRepeater):
 
   @property
   def replaygamedata(self):
-    for d in self.replaydata:
-      try:
-        return d["game"]
-      except KeyError:
-        pass
+    if self._replaygamedata is ...:
+      for d in self.replaydata:
+        try:
+          self._replaygamedata = d["game"]
+        except KeyError:
+          pass
+        else:
+          break
+    return self._replaygamedata
+  @replaygamedata.deleter
+  def replaygamedata(self):
+    self._replaygamedata = ...
+
+  @property
+  def replaygameresult(self):
+    d = self.replaygamedata
+    return {
+        s: d["gameResult"][f'teamResult{s}']._data
+        for s in ("Home", "Away")
+    }
+
+  @property
+  def replayId(self):
+    return self.apiget.get("replayId")
 
   @property
   def replayteam(self):
@@ -57,18 +77,6 @@ class Match(metaclass=cibblbibbl.helper.InstanceRepeater):
         s: self.replaygamedata[f'team{s}']._data
         for s in ("Home", "Away")
     }
-
-  @property
-  def replaygameresult(self):
-    d = self.replaygamedata
-    return {
-        s: d["gameResult"][f'teamResult{s}']._data
-        for s in ("Home", "Away")
-    }
-
-  @property
-  def replayId(self):
-    return self.apiget.get("replayId")
 
   @property
   def teams(self):

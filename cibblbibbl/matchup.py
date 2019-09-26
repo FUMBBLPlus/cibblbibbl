@@ -9,6 +9,8 @@ from . import matchup_config as MC
 
 class Matchup(metaclass=cibblbibbl.helper.InstanceRepeater):
 
+  class IsLocked(Exception): pass
+
   dump_kwargs = cibblbibbl.group.Group.dump_kwargs
 
   def __init__(self,
@@ -20,7 +22,7 @@ class Matchup(metaclass=cibblbibbl.helper.InstanceRepeater):
       *,
       register_match = True,
   ):
-    self._config = None
+    self._config = ...
     self._match = ...
 
   @property
@@ -33,17 +35,50 @@ class Matchup(metaclass=cibblbibbl.helper.InstanceRepeater):
 
   @property
   def config(self):
-    if self._config is None:
+    if self._config is ...:
       self.reload_config()
     if not self._config:
       self.update_config()
     return self._config
 
   @property
+  def configfiledir(self):
+    tournamentId = str(self._KEY[1])
+    if tournamentId.isdecimal():
+      dir = f'{tournamentId:0>8}'
+    else:
+      dir = tournamentId
+    return dir
+
+  @property
+  def configfilename(self):
+    filename = (
+        f'{self.round:0>2}'
+        f'-{self._KEY[3]:0>7}'
+        f'-{self._KEY[4]:0>7}'
+        ".json"
+    )
+    return filename
+
+  @property
+  def configfilepath(self):
+    filepath = (
+        cibblbibbl.data.path
+        / "matchup"
+        / self.configfiledir
+        / self.configfilename
+    )
+    return filepath
+
+  @property
   def created(self):
     fmt = "%Y-%m-%d %H:%M:%S"
     d = self.apischedulerecord
     return datetime.datetime.strptime(d["created"], fmt)
+
+  excluded = cibblbibbl.config.yesnofield(
+      "!excluded", default="no",
+  )
 
   group = cibblbibbl.year.Year.group
   group_key = cibblbibbl.year.Year.group_key
@@ -54,6 +89,8 @@ class Matchup(metaclass=cibblbibbl.helper.InstanceRepeater):
     teamId = d.get("result", {}).get("winner")
     if teamId:
       return cibblbibbl.team.Team(teamId)
+
+  locked = cibblbibbl.config.yesnofield("!locked", default="no")
 
   @property
   def match(self):
@@ -119,26 +156,18 @@ class Matchup(metaclass=cibblbibbl.helper.InstanceRepeater):
       del Ma.replaydata  # free up memory
     return D
 
+  def iterdead(self):
+    C = self.config
+    for teamId, DPP in C["player_performance"].items():
+      for playerId, dpp in DPP.items():
+        dead = dpp.get("dead")
+        if not dead:
+          continue
+        yield teamId, playerId, dpp
+
   def reload_config(self):
-    filename = (
-        f'{self.round:0>2}'
-        f'-{self._KEY[3]:0>7}'
-        f'-{self._KEY[4]:0>7}'
-        ".json"
-    )
-    tournamentId = str(self._KEY[1])
-    if tournamentId.isdecimal():
-      tournament_dir = f'{tournamentId:0>8}'
-    else:
-      tournament_dir = tournamentId
-    filepath = (
-        cibblbibbl.data.path
-        / "matchup"
-        / tournament_dir
-        / filename
-    )
     jf = cibblbibbl.data.jsonfile(
-        filepath,
+        self.configfilepath,
         default_data = {},
         autosave=True,
         dump_kwargs=dict(self.dump_kwargs)
@@ -146,12 +175,17 @@ class Matchup(metaclass=cibblbibbl.helper.InstanceRepeater):
     self._config = jf.data
 
   def rewrite_config(self):
-    if self._config is None:
+    if self.locked:
+      raise self.IsLocked(
+          f'unable to rewrite config of locked matchup {self}'
+      )
+    if self._config is ...:
       self.reload_config()
     self._config.root.data = self.calculate_config()
+    self._config = self._config.root.data
 
   def update_config(self):
-    if self._config is None:
+    if self._config is ...:
       self.reload_config()
     self._config.root.data.update(self.calculate_config())
 

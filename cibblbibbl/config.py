@@ -4,6 +4,21 @@ import pathlib
 
 import cibblbibbl
 
+yesnomap = {
+  "y": "yes",
+  "Y": "yes",
+  "yes": "yes",
+  "Yes": "yes",
+  "YES": "yes",
+  True: "yes",
+  "n": "no",
+  "N": "no",
+  "no": "no",
+  "No": "no",
+  "NO": "no",
+  False: "no",
+}
+
 def getter(key, default=None):
   def fget(self):
     return self.config.get(key, default)
@@ -28,3 +43,26 @@ def field(key, default=None, doc=None):
       doc
   )
 
+
+def yesnogetter(key, default=None):
+  def fget(self):
+    return self.config.get(key, yesnomap[default])
+  return fget
+
+yesnodeleter = deleter
+
+def yesnosetter(key):
+  def fset(self, value):
+    try:
+      self.config[key] = yesnomap[value]
+    except KeyError:
+      raise ValueError(f'invalid yes/no value: {value}')
+  return fset
+
+def yesnofield(key, default=None, doc=None):
+  return property(
+      yesnogetter(key, default=default),
+      yesnosetter(key),
+      yesnodeleter(key),
+      doc
+  )

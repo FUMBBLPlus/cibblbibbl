@@ -17,6 +17,10 @@ def excluded(G, T, R, Mu, D):
     return "no"
 
 
+def locked(G, T, R, Mu, D):
+  return "no"
+
+
 def player_performances(G, T, R, Mu, D):
   Ma = Mu.match
   if not Ma:
@@ -58,9 +62,9 @@ def player_performances(G, T, R, Mu, D):
   for side, DTE in Ma.replayteamdata.items():
     DPD = {str(d["playerId"]): d for d in DTE["playerArray"]}
     teamId = str(DTE["teamId"])
+    Te = cibblbibbl.team.Team(int(teamId))
     # I check the next match players to determine retired
     # players later.
-    Te = cibblbibbl.team.Team(int(teamId))
     Te_nextMa = Te.next_match(Ma)
     if Te_nextMa is not None:
       Te_nextMa_side = Te_nextMa.replayteamside[Te]
@@ -131,7 +135,7 @@ def player_performances(G, T, R, Mu, D):
                   f'dead mismatch: {Ma}, [{P.Id}] {d["name"]}'
               )
           elif P_status == "Retired":
-            print(f'{P_status} ({Ma}): [{P.Id}] {d["name"]}')
+            # print(f'{P_status} ({Ma}): [{P.Id}] {d["name"]}')
             d["retired"] = True
           elif P_status == "Retired Journeyman":
             # here I know about a Journeyman for sure
