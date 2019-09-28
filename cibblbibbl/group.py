@@ -20,7 +20,7 @@ class Group(
       register_tournaments = True,
       register_teams = True,
   ):
-    self._config = None
+    self._config = ...
     self._matchups = ...
     self.years = set()
     self.seasons = set()
@@ -33,7 +33,7 @@ class Group(
 
   @property
   def config(self):
-    if self._config is None:
+    if self._config is ...:
       self.reload_config()
     return self._config
 

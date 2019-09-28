@@ -28,6 +28,8 @@ class Match(metaclass=cibblbibbl.helper.InstanceRepeater):
   def replaydata(self):
       # replaydata should be deleted to avoid huge memory
       # consumption
+    if self._replaydata is not ...:
+      self._replaydata.root._data = None
     self._replaydata = ...
 
   @property
@@ -49,7 +51,7 @@ class Match(metaclass=cibblbibbl.helper.InstanceRepeater):
   def replaygameresult(self):
     d = self.replaygamedata
     return {
-        s: d["gameResult"][f'teamResult{s}']._data
+        s: d["gameResult"][f'teamResult{s}']
         for s in ("Home", "Away")
     }
 

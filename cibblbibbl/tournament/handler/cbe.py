@@ -96,8 +96,8 @@ class CBETournament(
     L = f(*[T.schedule for T in self.sub.values()])
     return L
 
-  @property
   def standings(self):
+    return  # TODO
     f = cibblbibbl.tournament.tools.standings.tiebroken
     L = f(self, base_=self.base_standings)
     # now we apply the individual standings back

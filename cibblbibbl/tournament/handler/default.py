@@ -1,4 +1,8 @@
+import collections
 import copy
+import itertools
+
+import pytourney
 
 import pyfumbbl
 
@@ -11,7 +15,7 @@ from .. import tools
 class BaseTournament:
 
   def __init__(self, group_key, Id):
-    self._config = None
+    self._config = ...
 
   def __lt__(self, other):
     return (self.group_key, self.sortId).__lt__((other.group_key, other.sortId))
@@ -174,17 +178,6 @@ class BaseTournament:
     )
     self._config = jf.data
 
-  def standings_keyf(self, d, Id):
-    row = d[Id]
-    return (
-      -row["pts"],
-      +row["hth"],
-      -row["scorediff"],
-      -row["casdiff"],
-      -row["cto"]
-  )
-
-
 
 class AbstractTournament(BaseTournament):
 
@@ -199,21 +192,20 @@ class Tournament(
 
   def __init__(self, group_key, Id):
     super().__init__(group_key, Id)
-    self._apiget = None
-    self._apischedule = None
-    self._matchups = None
-    self._season = None
-    self._standings = None
+    self._apiget = ...
+    self._apischedule = ...
+    self._matchups = ...
+    self._season = ...
 
   @property
   def apiget(self):
-    if self._apiget is None:
+    if self._apiget is ...:
       self.reload_apiget()
     return self._apiget
 
   @property
   def apischedule(self):
-    if self._apischedule is None:
+    if self._apischedule is ...:
       self.reload_apischedule()
     return self._apischedule
 
@@ -221,23 +213,31 @@ class Tournament(
   excluded_team_ids = cibblbibbl.group.Group.excluded_team_ids
   exclude_teams = cibblbibbl.group.Group.exclude_teams
 
+  def _iter_matchups(self):
+    for d in self.apischedule:
+      team_ids = sorted(d2["id"] for d2 in d["teams"])
+      matchup = cibblbibbl.matchup.Matchup(
+        self.group_key,
+        self.Id,
+        d["round"],
+        team_ids[0],
+        team_ids[1],
+      )
+      yield matchup
+
   @property
   def matchups(self):
-    if self._matchups is None:
-      def subgen():
-        for d in self.apischedule:
-          team_ids = sorted(d2["id"] for d2 in d["teams"])
-          matchup = cibblbibbl.matchup.Matchup(
-            self.group_key,
-            self.Id,
-            d["round"],
-            team_ids[0],
-            team_ids[1],
-          )
-          yield matchup
-      self._matchups = tuple(
-          cibblbibbl.matchup.sort_by_modified(subgen())
-      )
+    if self._matchups is ...:
+      p, n = self.prev, self.next
+      if n:
+        self._matchups = tuple()
+      else:
+        self._matchups = tuple(
+            cibblbibbl.matchup.sort_by_modified(itertools.chain(
+                (p._iter_matchups() if p else []),
+                self._iter_matchups()
+            ))
+        )
     return self._matchups
 
   @property
@@ -303,12 +303,6 @@ class Tournament(
       return season_names.index(season_name) + 1
 
   @property
-  def standings(self):
-    if self._standings is None:
-      self.reload_standings()
-    return self._standings
-
-  @property
   def status(self):
     return self.apiget["status"]
 
@@ -343,20 +337,91 @@ class Tournament(
         reload=reload,
     )
 
-  def reload_standings(self):
-    self._standings = tools.standings.tiebroken(self)
-    dump_kwargs = cibblbibbl.settings.dump_kwargs
-    jf = cibblbibbl.data.jsonfile(
-        self.filepath("standings"),
-        data = tools.standings.export(self._standings),
-        default_data = {},
-        autosave=True,
-        dump_kwargs=dump_kwargs
+  def standings(self):
+    tpkeys = (
+        "cas", "casdiff",
+        "score", "scorediff",
+        "tds", "tdsdiff",
+        "pts", "prestige"
     )
-
-
-
-
+    template = {k: 0 for k in tpkeys}
+    template["cto"] = -1
+    template["hth"] = -1
+    template["perf"] = []
+    S = collections.defaultdict(lambda: copy.deepcopy(template))
+    Ccto = self.config.get("cto", {})
+    Chth = self.config.get("hth", {})
+    Co = self.config.get("order")
+    HTH_results = []
+    for Mu in self.matchups:
+      if Mu.excluded == "yes":
+        continue
+      HTH_result = {}
+      for teamId, TP in Mu.config["team_performance"].items():
+        Te = cibblbibbl.team.Team(int(teamId))
+        rsym = TP["rsym"]
+        matchId = (Mu.match.Id if Mu.match else None)
+        perf = rsym, matchId
+        d = S[teamId]
+        d.setdefault("team", Te)
+        d["perf"].append(perf)
+        for k in tpkeys:
+          d[k] += TP[k]
+        if rsym.lower() not in ("b", "f", "x", "-"):
+          HTH_result[teamId] = TP["tds"]
+      if len(HTH_result) == 2:
+        HTH_results.append(HTH_result)
+    bypts = collections.defaultdict(list)
+    for teamId, d in S.items():
+      bypts[d["pts"]].append(teamId)
+    for pts, teamIds in bypts.items():
+      if 1 < len(teamIds):
+        pts_HTH_results = [{teamId: 0} for teamId in teamIds]
+            # this ensures all nodes for HTH calculation
+        for r0 in HTH_results:
+            # generate edges by passing results of the group
+            # members within the group
+          r1 = {
+              teamId: tds
+              for teamId, tds in r0.items()
+              if teamId in teamIds
+          }
+          if 1 < len(r1):
+            # I do not want to pass empty dictionaries nor nodes
+            # as those were ensured before
+            pts_HTH_results.append(r1)
+        pts_HTH = pytourney.tie.hth.calculate(pts_HTH_results)
+        for teamId, hth_val in pts_HTH.items():
+          S[teamId]["hth"] = Chth.get(teamId, hth_val)
+    for teamId, cto_val in Ccto.items():
+      S[teamId]["cto"] = cto_val
+    # determine missing coin toss
+    bytie = collections.defaultdict(list)
+    keys = ("pts", "hth", "scorediff", "casdiff", "cto")
+    for teamId, d in S.items():
+      bytie[tuple(d[k] for k in keys)].append(teamId)
+    for k, teamIds in bytie.items():
+      if 1 < len(teamIds):
+        cto_val = -112  # indicate missing
+        for teamId in teamIds:
+          S[teamId]["cto"] = cto_val
+          Ccto = self.config.setdefault("cto", {})
+              # this ensures that I write to the config file
+          Ccto[teamId] = cto_val
+    # determine order
+    if Co is None:
+      order = sorted(S, key=(
+          lambda teamId: (
+              -S[teamId]["pts"],
+              +S[teamId]["hth"],
+              -S[teamId]["scorediff"],
+              -S[teamId]["casdiff"],
+              -S[teamId]["cto"]
+          )
+      ))
+    else:
+      order = Co
+    return [S[teamId] for teamId in order]
 
 
 

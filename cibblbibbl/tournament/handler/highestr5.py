@@ -99,6 +99,9 @@ class HighestR5Tournament(
     )
     self._standings = standings
 
+  def standings(self):
+    return  # TODO
+
 
 def init(group_key, Id):
   return HighestR5Tournament(group_key, Id)

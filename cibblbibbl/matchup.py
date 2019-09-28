@@ -64,6 +64,7 @@ class Matchup(metaclass=cibblbibbl.helper.InstanceRepeater):
   def configfilepath(self):
     filepath = (
         cibblbibbl.data.path
+        / self.group_key
         / "matchup"
         / self.configfiledir
         / self.configfilename

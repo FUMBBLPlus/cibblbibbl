@@ -148,9 +148,5 @@ def export(standings):
     d["id"] = d["team"].Id
     d["name"] = d["team"].name  # to help human admin
     del d["team"]
-    if d.get("matches"):
-      d["matches"] = [
-          (None if M is None else M.Id) for M in d["matches"]
-      ]
   return L
 

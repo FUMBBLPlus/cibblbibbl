@@ -124,6 +124,9 @@ class JSONFile(JSONFileRoot):
     elif autosave:
       self.save()
 
+  def __str__(self):
+    return f'{self.__class__.__name__}({self.filepath})'
+
   @property
   def autosave(self):
     return bool(self._autosave)  # ensure boolean
@@ -144,6 +147,7 @@ class JSONFile(JSONFileRoot):
     return super().may_changed(inst, old_data)
 
   def on_change(self):
+    print("on change", self, self.autosave)
     if self.autosave:
       self.save()
 
@@ -184,6 +188,9 @@ class JSONFileContainer(JSONFileBase):
   def __init__(self, root, data):
     self._root = root
     self._data = data
+
+  def __contains__(self, key):  # has to be explicit
+    return self._data.__contains__(key)
 
   def __delitem__(self, key):  # has to be explicit
     m = self._change_method("__delitem__")

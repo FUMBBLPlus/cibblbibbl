@@ -222,4 +222,6 @@ def team_performances(G, T, R, Mu, D):
       ):
       value = T.rsym.get(k, {}).get(d["rsym"], 0)
       d[k] += value
+    for k in ("pts", "prestige"):
+      d[k] = T.rsym.get(k, {}).get(d["rsym"], 0)
     yield teamId, d
