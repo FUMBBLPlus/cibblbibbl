@@ -7,9 +7,78 @@ import cibblbibbl
 from . import matchup_config as MC
 
 
-class Matchup(metaclass=cibblbibbl.helper.InstanceRepeater):
+class BaseMatchup:
 
   class IsLocked(Exception): pass
+
+  excluded = cibblbibbl.config.yesnofield(
+      "!excluded", default="no",
+  )
+  locked = cibblbibbl.config.yesnofield("!locked", default="no")
+
+
+
+class AbstractMatchup(BaseMatchup):
+
+  def __init__(self,
+      group_key: str,
+      tournamentId: str,
+      round: int,
+      *keys,
+      modified = None,
+      teams = None,
+  ):
+    self._group_key = group_key
+    self._tournamentId = tournamentId
+    self._round = round
+    self._keys = keys
+    self.config = None
+    self.match = None
+    self.modified = (modified or datetime.datetime.now())
+    self.teams = (teams or ())
+
+  def __repr__(self):
+    return (
+        f'{self.__class__.__name__}'
+        "("
+        f'{self.group_key!r}, '
+        f'{self.tournamentId!r}, '
+        f'{self.round!r}, '
+        f'{", ".join(repr(k) for k in self.keys)}'
+        ")"
+    )
+
+  @property
+  def abstract(self):
+    return True
+
+  group = cibblbibbl.year.Year.group
+
+  @property
+  def group_key(self):
+    return self._group_key
+
+  @property
+  def keys(self):
+    return self._keys
+
+  @property
+  def round(self):
+    return self._round
+
+  @property
+  def tournament(self):
+    return self.group.tournaments[self.tournamentId]
+
+  @property
+  def tournamentId(self):
+    return str(self._tournamentId)
+
+
+class Matchup(
+    BaseMatchup,
+    metaclass=cibblbibbl.helper.InstanceRepeater
+):
 
   dump_kwargs = cibblbibbl.group.Group.dump_kwargs
 
@@ -19,11 +88,13 @@ class Matchup(metaclass=cibblbibbl.helper.InstanceRepeater):
       round: int,
       low_teamId:int,
       high_teamId:int,
-      *,
-      register_match = True,
   ):
     self._config = ...
     self._match = ...
+
+  @property
+  def abstract(self):
+    return False
 
   @property
   def apischedulerecord(self):
@@ -77,10 +148,6 @@ class Matchup(metaclass=cibblbibbl.helper.InstanceRepeater):
     d = self.apischedulerecord
     return datetime.datetime.strptime(d["created"], fmt)
 
-  excluded = cibblbibbl.config.yesnofield(
-      "!excluded", default="no",
-  )
-
   group = cibblbibbl.year.Year.group
   group_key = cibblbibbl.year.Year.group_key
 
@@ -90,8 +157,6 @@ class Matchup(metaclass=cibblbibbl.helper.InstanceRepeater):
     teamId = d.get("result", {}).get("winner")
     if teamId:
       return cibblbibbl.team.Team(teamId)
-
-  locked = cibblbibbl.config.yesnofield("!locked", default="no")
 
   @property
   def match(self):
@@ -131,7 +196,11 @@ class Matchup(metaclass=cibblbibbl.helper.InstanceRepeater):
 
   @property
   def tournament(self):
-    return self.group.tournaments[str(self._KEY[1])]
+    return self.group.tournaments[self.tournamentId]
+
+  @property
+  def tournamentId(self):
+    return str(self._KEY[1])
 
   @property
   def year(self):

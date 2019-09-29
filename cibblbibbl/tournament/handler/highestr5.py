@@ -12,95 +12,53 @@ class HighestR5Tournament(
     default.Tournament,
     metaclass=cibblbibbl.helper.InstanceRepeater,
 ):
-  base_standings = cbe.CBETournament.base_standings
   excluded_teams = default.Tournament.excluded_teams
   rsym = default.Tournament.rsym
   sub = cbe.CBETournament.sub
 
   @property
-  def custom_prestiges(self):
-    r = {Te: {"gam": 0} for Te in self.teams}
-    m_res = cibblbibbl.tournament.tools.results
-    m_stand = cibblbibbl.tournament.tools.standings
-    f = m_res.individual_from_schedule
-    I = list(f(self, self.schedule))
-    f = m_stand.base_from_individual_results
-    B = f(I)
-    base_rev = m_stand.base_revised(self,
-        base_ = B,
-        config_standings_key = "thisstandings",
-    )
-    d = {d["team"]: d["perf"] for d in base_rev}
-    for Te, perf in d.items():
-      gam = 0
-      if self.season.name != "Winter":
-        for rsym in perf:
-          gam += self.rsym.get("prestige", {}).get(rsym, 0)
-      r[Te].update({"gam": gam})
-    return r
+  def matchups(self):
+    if self._matchups is ...:
+      ranks = self.teamranks()
+      matchups = default.Tournament.matchups.fget(self)
+      if self.status == "Completed":
+        # ensure the highest ranked matchup win got over 100 pts
+        sortf = (
+            lambda Mu: sum(
+                ranks[cibblbibbl.team.Team(int(teamId))]
+                for teamId in Mu.config["team_performance"]
+            )
+        )
+        matchups_by_rank = sorted(matchups, key=sortf)
+        for Mu in matchups_by_rank:
+          for TP in Mu.config["team_performance"].values():
+            if not TP.get("rsym"):
+              break  # not yet played
+            elif TP["rsym"] == "W":
+              if TP["pts"] < 100:
+                TP["pts"] += 100
+              break
+          else:
+            continue
+          break
+      self._matchups = tuple(
+          cibblbibbl.matchup.sort_by_modified(itertools.chain(
+              (
+                  Mu
+                  for T in self.sub.values()
+                  for Mu in T._iter_matchups()
+              ),
+              matchups
+          ))
+      )
+    return self._matchups
 
-  @property
-  def fullschedule(self):
-    Ss = [T.schedule for T in self.sub.values()]
-    Ss.append(self.schedule)
-    f = cibblbibbl.tournament.tools.schedule.combined
-    L = f(*Ss)
-    return L
-
-  @property
-  def individual_results(self):
-    m_res = cibblbibbl.tournament.tools.results
-    f_ind = m_res.individual_from_schedule
-    I = list(f_ind(self, self.fullschedule))
-    return I
-
-  @property
-  def rank_pairs(self):
-    gen = zip(*[T.standings for T in self.sub.values()])
-    T = tuple(
-      tuple(d["team"] for d in rank_pair)
-      for rank_pair in gen
-    )
-    return T
-
-  @property
-  def subschedule(self):
-    Ss = [T.schedule for T in self.sub.values()]
-    f = cibblbibbl.tournament.tools.schedule.combined
-    L = f(*Ss)
-    return L
-
-  @property
-  def teams(self):
-    return set(ir.team for ir in self.individual_results)
-
-  def reload_standings(self):
-    m_res = cibblbibbl.tournament.tools.results
-    m_stand = cibblbibbl.tournament.tools.standings
-    hth_all = m_res.hth_all(self, schedule=self.fullschedule)
-    base_rev = m_stand.base_revised(self,
-        base_=self.base_standings,
-    )
-    # Now I look for the best ranked winner
-    idx_d = {d["team"]: (i, d) for i, d in enumerate(base_rev)}
-    ranks = [Te for rp in self.rank_pairs for Te in rp]
-    for Te in ranks:
-      i, d = idx_d[Te]
-      perf = d.get("perf", "")
-      if perf and perf[-1] == "W":
-        d["pts"] += 1000000  # winner
-        if i != 0:
-          del base_rev[i]
-          base_rev.insert(0, d)
-        break
-    standings = tools.standings.tiebroken(self,
-        base_revised_ = base_rev,
-        hth_all = hth_all,
-    )
-    self._standings = standings
-
-  def standings(self):
-    return  # TODO
+  def teamranks(self):
+    ranks = {}
+    for T in self.sub.values():
+      for n, d in enumerate(T.standings(), 1):
+        ranks[d["team"]] = n
+    return ranks
 
 
 def init(group_key, Id):

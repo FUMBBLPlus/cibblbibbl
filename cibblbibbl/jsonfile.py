@@ -125,7 +125,7 @@ class JSONFile(JSONFileRoot):
       self.save()
 
   def __str__(self):
-    return f'{self.__class__.__name__}({self.filepath})'
+    return f"{self.__class__.__name__}('{self.filepath}')"
 
   @property
   def autosave(self):
@@ -203,6 +203,9 @@ class JSONFileContainer(JSONFileBase):
   def __doc__(self):
     return self._data.__doc__
 
+  def __iter__(self):  # has to be explicit
+    return self._data.__iter__()
+
   def __getattr__(self, name):
     if name in self._change_method_names:
       return self._change_method(name)
@@ -273,6 +276,13 @@ class JSONFileObject(JSONFileContainer):
     key = str(key)  # JSON obejct keys must be strings
     return super().__setitem__(key, value)
 
+  def items(self):
+    for k in self:
+      yield k, self[k]
+
+  def values(self):
+    for k in self:
+      yield self[k]
 
 
 jsonfile = JSONFile

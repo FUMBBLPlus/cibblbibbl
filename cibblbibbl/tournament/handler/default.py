@@ -276,7 +276,6 @@ class Tournament(
     })
     dscorediff = d.setdefault("scorediff", {
         "B": 2,
-        "b": -2,
         "F": -2,
     })
     return d
@@ -420,7 +419,9 @@ class Tournament(
           )
       ))
     else:
-      order = Co
+      order = [str(teamId) for teamId in Co]
+    S.default_factory = None
+        # close defaultdict so it can raise KeyError exceptions
     return [S[teamId] for teamId in order]
 
 
