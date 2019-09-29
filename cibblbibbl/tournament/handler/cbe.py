@@ -37,25 +37,27 @@ class CBETournament(
       )
       matchups = []
       for Mu in orig_matchups:
+        filekeys = Mu.configfilepath.stem.split("-")
         AMu = cibblbibbl.matchup.AbstractMatchup(
             Mu.group_key,
-            Mu.tournamentId,
+            str(self.Id),
             Mu.round,
-            *tuple(Te.Id for Te in Mu.teams),
-            modified = Mu.modified,
-            teams = Mu.teams,
+            *sorted(Te.Id for Te in Mu.teams),
+            filekeys = filekeys,
         )
-        AMu.config = copy.deepcopy(Mu.config._data)
-        AMu.match = Mu.match
-        AMu.config["player_performance"] = {}
-        dTP = AMu.config["team_performance"]
-        for teamId, d in list(dTP.items()):
-          Te = cibblbibbl.team.Team(int(teamId))
-          grnr, Gr = group_of_partner[Te]
-          d["id"] = teamId
-          d["prestige"] = 0
-          dTP[str(grnr)] = d
-          del dTP[teamId]
+        if not AMu.config:
+          d = copy.deepcopy(Mu.config._data)
+          d["player_performance"] = {}
+          dTP = d["team_performance"]
+          for teamId, d1 in list(dTP.items()):
+            Te = cibblbibbl.team.Team(int(teamId))
+            grnr, Gr = group_of_partner[Te]
+            d1["id"] = teamId
+            d1["prestige"] = 0
+            dTP[str(grnr)] = d1
+            del dTP[teamId]
+          AMu.update_config(d)
+          AMu.modified = Mu.modified
         matchups.append(AMu)
       self._matchups = tuple(matchups)
     return self._matchups

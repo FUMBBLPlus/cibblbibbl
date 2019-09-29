@@ -8,6 +8,7 @@ import pyfumbbl
 
 import cibblbibbl
 
+from ...jsonfile import jsonfile
 from .. import tools
 
 
@@ -37,6 +38,20 @@ class BaseTournament:
   @property
   def matchups(self):
     return tuple()
+
+  @property
+  def matchupsdir(self):
+    if self.Id.isdecimal():
+      dirname = f'{self.Id:0>8}'
+    else:
+      dirname = self.Id
+    dir = (
+        cibblbibbl.data.path
+        / self.group_key
+        / "matchup"
+        / dirname
+    )
+    return dir
 
   @property
   def next(self):
@@ -223,6 +238,24 @@ class Tournament(
         team_ids[0],
         team_ids[1],
       )
+      yield matchup
+    for p in self.matchupsdir.glob("a-*.json"):
+      jf = jsonfile(
+          p,
+          default_data = {},
+          autosave = True,
+          dump_kwargs = dict(self.dump_kwargs),
+      )
+      d = jf.data
+      filekeys = p.name.split("-")[1:]
+      keys = jf.data.get("keys") or filekeys
+      matchup = cibblbibbl.matchup.AbstractMatchup(
+        self.group_key,
+        self.Id,
+        *keys,
+        filekeys=filekeys
+      )
+      matchup._config = d
       yield matchup
 
   @property

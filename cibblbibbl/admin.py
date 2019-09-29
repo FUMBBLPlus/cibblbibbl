@@ -41,7 +41,7 @@ def missingkiller():
         playerName = dpp["name"]
         print(
             f'{n}.  '
-            f'{Mu.configfiledir}/{Mu.configfilename}  '
+            f'{Mu.configfiledir.stem}/{Mu.configfilename}  '
             f'Team-{teamId} Player-{playerId} '
             f'H{half}T{turn} {reason}'
         )

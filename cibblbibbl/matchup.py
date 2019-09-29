@@ -11,46 +11,31 @@ class BaseMatchup:
 
   class IsLocked(Exception): pass
 
-  excluded = cibblbibbl.config.yesnofield(
-      "!excluded", default="no",
-  )
-  locked = cibblbibbl.config.yesnofield("!locked", default="no")
-
-
-
-class AbstractMatchup(BaseMatchup):
-
   def __init__(self,
       group_key: str,
       tournamentId: str,
-      round: int,
       *keys,
-      modified = None,
-      teams = None,
   ):
     self._group_key = group_key
     self._tournamentId = tournamentId
-    self._round = round
     self._keys = keys
-    self.config = None
-    self.match = None
-    self.modified = (modified or datetime.datetime.now())
-    self.teams = (teams or ())
-
-  def __repr__(self):
-    return (
-        f'{self.__class__.__name__}'
-        "("
-        f'{self.group_key!r}, '
-        f'{self.tournamentId!r}, '
-        f'{self.round!r}, '
-        f'{", ".join(repr(k) for k in self.keys)}'
-        ")"
-    )
+    self._config = ...
 
   @property
-  def abstract(self):
-    return True
+  def config(self):
+    if self._config is ...:
+      self.reload_config()
+    return self._config
+
+  @property
+  def configfilepath(self):
+    return self.tournament.matchupsdir / self.configfilename
+
+  dump_kwargs = cibblbibbl.group.Group.dump_kwargs
+
+  excluded = cibblbibbl.config.yesnofield(
+      "!excluded", default="no",
+  )
 
   group = cibblbibbl.year.Year.group
 
@@ -62,9 +47,27 @@ class AbstractMatchup(BaseMatchup):
   def keys(self):
     return self._keys
 
+  locked = cibblbibbl.config.yesnofield("!locked", default="no")
+
   @property
-  def round(self):
-    return self._round
+  def match(self):
+    match, matchId = None, self.config.get("matchId")
+    if matchId is not None:
+      match = cibblbibbl.match.Match(int(matchId))
+    return match
+  @match.setter
+  def match(self, value):
+    if hasattr(value, "Id"):
+      value = value.Id
+    self.config["matchId"] = str(value)
+  match = match.deleter(cibblbibbl.config.deleter("matchId"))
+
+  @property
+  def teams(self):
+    return frozenset(
+        cibblbibbl.team.Team(int(teamId))
+        for teamId in self.config["team_performance"]
+    )
 
   @property
   def tournament(self):
@@ -74,22 +77,93 @@ class AbstractMatchup(BaseMatchup):
   def tournamentId(self):
     return str(self._tournamentId)
 
+  def reload_config(self):
+    jf = cibblbibbl.data.jsonfile(
+        self.configfilepath,
+        default_data = {},
+        autosave=True,
+        dump_kwargs=dict(self.dump_kwargs)
+    )
+    self._config = jf.data
+
+
+
+class AbstractMatchup(
+    BaseMatchup,
+    metaclass=cibblbibbl.helper.InstanceRepeater,
+):
+
+  def __init__(self, *args, filekeys=None, **kwargs):
+    super().__init__(*args, **kwargs)
+    self.filekeys = filekeys
+
+  def __repr__(self):
+    return (
+        f'{self.__class__.__name__}'
+        "("
+        f'{self.group_key!r}, '
+        f'{self.tournamentId!r}, '
+        f'{", ".join(repr(k) for k in self.keys)}'
+        ")"
+    )
+
+  @property
+  def abstract(self):
+    return True
+
+  @property
+  def configfilename(self):
+    filekeys = self.filekeys or self.keys
+    return "a-" + "-".join(str(v) for v in filekeys) + ".json"
+
+  @property
+  def modified(self):
+    modified = self.config.get("modified")
+    if modified:
+      fmt = "%Y-%m-%d %H:%M:%S"
+      modified = datetime.datetime.strptime(modified, fmt)
+    return modified
+  @modified.setter
+  def modified(self, value):
+    fmt = "%Y-%m-%d %H:%M:%S"
+    if hasattr(value, "isdecimal"):
+      dt = datetime.datetime.strptime(value, fmt)  # test
+    else:
+      value = value.strftime(fmt)
+    self.config["modified"] = value
+  @modified.deleter
+  def modified(self):
+    try:
+      del self.config["modified"]
+    except KeyError:
+      pass
+
+  def update_config(self, data):
+    if self._config is ...:
+      self.reload_config()
+    self._config.root.data.update(data)
+
+
 
 class Matchup(
     BaseMatchup,
-    metaclass=cibblbibbl.helper.InstanceRepeater
+    metaclass=cibblbibbl.helper.InstanceRepeater,
 ):
-
-  dump_kwargs = cibblbibbl.group.Group.dump_kwargs
 
   def __init__(self,
       group_key: str,
       tournamentId: str,
-      round: int,
+      round_: int,
       low_teamId:int,
       high_teamId:int,
   ):
-    self._config = ...
+    super().__init__(
+        group_key,
+        tournamentId,
+        round_,
+        low_teamId,
+        high_teamId,
+    )
     self._match = ...
 
   @property
@@ -116,9 +190,15 @@ class Matchup(
   def configfiledir(self):
     tournamentId = str(self._KEY[1])
     if tournamentId.isdecimal():
-      dir = f'{tournamentId:0>8}'
+      dirname = f'{tournamentId:0>8}'
     else:
-      dir = tournamentId
+      dirname = tournamentId
+    dir = (
+        cibblbibbl.data.path
+        / self.group_key
+        / "matchup"
+        / dirname
+    )
     return dir
 
   @property
@@ -133,23 +213,13 @@ class Matchup(
 
   @property
   def configfilepath(self):
-    filepath = (
-        cibblbibbl.data.path
-        / self.group_key
-        / "matchup"
-        / self.configfiledir
-        / self.configfilename
-    )
-    return filepath
+    return self.configfiledir / self.configfilename
 
   @property
   def created(self):
     fmt = "%Y-%m-%d %H:%M:%S"
     d = self.apischedulerecord
     return datetime.datetime.strptime(d["created"], fmt)
-
-  group = cibblbibbl.year.Year.group
-  group_key = cibblbibbl.year.Year.group_key
 
   @property
   def highlightedteam(self):
@@ -195,14 +265,6 @@ class Matchup(
     )
 
   @property
-  def tournament(self):
-    return self.group.tournaments[self.tournamentId]
-
-  @property
-  def tournamentId(self):
-    return str(self._KEY[1])
-
-  @property
   def year(self):
     return self.tournament.year
 
@@ -235,15 +297,6 @@ class Matchup(
           continue
         yield teamId, playerId, dpp
 
-  def reload_config(self):
-    jf = cibblbibbl.data.jsonfile(
-        self.configfilepath,
-        default_data = {},
-        autosave=True,
-        dump_kwargs=dict(self.dump_kwargs)
-    )
-    self._config = jf.data
-
   def rewrite_config(self):
     if self.locked:
       raise self.IsLocked(
@@ -258,6 +311,8 @@ class Matchup(
     if self._config is ...:
       self.reload_config()
     self._config.root.data.update(self.calculate_config())
+
+
 
 
 def sort_by_modified(matchups):
