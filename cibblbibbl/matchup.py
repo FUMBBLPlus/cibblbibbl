@@ -63,6 +63,14 @@ class BaseMatchup:
   match = match.deleter(cibblbibbl.config.deleter("matchId"))
 
   @property
+  def season(self):
+    return self.tournament.season
+
+  @property
+  def season_nr(self):
+    return self.tournament.season_nr
+
+  @property
   def teams(self):
     return frozenset(
         cibblbibbl.team.Team(int(teamId))
@@ -85,6 +93,14 @@ class BaseMatchup:
         dump_kwargs=dict(self.dump_kwargs)
     )
     self._config = jf.data
+
+  @property
+  def year(self):
+    return self.tournament.year
+
+  @property
+  def year_nr(self):
+    return self.tournament.year_nr
 
 
 
@@ -254,19 +270,11 @@ class Matchup(
     return self._KEY[2]
 
   @property
-  def season(self):
-    return self.tournament.season
-
-  @property
   def teams(self):
     return frozenset(
         cibblbibbl.team.Team(teamId)
         for teamId in self._KEY[3:5]
     )
-
-  @property
-  def year(self):
-    return self.tournament.year
 
   def calculate_config(self):
     G = self.group

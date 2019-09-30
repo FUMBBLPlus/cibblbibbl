@@ -19,6 +19,8 @@ from . import season
 from . import tournament
 from . import matchup
 
+from . import achievement
+
 CIBBL = group.Group("cibbl")
 
 from . import admin

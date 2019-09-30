@@ -47,3 +47,29 @@ class Season(
   @property
   def year_nr(self):
     return self._KEY[1]
+
+  def since(self, season):
+    """
+    Returns how many seasons has been passed since the given
+    season including itself. The result is positive if the
+    given season was earlier.
+    """
+    c = 0
+    if season.KEY[1:] < self._KEY[1:]:
+      while season is not self:
+        season = season.next
+        c += 1
+    elif self._KEY[1:] < season.KEY[1:]:
+      while season is not self:
+        season = season.prec
+        c -= 1
+    return c
+
+  def until(self, season):
+    """
+    Returns how many seasons has been passed until the given
+    season including itself. The result is positive if the
+    given season was later.
+    """
+    return -self.since(season)
+
