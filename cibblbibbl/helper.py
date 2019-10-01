@@ -146,6 +146,15 @@ class InstanceRepeater(type):
     return instance
 
 
+def instancerepeatergetter(keyi, doc=None):
+  return property(
+    lambda keyi=keyi, self: self._KEY[keyi],   # fget
+    None,  # fset
+    None,  # fdel
+    doc
+  )
+
+
 
 # https://stackoverflow.com/a/14412901/2334951
 def doublewrap(f):

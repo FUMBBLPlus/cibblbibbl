@@ -12,6 +12,10 @@ class Team(metaclass=cibblbibbl.helper.InstanceRepeater):
     self._apimatches = ...
     self._matchups = {}
 
+  @staticmethod
+  def _get_key(teamId):
+    return (int(teamId),)
+
   @property
   def apiget(self):
     if self._apiget is ...:

@@ -18,9 +18,15 @@ class TP_Match(Achievement):
     for key, prestige in prestiges.items():
       if prestige:
         i = cls(*key)
-        i.config.setdefault("prestige", prestige)
+        if i.status != "accepted":
+          i.baseprestige = prestige
         yield i
 
+  @classmethod
+  def byteam(cls, team):
+    if hasattr(team, "Id"):
+      team = team.Id
+    return set(cls.inst_by_subjec.get((str(team), ""), ()))
 
 
 cls = TP_Match
