@@ -11,6 +11,7 @@ class Team(metaclass=cibblbibbl.helper.InstanceRepeater):
     self._apiget = ...
     self._apimatches = ...
     self._matchups = {}
+    self.achievements = set()
 
   @staticmethod
   def _get_key(teamId):

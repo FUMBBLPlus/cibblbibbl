@@ -4,6 +4,7 @@ class Player:
 
   def __init__(self, playerId: int):
     self._Id = int(playerId)
+    self.achievements = set()
 
   def __eq__(self, other):
     return (hash(self) == hash(other))

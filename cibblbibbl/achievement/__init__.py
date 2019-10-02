@@ -11,5 +11,22 @@ __all__ = list(
 
 from . import *
 
+
+def collect(group_key):
+  return {
+      a
+      for cls in mastercls.Achievement.registry.values()
+      for a in cls.collect(group_key)
+  }
+
+
+def collectall():
+  return {
+      a
+      for key in cibblbibbl.group.Group.__members__
+      for a in collect(key[0])
+  }
+
+
 del pkgutil
 del os

@@ -6,14 +6,27 @@ from ..jsonfile import jsonfile
 import cibblbibbl
 
 
-class Achievement:
+class Achievement(
+    metaclass=cibblbibbl.helper.InstanceRepeater
+):
 
-  default_config = {"status": "proposed"}
+  registry = {}
+
   dump_kwargs = cibblbibbl.group.Group.dump_kwargs
 
   def __init__(self, tournament, subject):
     self.tournament = tournament
     self.subject = subject
+    self.tournament.achievements.add(self)
+    self.subject.achievements.add(self)
+
+  def __init_subclass__(cls, **kwargs):
+    super().__init_subclass__(**kwargs)
+    Achievement.registry[cls.__name__.lower()] = cls
+
+  def __del__(self):
+    self.tournament.achievements.remove(self)
+    self.subject.achievements.remove(self)
 
   def __delitem__(self, key):
     return self.config.__delitem__(key, value)
@@ -26,6 +39,40 @@ class Achievement:
 
   def __setitem__(self, key, value):
     return self.config.__setitem__(key, value)
+
+  @classmethod
+  def agent00(cls, group_key):
+    G = cibblbibbl.group.Group(group_key)
+    dir = (
+      cibblbibbl.data.path
+      / group_key
+      / "achievement"
+      / f'{cls.__name__.lower()}'
+    )
+    for p in dir.glob("**/*.json"):
+      tournamentId = p.parent.name
+      if tournamentId.isdecimal():
+        tournamentId = tournamentId.lstrip("0")
+      tournament = G.tournaments[tournamentId]
+      subjectId = int(p.stem)
+      subject = cls.subject_type(subjectId)
+      yield cls(tournament, subject)
+
+  @classmethod
+  def collect(cls, group_key):
+    nr = 0
+    S = set()
+    while nr < 100:
+      attrname = f'agent{nr:0>2}'
+      if hasattr(cls, attrname):
+        agentmethod = getattr(cls, attrname)
+        S |= set(agentmethod(group_key))
+      else:
+        break
+      nr += 1
+    return S
+
+  iterexisting = agent00
 
   @property
   def configfilepath(self):

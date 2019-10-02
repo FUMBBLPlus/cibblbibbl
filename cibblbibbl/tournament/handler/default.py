@@ -17,6 +17,7 @@ class BaseTournament:
 
   def __init__(self, group_key, Id):
     self._config = ...
+    self.achievements = set()
 
   def __lt__(self, other):
     return (self.group_key, self.sortId).__lt__((other.group_key, other.sortId))

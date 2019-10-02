@@ -102,6 +102,16 @@ class BaseMatchup:
   def year_nr(self):
     return self.tournament.year_nr
 
+  def performance(self, subject):
+    if isinstance(subject, cibblbibbl.team.Team):
+      return self.config["team_performance"][str(subject.Id)]
+    elif isinstance(subject, cibblbibbl.player.Player):
+      return self.config["player_performance"][str(subject.Id)]
+    else:
+      raise NotImplementedError(
+          f'unknown performance subject type: {subject!r}'
+      )
+
 
 
 class AbstractMatchup(
