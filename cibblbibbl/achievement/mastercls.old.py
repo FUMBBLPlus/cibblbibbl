@@ -6,57 +6,144 @@ from ..jsonfile import jsonfile
 import cibblbibbl
 
 
-class AchievementConfig:
 
-  def __get__(self, instance, owner):
-    if instance is None:
-      o = owner
-    else:
-      o = instance
-    if o._config is ...:
-      jf = jsonfile(
-          self.filepath(instance, owner),
-          default_data = {},
-          autosave = True,
-          dump_kwargs = dict(owner.dump_kwargs),
-      )
-      o._config = jf.data
-      if o is instance and not o._config:
-        o._config.update(copy.deepcopy(owner.default_config))
-      return o._config
+class Achievement:
 
-  def filepath(self, instance, owner):
+  registry = {}
+
+  def __init__(self, group_key, key):
+    super().__init__()
+    self._group_key = group_key = str(group_key)
+    self._key = key = str(key)
+    self._config = ...
+    Achievement.registry[(group_key, key)] = self
+
+  config = cibblbibbl.group.config
+  dump_kwargs = cibblbibbl.group.Group.dump_kwargs
+  group = cibblbibbl.year.group
+
+  @property
+  def group_key(self):
+    return self._group_key
+
+  @property
+  def key(self):
+    return self._key
+
+  @property
+  def configfilepath(self):
     p = (
-      cibblbibbl.data.path
-      / owner.group_key
-      / "achievement"
+        cibblbibbl.data.path
+        / self.group_key
+        / "achievement"
+        / f'{self.key}.json'
     )
-    if instance is None:
-      p /= f'{owner.__name__.lower()}.json'
-    else:
-      p /= f'{owner.__name__.lower()}'
-      tournamentId = instance.tournamentId
-      if tournamentId.isdecimal():
-        p /= f'{tournamentId:0>8}'
-      else:
-        p /= f'{tournamentId}'
-      p /= f'{instance.subjId:0>8}.json'
     return p
+
+  reload_config = cibblbibbl.matchup.reload_config
+
+
+
+class AchievementRecord(
+    metaclass=cibblbibbl.helper.InstanceRepeater
+):
+  def __init__(self, *args):
+        # args are managed by the metaclass and _get_key()
+    super().__init__()
+    self._config = ...
+
+  @staticmethod
+  def _get_key(
+    group_key: str,
+    achiev_key: str,
+    year_nr: int,
+    season_nr: int,
+    teamIds,
+    playerId: str,
+  ):
+    group_key = str(group_key)
+    achiev_key = str(achiev_key)
+    year_nr = int(year_nr)
+    season_nr = int(season_nr)
+    if hasattr(teamId, "len"):
+      teamIds = tuple(int(v) for v in teamId)
+    else:
+      teamIds = (int(TeamId),)
+    playerId = str(playerId) if playerId is not None else ""
+    return (
+        group_key,
+        achiev_key,
+        year_nr,
+        season_nr,
+        teamIds,
+        playerId,
+    )
+
+  group_key = cibblbibbl.helper.instancerepeatergetter(0)
+  achiev_key = cibblbibbl.helper.instancerepeatergetter(1)
+  year_nr = cibblbibbl.helper.instancerepeatergetter(2)
+  season_nr = cibblbibbl.helper.instancerepeatergetter(3)
+  teamIds = cibblbibbl.helper.instancerepeatergetter(4)
+  playerId = cibblbibbl.helper.instancerepeatergetter(5)
+
+  group = cibblbibbl.year.group
+
+  @property
+  def achiev(self):
+    k = (self.group_key, self.achiev_key)
+    return Achievement.registry[k]
+
+  year = cibbl.season.Season.year
+
+  @property
+  def season(self):
+    return cibblbibbl.season.Season(
+        self.group_key, self.year_nr, self.season_nr
+  )
+
+  @property
+  def team(self):
+    if len(self.teamIds) == 1:
+      return cibblbibbl.team.Team(self.teamIds[0])
+    elif 1 < len(self.teamIds):
+      return cibblbibbl.team.GroupOfTeams(self.teamIds)
+
+  @property
+  def player(self):
+    return cibblbibbl.player.Player(self.playerId)
+
+
 
 
 class Achievement:
 
   default_config = {"status": "proposed"}
   dump_kwargs = cibblbibbl.group.Group.dump_kwargs
+  inst_by_season = collections.defaultdict(set)
+  inst_by_subjec = collections.defaultdict(set)
+
+  def __new__(cls, *args, **kwargs):
+    self = object.__new__(cls)
+      # this is weirdly needed, maybe because of the
+      # @classproperty_support
+    self.__init__(*args, **kwargs)  # ditto
+    cls.inst_by_season[self.season_key].add(self)
+    cls.inst_by_subjec[self.subjec_key].add(self)
+    return self
+
+  def __del__(self):
+    i, cls = self, self.__class__
+    cls.inst_by_season[self.season_key].remove(i)
+    cls.inst_by_subjec[self.subjec_key].remove(i)
+    return super().__del__()
 
   def __init_subclass__(cls, **kwargs):
     super().__init_subclass__(**kwargs)
-    cls._config = ...
+    cls._clsconfig = ...
+    cls.inst_by_season = collections.defaultdict(set)
+    cls.inst_by_subjec = collections.defaultdict(set)
 
   def __init__(self,
-      group_key: str,
-      tournamentId: str,
-
       year_nr: int,
       season_nr: int,
       teamId: str,
