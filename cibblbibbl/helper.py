@@ -148,7 +148,7 @@ class InstanceRepeater(type):
 
 def instancerepeatergetter(keyi, doc=None):
   return property(
-    lambda keyi=keyi, self: self._KEY[keyi],   # fget
+    lambda self, keyi=keyi: self._KEY[keyi],   # fget
     None,  # fset
     None,  # fdel
     doc

@@ -7,6 +7,45 @@ import cibblbibbl
 
 
 
+class AchievementConfig:
+
+  def __get__(self, instance, owner):
+    if instance is None:
+      o = owner
+    else:
+      o = instance
+    if o._config is ...:
+      jf = jsonfile(
+          self.filepath(instance, owner),
+          default_data = {},
+          autosave = True,
+          dump_kwargs = dict(owner.dump_kwargs),
+      )
+      o._config = jf.data
+      if o is instance and not o._config:
+        o._config.update(copy.deepcopy(owner.default_config))
+      return o._config
+
+  def filepath(self, instance, owner):
+    p = (
+      cibblbibbl.data.path
+      / owner.group_key
+      / "achievement"
+    )
+    if instance is None:
+      p /= f'{owner.__name__.lower()}.json'
+    else:
+      p /= f'{owner.__name__.lower()}'
+      tournamentId = instance.tournamentId
+      if tournamentId.isdecimal():
+        p /= f'{tournamentId:0>8}'
+      else:
+        p /= f'{tournamentId}'
+      p /= f'{instance.subjId:0>8}.json'
+    return p
+
+
+
 class Achievement:
 
   registry = {}

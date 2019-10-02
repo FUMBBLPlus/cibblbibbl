@@ -14,7 +14,7 @@ class Team(metaclass=cibblbibbl.helper.InstanceRepeater):
 
   @staticmethod
   def _get_key(teamId):
-    return (int(teamId),)
+    return int(teamId)
 
   @property
   def apiget(self):
