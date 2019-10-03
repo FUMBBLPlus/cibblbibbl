@@ -41,7 +41,7 @@ class CBETournament(
         AMu = cibblbibbl.matchup.AbstractMatchup(
             Mu.group_key,
             str(self.Id),
-            Mu.round,
+            Mu.round_,
             *sorted(Te.Id for Te in Mu.teams),
             filekeys = filekeys,
         )

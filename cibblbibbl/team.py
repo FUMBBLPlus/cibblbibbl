@@ -2,32 +2,24 @@ import re
 
 import pyfumbbl
 
+from . import field
+
 import cibblbibbl
+
 
 @cibblbibbl.helper.idkey
 class Team(metaclass=cibblbibbl.helper.InstanceRepeater):
 
+  apiget = field.fumbblapi.CachedFUMBBLAPIGetField(
+      pyfumbbl.team.get, "cache/api-team"
+  )
+  apimatches = field.fumbblapi.CachedFUMBBLAPIGetField(
+      pyfumbbl.team.get_all_matches, "cache/api-team-matches"
+  )
+
   def __init__(self, teamId: int):
-    self._apiget = ...
-    self._apimatches = ...
     self._matchups = {}
     self.achievements = set()
-
-  @staticmethod
-  def _get_key(teamId):
-    return int(teamId)
-
-  @property
-  def apiget(self):
-    if self._apiget is ...:
-      self.reload_apiget()
-    return self._apiget
-
-  @property
-  def apimatches(self):
-    if self._apimatches is ...:
-      self.reload_apimatches()
-    return self._apimatches
 
   @property
   def matches(self):
@@ -53,7 +45,7 @@ class Team(metaclass=cibblbibbl.helper.InstanceRepeater):
   @property
   def roster_name(self):
     s = self.apiget["roster"]["name"]
-    s = re.sub('\s*\(.+$', '', s)
+    s = re.sub('\s*\(.+$', '', s)  # CIBBL/BIBBL specific!
     return cibblbibbl.helper.norm_name(s)
 
   def matchups(self, group_key):
@@ -86,21 +78,7 @@ class Team(metaclass=cibblbibbl.helper.InstanceRepeater):
     except StopIteration:
       pass
 
-  def reload_apiget(self, reload=False):
-    self._apiget = cibblbibbl.helper.get_api_data(
-        self.Id,
-        "cache/api-team",
-        pyfumbbl.team.get,
-        reload=reload,
-    )
 
-  def reload_apimatches(self, reload=False):
-    self._apimatches = tuple(cibblbibbl.helper.get_api_data(
-        self.Id,
-        "cache/api-team-matches",
-        pyfumbbl.team.get_all_matches,
-        reload=reload,
-    ))
 
 
 class GroupOfTeams(tuple):

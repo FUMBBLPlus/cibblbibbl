@@ -2,73 +2,51 @@ import datetime
 
 import pyfumbbl
 
+from . import field
+
 import cibblbibbl
 
 from . import matchup_config as MC
 
 
-class BaseMatchup:
+class BaseMatchup(metaclass=cibblbibbl.helper.InstanceRepeater):
 
-  class IsLocked(Exception): pass
+  config = field.config.cachedconfig
+  excluded = field.config.yesnofield("!excluded", default="no")
+  group = field.inst.group_by_self_group_key
+  group_key = field.instrep.keyigetterproperty(0)
+  locked = field.config.yesnofield("!locked", default="no")
+  season = field.inst.season_of_self_tournament
+  season_nr = field.inst.season_nr_of_self_tournament
+  tournament = field.inst.tournament
+  tournamentId = field.instrep.keyigetterproperty(1)
+  year = field.inst.year_of_self_tournament
+  year_nr = field.inst.year_nr_of_self_tournament
 
-  def __init__(self,
-      group_key: str,
-      tournamentId: str,
-      *keys,
-  ):
+  def __init__(self, group_key: str, tournamentId: str, *keys):
     self._group_key = group_key
     self._tournamentId = tournamentId
     self._keys = keys
-    self._config = ...
-
-  @property
-  def config(self):
-    if self._config is ...:
-      self.reload_config()
-    return self._config
 
   @property
   def configfilepath(self):
     return self.tournament.matchupsdir / self.configfilename
 
-  dump_kwargs = cibblbibbl.group.Group.dump_kwargs
-
-  excluded = cibblbibbl.config.yesnofield(
-      "!excluded", default="no",
-  )
-
-  group = cibblbibbl.year.Year.group
-
-  @property
-  def group_key(self):
-    return self._group_key
-
   @property
   def keys(self):
-    return self._keys
-
-  locked = cibblbibbl.config.yesnofield("!locked", default="no")
+    return self._KEY[2:]
 
   @property
   def match(self):
-    match, matchId = None, self.config.get("matchId")
+    matchId = self.config.get("matchId")
     if matchId is not None:
-      match = cibblbibbl.match.Match(int(matchId))
-    return match
+      return cibblbibbl.match.Match(int(matchId))
   @match.setter
   def match(self, value):
     if hasattr(value, "Id"):
       value = value.Id
     self.config["matchId"] = str(value)
-  match = match.deleter(cibblbibbl.config.deleter("matchId"))
-
-  @property
-  def season(self):
-    return self.tournament.season
-
-  @property
-  def season_nr(self):
-    return self.tournament.season_nr
+  match = match.deleter(field.config.deleter("matchId"))
 
   @property
   def teams(self):
@@ -76,31 +54,6 @@ class BaseMatchup:
         cibblbibbl.team.Team(int(teamId))
         for teamId in self.config["team_performance"]
     )
-
-  @property
-  def tournament(self):
-    return self.group.tournaments[self.tournamentId]
-
-  @property
-  def tournamentId(self):
-    return str(self._tournamentId)
-
-  def reload_config(self):
-    jf = cibblbibbl.data.jsonfile(
-        self.configfilepath,
-        default_data = {},
-        autosave=True,
-        dump_kwargs=dict(self.dump_kwargs)
-    )
-    self._config = jf.data
-
-  @property
-  def year(self):
-    return self.tournament.year
-
-  @property
-  def year_nr(self):
-    return self.tournament.year_nr
 
   def performance(self, subject):
     if isinstance(subject, cibblbibbl.team.Team):
@@ -114,10 +67,10 @@ class BaseMatchup:
 
 
 
-class AbstractMatchup(
-    BaseMatchup,
-    metaclass=cibblbibbl.helper.InstanceRepeater,
-):
+class AbstractMatchup(BaseMatchup):
+
+  abstract = field.common.Constant(True)
+  modified = field.config.TimeField()
 
   def __init__(self, *args, filekeys=None, **kwargs):
     super().__init__(*args, **kwargs)
@@ -134,47 +87,21 @@ class AbstractMatchup(
     )
 
   @property
-  def abstract(self):
-    return True
-
-  @property
   def configfilename(self):
     filekeys = self.filekeys or self.keys
     return "a-" + "-".join(str(v) for v in filekeys) + ".json"
 
-  @property
-  def modified(self):
-    modified = self.config.get("modified")
-    if modified:
-      fmt = "%Y-%m-%d %H:%M:%S"
-      modified = datetime.datetime.strptime(modified, fmt)
-    return modified
-  @modified.setter
-  def modified(self, value):
-    fmt = "%Y-%m-%d %H:%M:%S"
-    if hasattr(value, "isdecimal"):
-      dt = datetime.datetime.strptime(value, fmt)  # test
-    else:
-      value = value.strftime(fmt)
-    self.config["modified"] = value
-  @modified.deleter
-  def modified(self):
-    try:
-      del self.config["modified"]
-    except KeyError:
-      pass
-
-  def update_config(self, data):
-    if self._config is ...:
-      self.reload_config()
-    self._config.root.data.update(data)
 
 
+class Matchup(BaseMatchup):
 
-class Matchup(
-    BaseMatchup,
-    metaclass=cibblbibbl.helper.InstanceRepeater,
-):
+  abstract = field.common.Constant(False)
+  created = field.matchup.ScheduleRecordTimeFieldGetter()
+  highlightedteam = field.matchup.sr_highlightedteam_getter
+  match = field.matchup.MatchLink()
+  modified = field.matchup.ScheduleRecordTimeFieldGetter()
+  position = field.matchup.sr_position_getter
+  round_ = field.instrep.keyigetterproperty(2)
 
   def __init__(self,
       group_key: str,
@@ -190,27 +117,19 @@ class Matchup(
         low_teamId,
         high_teamId,
     )
-    self._match = ...
-
-  @property
-  def abstract(self):
-    return False
+    pass
 
   @property
   def apischedulerecord(self):
-    this_team_ids = self._KEY[3:5]
-    for d in self.tournament.apischedule:
-      team_ids = tuple(sorted(d2["id"] for d2 in d["teams"]))
-      if team_ids == this_team_ids:
-        return d
-
-  @property
-  def config(self):
-    if self._config is ...:
-      self.reload_config()
-    if not self._config:
-      self.update_config()
-    return self._config
+    if not hasattr(self, "_apischedulerecord"):
+      this_team_ids = self._KEY[3:5]
+      for d in self.tournament.apischedule:
+        team_ids = tuple(sorted(d2["id"] for d2 in d["teams"]))
+        if team_ids == this_team_ids:
+          self._apischedulerecord = d
+          return d
+    else:
+      return self._apischedulerecord
 
   @property
   def configfiledir(self):
@@ -230,7 +149,7 @@ class Matchup(
   @property
   def configfilename(self):
     filename = (
-        f'{self.round:0>2}'
+        f'{self.round_:0>2}'
         f'-{self._KEY[3]:0>7}'
         f'-{self._KEY[4]:0>7}'
         ".json"
@@ -242,49 +161,8 @@ class Matchup(
     return self.configfiledir / self.configfilename
 
   @property
-  def created(self):
-    fmt = "%Y-%m-%d %H:%M:%S"
-    d = self.apischedulerecord
-    return datetime.datetime.strptime(d["created"], fmt)
-
-  @property
-  def highlightedteam(self):
-    d = self.apischedulerecord
-    teamId = d.get("result", {}).get("winner")
-    if teamId:
-      return cibblbibbl.team.Team(teamId)
-
-  @property
-  def match(self):
-    if self._match is ...:
-      self._match = None
-      d = self.apischedulerecord
-      matchId = d.get("result", {}).get("id")
-      if matchId:
-        self._match = Ma = cibblbibbl.match.Match(matchId)
-        Ma._matchup = self
-    return self._match
-
-  @property
-  def modified(self):
-    fmt = "%Y-%m-%d %H:%M:%S"
-    d = self.apischedulerecord
-    return datetime.datetime.strptime(d["modified"], fmt)
-
-  @property
-  def position(self):
-    return self.apischedulerecord["position"]
-
-  @property
-  def round(self):
-    return self._KEY[2]
-
-  @property
-  def teams(self):
-    return frozenset(
-        cibblbibbl.team.Team(teamId)
-        for teamId in self._KEY[3:5]
-    )
+  def schedulerecord(self):
+    return self.apischedulerecord
 
   def calculate_config(self):
     G = self.group
@@ -314,22 +192,6 @@ class Matchup(
         if not dead:
           continue
         yield teamId, playerId, dpp
-
-  def rewrite_config(self):
-    if self.locked:
-      raise self.IsLocked(
-          f'unable to rewrite config of locked matchup {self}'
-      )
-    if self._config is ...:
-      self.reload_config()
-    self._config.root.data = self.calculate_config()
-    self._config = self._config.root.data
-
-  def update_config(self):
-    if self._config is ...:
-      self.reload_config()
-    self._config.root.data.update(self.calculate_config())
-
 
 
 

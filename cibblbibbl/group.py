@@ -1,6 +1,7 @@
 import bisect
 
-from .jsonfile import jsonfile
+from . import field
+
 import pyfumbbl
 
 import cibblbibbl
@@ -10,36 +11,34 @@ class Group(
     metaclass=cibblbibbl.helper.InstanceRepeater
 ):
 
-  dump_kwargs = (
-      ("ensure_ascii", False),
-      ("indent", "\t"),
-      ("sort_keys", True),
+  achievements = field.insts.self_tournament_achievements
+  config = field.config.cachedconfig
+  excluded_team_ids = field.config.field(
+      "excluded_teams", default=[]
   )
+  key = field.instrep.keyigetterproperty(0)
+  matchups = field.insts.self_tournaments_matchups
 
   def __init__(self, key: str, *,
       register_tournaments = True,
       register_teams = True,
+      register_achievements = True,
   ):
-    self._config = ...
-    self._matchups = ...
     self.years = set()
     self.seasons = set()
     self.tournaments = {}
     self.teams = set()
     if register_tournaments:
-       self.register_tournaments()
+      self.register_tournaments()
     if register_teams:
-       self.register_teams()
+      self.register_teams()
+    if register_achievements:
+      self.register_achievements()
 
   @property
-  def config(self):
-    if self._config is ...:
-      self.reload_config()
-    return self._config
+  def configfilepath(self):
+    return cibblbibbl.data.path / self.key / "config.json"
 
-  excluded_team_ids = cibblbibbl.config.field(
-      "excluded_teams", default=[]
-  )
   @property
   def excluded_teams(self):
     return frozenset(
@@ -48,26 +47,10 @@ class Group(
     )
   @excluded_teams.setter
   def excluded_teams(self, sequence):
-    excluded_team_ids = [Te.Id for Te in sorted(sequence)]
+    self.excluded_team_ids = [Te.Id for Te in sorted(sequence)]
   @excluded_teams.deleter
   def excluded_teams(self):
-    excluded_team_ids = []
-
-  @property
-  def key(self):
-    return self._KEY[0]
-
-  @property
-  def matchups(self):
-    if self._matchups is ...:
-      self._matchups = tuple(
-          cibblbibbl.matchup.sort_by_modified(
-              M
-              for T in self.tournaments.values()
-              for M in T.matchups
-          )
-      )
-    return self._matchups
+    self.excluded_team_ids = []
 
   @property
   def season_names(self):
@@ -80,6 +63,9 @@ class Group(
       L = self.excluded_team_ids
       bisect.insort(L, int(Te))
       self.excluded_team_ids = L  # directly is not good
+
+  def register_achievements(self):
+    cibblbibbl.achievement.collect(self.key)
 
   def register_teams(self):
     for M in self.matchups:
@@ -103,12 +89,3 @@ class Group(
       handler_ = get_handler_f(self.key, Id)
       T = handler_.init(self.key, Id)
       T.register()
-
-  def reload_config(self):
-    jf = jsonfile(
-        cibblbibbl.data.path / self.key / "config.json",
-        default_data = {},
-        autosave = True,
-        dump_kwargs = dict(self.dump_kwargs),
-    )
-    self._config = jf.data

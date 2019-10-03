@@ -10,67 +10,6 @@ IGNORE = "\xad"
 NOTYPECAST = lambda v: v
 
 
-# https://stackoverflow.com/a/35640842/2334951
-class classproperty:
-    """
-    Same as property(), but passes obj.__class__ instead of obj to fget/fset/fdel.
-    Original code for property emulation:
-    https://docs.python.org/3.5/howto/descriptor.html#properties
-    """
-    def __init__(self, fget=None, fset=None, fdel=None, doc=None):
-        self.fget = fget
-        self.fset = fset
-        self.fdel = fdel
-        if doc is None and fget is not None:
-            doc = fget.__doc__
-        self.__doc__ = doc
-
-    def __get__(self, obj, objtype=None):
-        if obj is None:
-            return self
-        if self.fget is None:
-            raise AttributeError("unreadable attribute")
-        return self.fget(obj.__class__)
-
-    def __set__(self, obj, value):
-        if self.fset is None:
-            raise AttributeError("can't set attribute")
-        self.fset(obj.__class__, value)
-
-    def __delete__(self, obj):
-        if self.fdel is None:
-            raise AttributeError("can't delete attribute")
-        self.fdel(obj.__class__)
-
-    def getter(self, fget):
-        return type(self)(fget, self.fset, self.fdel, self.__doc__)
-
-    def setter(self, fset):
-        return type(self)(self.fget, fset, self.fdel, self.__doc__)
-
-    def deleter(self, fdel):
-        return type(self)(self.fget, self.fset, fdel, self.__doc__)
-
-
-def classproperty_support(cls):
-    """
-    Class decorator to add metaclass to our class.
-    Metaclass uses to add descriptors to class attributes, see:
-    http://stackoverflow.com/a/26634248/1113207
-    """
-    class Meta(type):
-        pass
-
-    for name, obj in vars(cls).items():
-        if isinstance(obj, classproperty):
-            setattr(Meta, name, property(obj.fget, obj.fset, obj.fdel))
-
-    class Wrapper(cls, metaclass=Meta):
-        pass
-    return Wrapper
-
-
-
 class InstanceRepeater(type):
 
   def __new__(meta, name, bases, dict_):
@@ -146,16 +85,6 @@ class InstanceRepeater(type):
     return instance
 
 
-def instancerepeatergetter(keyi, doc=None):
-  return property(
-    lambda self, keyi=keyi: self._KEY[keyi],   # fget
-    None,  # fset
-    None,  # fdel
-    doc
-  )
-
-
-
 # https://stackoverflow.com/a/14412901/2334951
 def doublewrap(f):
   '''
@@ -177,21 +106,6 @@ def doublewrap(f):
       # decorator arguments
       return lambda realf: f(realf, *args, **kwargs)
   return new_dec
-
-
-
-def get_api_data(Id, dir_path, api_func, *, reload=False):
-  filename = f'{Id:0>8}.json'
-  p = cibblbibbl.data.path / dir_path / filename
-  jf = cibblbibbl.data.jsonfile(p)
-  #print([p, reload, p.is_file(), p.stat().st_size])
-  if reload or not p.is_file() or not p.stat().st_size:
-    jf.dump_kwargs = cibblbibbl.settings.dump_kwargs
-    #print(f'API: {api_func}({Id})')
-    jf.data = api_func(Id)
-    jf.save()
-  return jf.data
-
 
 
 @doublewrap

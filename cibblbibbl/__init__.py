@@ -1,9 +1,10 @@
 __version__ = "0.0.1"
 
 # prioriy modules
+from . import field
 from . import config
 from . import data
-from . import settings
+#from . import settings
 
 from . import helper
 

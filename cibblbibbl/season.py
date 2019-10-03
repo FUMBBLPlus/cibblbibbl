@@ -1,3 +1,6 @@
+from . import field
+
+
 import cibblbibbl
 
 
@@ -5,13 +8,16 @@ class Season(
     metaclass=cibblbibbl.helper.InstanceRepeater
 ):
 
-  def __init__(self, group_key, year_nr:int, nr:int):
-    self._matchups = ...
-    self.tournaments = {}
+  achievements = field.insts.self_tournament_achievements
+  group = field.inst.group_by_self_group_key
+  group_key = field.instrep.keyigetterproperty(0)
+  matchups = field.insts.self_tournaments_matchups
+  nr = field.instrep.keyigetterproperty(2)
+  year = field.inst.year_by_self_group_key_and_year_nr
+  year_nr = field.instrep.keyigetterproperty(1)
 
-  group = cibblbibbl.year.Year.group
-  group_key = cibblbibbl.year.Year.group_key
-  matchups = cibblbibbl.group.Group.matchups
+  def __init__(self, group_key, year_nr:int, nr:int):
+    self.tournaments = {}
 
   @property
   def name(self):
@@ -27,26 +33,12 @@ class Season(
     return next
 
   @property
-  def nr(self):
-    return self._KEY[2]
-
-  @property
   def prev(self):
     key = (self.group_key, self.year_nr, self.nr - 1)
     prev = self.__class__.__members__.get(key)
     if prev is None and self.year.prev:
       prev = sorted(self.year.prev.seasons)[-1]
     return prev
-
-  @property
-  def year(self):
-    return cibblbibbl.year.Year(
-        self.group_key, self.year_nr
-  )
-
-  @property
-  def year_nr(self):
-    return self._KEY[1]
 
   def since(self, season):
     """

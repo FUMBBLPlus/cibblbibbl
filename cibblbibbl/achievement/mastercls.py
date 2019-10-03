@@ -5,6 +5,8 @@ from ..jsonfile import jsonfile
 
 import cibblbibbl
 
+from .. import field
+
 
 class Achievement(
     metaclass=cibblbibbl.helper.InstanceRepeater
@@ -12,11 +14,9 @@ class Achievement(
 
   registry = {}
 
-  dump_kwargs = cibblbibbl.group.Group.dump_kwargs
+  dump_kwargs = field.config.dump_kwargs
 
   def __init__(self, tournament, subject):
-    self.tournament = tournament
-    self.subject = subject
     self.tournament.achievements.add(self)
     self.subject.achievements.add(self)
 
@@ -31,11 +31,32 @@ class Achievement(
   def __delitem__(self, key):
     return self.config.__delitem__(key, value)
 
+  def __eq__(self, other):
+    return (hash(self) == hash(other))
+
+  def __ge__(self, other):
+    return self._sortkey.__ge__(other._sortkey)
+
   def __getitem__(self, key):
     try:
       return self.config.__getitem__(key)
     except KeyError:
       return self.defaultconfig.__getitem__(key)
+
+  def __gt__(self, other):
+    return self._sortkey.__gt__(other._sortkey)
+
+  def __hash__(self):
+    return hash(self._KEY)
+
+  def __le__(self, other):
+    return self._sortkey.__le__(other._sortkey)
+
+  def __lt__(self, other):
+    return self._sortkey.__lt__(other._sortkey)
+
+  def __ne__(self, other):
+    return (hash(self) != hash(other))
 
   def __setitem__(self, key, value):
     return self.config.__setitem__(key, value)
@@ -75,6 +96,16 @@ class Achievement(
   iterexisting = agent00
 
   @property
+  def config(self):
+    jf = jsonfile(
+        self.configfilepath,
+        default_data = {},
+        autosave = True,
+        dump_kwargs = dict(self.dump_kwargs),
+    )
+    return jf.data
+
+  @property
   def configfilepath(self):
     p = (
       cibblbibbl.data.path
@@ -90,9 +121,9 @@ class Achievement(
     return p
 
   @property
-  def config(self):
+  def defaultconfig(self):
     jf = jsonfile(
-        self.configfilepath,
+        self.defaultconfigfilepath,
         default_data = {},
         autosave = True,
         dump_kwargs = dict(self.dump_kwargs),
@@ -108,12 +139,46 @@ class Achievement(
       / f'{type(self).__name__.lower()}.json'
     )
 
+  group = cibblbibbl.year.Year.group
+
   @property
-  def defaultconfig(self):
-    jf = jsonfile(
-        self.defaultconfigfilepath,
-        default_data = {},
-        autosave = True,
-        dump_kwargs = dict(self.dump_kwargs),
+  def group_key(self):
+    return self.tournament.group_key
+
+  @property
+  def season(self):
+    return self.tournament.season
+
+  @property
+  def season_nr(self):
+    return self.tournament.season_nr
+
+  @property
+  def _sortkey(self):
+    Ttimesortkeyf = cibblbibbl.tournament.tools.timesortkey()
+    return (
+        self.group_key,
+        type(self).__name__.lower(),
+        self.tournament,
+        self.subjectId,
     )
-    return jf.data
+
+  subject = field.instrep.keyigetterproperty(1)
+
+  @property
+  def subjectId(self):
+    return self.subject.Id
+
+  tournament = field.instrep.keyigetterproperty(0)
+
+  @property
+  def tournamentId(self):
+    return self.tournament.Id
+
+  @property
+  def year(self):
+    return self.tournament.year
+
+  @property
+  def year_nr(self):
+    return self.tournament.year_nr

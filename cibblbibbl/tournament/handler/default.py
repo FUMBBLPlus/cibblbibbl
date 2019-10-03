@@ -8,6 +8,7 @@ import pyfumbbl
 
 import cibblbibbl
 
+from ... import field
 from ...jsonfile import jsonfile
 from .. import tools
 
@@ -16,7 +17,6 @@ from .. import tools
 class BaseTournament:
 
   def __init__(self, group_key, Id):
-    self._config = ...
     self.achievements = set()
 
   def __lt__(self, other):
@@ -29,6 +29,47 @@ class BaseTournament:
     return (self.group_key, self.sortId).__ge__((other.group_key, other.sortId))
 
   config = cibblbibbl.group.Group.config
+
+  @property
+  def above(self):
+    Id = self.config.get("above")
+    if Id is not None:
+      return self.group.tournaments[str(Id)]
+
+  @property
+  def configfilepath(self):
+    return self.filepath("config")
+
+  @property
+  def end(self):
+    end = self.config.get("end")
+    if end:
+      fmt = "%Y-%m-%d %H:%M:%S"
+      end = datetime.datetime.strptime(end, fmt)
+    elif self.next:
+      return self.next.end
+    elif self.above:
+      return self.above.end
+    elif self.status == "In Progress":
+      return
+    elif self.matchups:
+      return max(Mu.modified for Mu in self.matchups)
+    return end
+  @end.setter
+  def end(self, value):
+    fmt = "%Y-%m-%d %H:%M:%S"
+    if hasattr(value, "isdecimal"):
+      dt = datetime.datetime.strptime(value, fmt)  # test
+    else:
+      value = value.strftime(fmt)
+    self.config["end"] = value
+  @end.deleter
+  def end(self):
+    try:
+      del self.config["end"]
+    except KeyError:
+      pass
+
   group = cibblbibbl.year.Year.group
   group_key = cibblbibbl.year.Year.group_key
 
@@ -140,6 +181,26 @@ class BaseTournament:
     season_name = self.config["season"]
     return self.group.season_names.index(season_name) + 1
 
+  @property
+  def status(self):
+    status = self.config.get("status")
+    if status:
+      return status
+    if self.next:
+      return self.next.status
+    elif self.above:
+      return self.above.status
+    return "Unknown"
+  @status.setter
+  def status(self, value):
+    self.config["status"] = value
+  @status.deleter
+  def status(self):
+    try:
+      del self.config["status"]
+    except KeyError:
+      pass
+
   year = cibblbibbl.season.Season.year
   @year.setter
   def year(self, year):
@@ -184,16 +245,6 @@ class BaseTournament:
     self.group.seasons.add(self.season)
     self.year.seasons.add(self.season)
 
-  def reload_config(self):
-    dump_kwargs = cibblbibbl.settings.dump_kwargs
-    jf = cibblbibbl.data.jsonfile(
-        self.filepath("config"),
-        default_data = {},
-        autosave=True,
-        dump_kwargs=dump_kwargs
-    )
-    self._config = jf.data
-
 
 class AbstractTournament(BaseTournament):
 
@@ -206,24 +257,18 @@ class Tournament(
     metaclass=cibblbibbl.helper.InstanceRepeater,
 ):
 
+  apiget = field.fumbblapi.CachedFUMBBLAPIGetField(
+      pyfumbbl.tournament.get, "cache/api-tournament"
+  )
+  apischedule = field.fumbblapi.CachedFUMBBLAPIGetField(
+      pyfumbbl.tournament.schedule,
+      "cache/api-tournament-schedule",
+  )
+
   def __init__(self, group_key, Id):
     super().__init__(group_key, Id)
-    self._apiget = ...
-    self._apischedule = ...
     self._matchups = ...
     self._season = ...
-
-  @property
-  def apiget(self):
-    if self._apiget is ...:
-      self.reload_apiget()
-    return self._apiget
-
-  @property
-  def apischedule(self):
-    if self._apischedule is ...:
-      self.reload_apischedule()
-    return self._apischedule
 
   excluded_teams = cibblbibbl.group.Group.excluded_teams
   excluded_team_ids = cibblbibbl.group.Group.excluded_team_ids
@@ -337,7 +382,16 @@ class Tournament(
 
   @property
   def status(self):
+    status = self.config.get("status")
+    if status:
+      return status
+    if self.next:
+      return self.next.status
+    elif self.above:
+      return self.above.status
     return self.apiget["status"]
+    status = status.setter(BaseTournament.status.fset)
+    status = status.deleter(BaseTournament.status.fdel)
 
   @property
   def style(self):
@@ -354,21 +408,7 @@ class Tournament(
     else:
       return int(year_nr)
 
-  def reload_apiget(self, reload=False):
-    self._apiget = cibblbibbl.helper.get_api_data(
-        self.Id,
-        "cache/api-tournament",
-        pyfumbbl.tournament.get,
-        reload=reload,
-    )
 
-  def reload_apischedule(self, reload=False):
-    self._apischedule = cibblbibbl.helper.get_api_data(
-        self.Id,
-        "cache/api-tournament-schedule",
-        pyfumbbl.tournament.schedule,
-        reload=reload,
-    )
 
   def standings(self):
     tpkeys = (
