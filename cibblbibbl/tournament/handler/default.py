@@ -430,7 +430,7 @@ class Tournament(BaseTournament):
           lambda teamId: (
               -S[teamId]["pts"],
               +S[teamId]["hth"],
-              -S[teamId]["scorediff"],
+              -S[teamId]["tdsdiff"],
               -S[teamId]["casdiff"],
               -S[teamId]["cto"]
           )

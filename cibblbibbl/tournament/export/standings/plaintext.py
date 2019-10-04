@@ -53,7 +53,7 @@ def export(T, *,
         perf,
         pts,
         hth_trans.get(r["hth"], r["hth"]),
-        r["scorediff"],
+        r["tdsdiff"],
         r["casdiff"],
         cto_trans.get(r["cto"], r["cto"]),
     ]
