@@ -9,16 +9,6 @@ def group_by_self_group_key(self):
 
 
 @property
-def season_of_self_tournament(self):
-  return self.tournament.season
-
-
-@property
-def season_nr_of_self_tournament(self):
-  return self.tournament.season_nr
-
-
-@property
 def tournament(self):
   return self.group.tournaments[self.tournamentId]
 

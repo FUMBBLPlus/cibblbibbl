@@ -4,13 +4,11 @@ import pyfumbbl
 
 import cibblbibbl
 
+from ... import field
 from . import default
 from .. import tools
 
-class CBETournament(
-    default.AbstractTournament,
-    metaclass=cibblbibbl.helper.InstanceRepeater,
-):
+class CBETournament(default.AbstractTournament):
 
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
@@ -79,7 +77,7 @@ class CBETournament(
     L2 = [[Te.Id for Te in p] for p in L]
     self.config["partners"] = L2
   partners = partners.deleter(
-      cibblbibbl.config.deleter("partners")
+      field.config.deleter("partners")
   )
 
   @property
@@ -93,7 +91,7 @@ class CBETournament(
     assert all((T.group_key == self.group_key) for T in Ts)
     assert all((T.Id != self.Id) for T in Ts)
     self.config["sub"] = {name: T.Id for name, T in d.items()}
-  sub = sub.deleter(cibblbibbl.config.deleter("sub"))
+  sub = sub.deleter(field.config.deleter("sub"))
 
   def standings(self):
     # As the team performance keys are replaced with the group
@@ -118,8 +116,6 @@ class CBETournament(
       d["perfs"] = [dsub[Te]["perf"] for Te in group]
     return standings
 
-  def excluded_teams(self, *args, **kwargs):
-    return set()
 
 def init(group_key, Id):
   return CBETournament(group_key, Id)

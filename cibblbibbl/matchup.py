@@ -11,13 +11,13 @@ from . import matchup_config as MC
 
 class BaseMatchup(metaclass=cibblbibbl.helper.InstanceRepeater):
 
-  config = field.config.cachedconfig
+  config = field.config.CachedConfig()
   excluded = field.config.yesnofield("!excluded", default="no")
   group = field.inst.group_by_self_group_key
   group_key = field.instrep.keyigetterproperty(0)
   locked = field.config.yesnofield("!locked", default="no")
-  season = field.inst.season_of_self_tournament
-  season_nr = field.inst.season_nr_of_self_tournament
+  season = field.common.DiggedAttr("tournament", "season")
+  season_nr = field.common.DiggedAttr("tournament", "season_nr")
   tournament = field.inst.tournament
   tournamentId = field.instrep.keyigetterproperty(1)
   year = field.inst.year_of_self_tournament
@@ -30,7 +30,7 @@ class BaseMatchup(metaclass=cibblbibbl.helper.InstanceRepeater):
 
   @property
   def configfilepath(self):
-    return self.tournament.matchupsdir / self.configfilename
+    return self.tournament.matchupsconfigdir / self.configfilename
 
   @property
   def keys(self):
@@ -96,6 +96,7 @@ class AbstractMatchup(BaseMatchup):
 class Matchup(BaseMatchup):
 
   abstract = field.common.Constant(False)
+  configdir = field.config.MatchupsDirectory()
   created = field.matchup.ScheduleRecordTimeFieldGetter()
   highlightedteam = field.matchup.sr_highlightedteam_getter
   match = field.matchup.MatchLink()
@@ -132,7 +133,7 @@ class Matchup(BaseMatchup):
       return self._apischedulerecord
 
   @property
-  def configfiledir(self):
+  def configdir(self):
     tournamentId = str(self._KEY[1])
     if tournamentId.isdecimal():
       dirname = f'{tournamentId:0>8}'
@@ -158,7 +159,7 @@ class Matchup(BaseMatchup):
 
   @property
   def configfilepath(self):
-    return self.configfiledir / self.configfilename
+    return self.configdir / self.configfilename
 
   @property
   def schedulerecord(self):

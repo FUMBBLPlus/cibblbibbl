@@ -1,5 +1,6 @@
 import collections
 import copy
+import datetime
 import itertools
 
 import pytourney
@@ -13,87 +14,70 @@ from ...jsonfile import jsonfile
 from .. import tools
 
 
+class TournamentTime(field.base.TimeFieldProxyDDescriptorBase):
 
-class BaseTournament:
+  def __get__(self, instance, owner):
+    if instance is None:
+      return self
+    t = instance.config.get(self.key)
+    if t:
+      return datetime.datetime.strptime(t, self.fmt)
+    elif instance.next:
+      return getattr(instance.next, self.name)
+    elif instance.above:
+      return getattr(instance.above, self.name)
+    elif instance.status == "In Progress":
+      return
+    elif instance.matchups:
+      return max(Mu.modified for Mu in instance.matchups)
+    return t
+
+
+
+class BaseTournament(
+    metaclass=cibblbibbl.helper.InstanceRepeater
+):
+
+  above = field.config.TournamentField()
+  config = field.config.CachedConfig()
+  end = TournamentTime()
+  excluded_teamIds = field.config.DDField(key="excluded_teams")
+  excluded_teams = field.insts.excluded_teams
+  exclude_teams = field.insts.exclude_teams
+  group = field.inst.group_by_self_group_key
+  group_key = field.instrep.keyigetterproperty(0)
+  Id = field.instrep.keyigetterproperty(1)
+  matchups = field.common.Call(tuple)
+  matchupsconfigdir = field.config.MatchupsDirectory("Id")
+  name = field.config.DDField()
+  ppos = field.config.DDField()
+  rsym = field.config.DDField(default=dict, set_f_typecast=dict)
+  season_nr = field.config.NDField(key="season",
+      f_typecast = (
+          lambda v, instance:
+          instance.group.season_names.index(v) + 1
+      )
+  )
+  sortId = field.config.DDField(
+      default = (lambda instance, descriptor: instance.Id),
+      get_f_typecast = float, set_f_typecast = float,
+  )
+  year = field.config.YearField()
+  year_nr = field.config.YearNrField()
 
   def __init__(self, group_key, Id):
     self.achievements = set()
 
-  def __lt__(self, other):
-    return (self.group_key, self.sortId).__lt__((other.group_key, other.sortId))
-  def __le__(self, other):
-    return (self.group_key, self.sortId).__le__((other.group_key, other.sortId))
-  def __gt__(self, other):
-    return (self.group_key, self.sortId).__gt__((other.group_key, other.sortId))
-  def __ge__(self, other):
-    return (self.group_key, self.sortId).__ge__((other.group_key, other.sortId))
-
-  config = cibblbibbl.group.Group.config
-
-  @property
-  def above(self):
-    Id = self.config.get("above")
-    if Id is not None:
-      return self.group.tournaments[str(Id)]
+  propnames = ("group_key", "sortId")
+  __lt__ = field.ordering.PropTupCompar(*propnames)
+  __le__ = field.ordering.PropTupCompar(*propnames)
+  __gt__ = field.ordering.PropTupCompar(*propnames)
+  __ge__ = field.ordering.PropTupCompar(*propnames)
+  del propnames
 
   @property
   def configfilepath(self):
     return self.filepath("config")
-
-  @property
-  def end(self):
-    end = self.config.get("end")
-    if end:
-      fmt = "%Y-%m-%d %H:%M:%S"
-      end = datetime.datetime.strptime(end, fmt)
-    elif self.next:
-      return self.next.end
-    elif self.above:
-      return self.above.end
-    elif self.status == "In Progress":
-      return
-    elif self.matchups:
-      return max(Mu.modified for Mu in self.matchups)
-    return end
-  @end.setter
-  def end(self, value):
-    fmt = "%Y-%m-%d %H:%M:%S"
-    if hasattr(value, "isdecimal"):
-      dt = datetime.datetime.strptime(value, fmt)  # test
-    else:
-      value = value.strftime(fmt)
-    self.config["end"] = value
-  @end.deleter
-  def end(self):
-    try:
-      del self.config["end"]
-    except KeyError:
-      pass
-
-  group = cibblbibbl.year.Year.group
-  group_key = cibblbibbl.year.Year.group_key
-
-  @property
-  def Id(self):
-    return self._KEY[1]
-
-  @property
-  def matchups(self):
-    return tuple()
-
-  @property
-  def matchupsdir(self):
-    if self.Id.isdecimal():
-      dirname = f'{self.Id:0>8}'
-    else:
-      dirname = self.Id
-    dir = (
-        cibblbibbl.data.path
-        / self.group_key
-        / "matchup"
-        / dirname
-    )
-    return dir
 
   @property
   def next(self):
@@ -113,8 +97,6 @@ class BaseTournament:
     assert str(T.config["prev"]) == str(self.Id)
     del self.config["next"], T.config["prev"]
 
-  ppos = cibblbibbl.config.field("ppos")
-
   @property
   def prev(self):
     Id = self.config.get("prev")
@@ -127,19 +109,6 @@ class BaseTournament:
   def prev(self):
     T = self.group.tournaments[str(self.prev)]
     del T.next
-
-  @property
-  def rsym(self):
-    return self.config.get("rsym", {})
-
-  @property
-  def sortId(self):
-    sort_id = self.config.get("sortId")
-    if sort_id is None:
-      sort_id = self.Id
-    return int(sort_id)
-  sortId = sortId.setter(cibblbibbl.config.setter("sortId"))
-  sortId = sortId.deleter(cibblbibbl.config.deleter("sortId"))
 
   @property
   def season(self):
@@ -174,12 +143,7 @@ class BaseTournament:
       else:
         raise ValueError(f'season not found: {season!r}')
     self.config["season"] = season.name
-  season = season.deleter(cibblbibbl.config.deleter("season"))
-
-  @property
-  def season_nr(self):
-    season_name = self.config["season"]
-    return self.group.season_names.index(season_name) + 1
+  season = season.deleter(field.config.deleter("season"))
 
   @property
   def status(self):
@@ -191,32 +155,8 @@ class BaseTournament:
     elif self.above:
       return self.above.status
     return "Unknown"
-  @status.setter
-  def status(self, value):
-    self.config["status"] = value
-  @status.deleter
-  def status(self):
-    try:
-      del self.config["status"]
-    except KeyError:
-      pass
-
-  year = cibblbibbl.season.Season.year
-  @year.setter
-  def year(self, year):
-    if hasattr(year, "nr"):
-      assert year.group is self.group
-      year_nr = year.nr
-    else:
-      year_nr = int(year)
-    self.config["year"] = year_nr
-  year = year.deleter(cibblbibbl.config.deleter("year"))
-
-  @property
-  def year_nr(self):
-    return int(self.config["year"])
-
-
+  status = status.setter(field.config.setter("status"))
+  status = status.deleter(field.config.deleter("status"))
 
   def filepath(self, key):
     if self.Id.isdecimal():
@@ -227,7 +167,7 @@ class BaseTournament:
     p /= f'{self.group_key}/tournament/{key}/{filename}'
     return p
 
-  def deregister(self):
+  def unregister(self):
     del self.group.tournaments[str(self.Id)]
     del self.year.tournaments[str(self.Id)]
     del self.season.tournaments[str(self.Id)]
@@ -247,16 +187,13 @@ class BaseTournament:
 
 
 class AbstractTournament(BaseTournament):
-
-  name = cibblbibbl.config.field("name")
-
+  abstract = field.common.Constant(True)
 
 
-class Tournament(
-    BaseTournament,
-    metaclass=cibblbibbl.helper.InstanceRepeater,
-):
 
+class Tournament(BaseTournament):
+
+  abstract = field.common.Constant(False)
   apiget = field.fumbblapi.CachedFUMBBLAPIGetField(
       pyfumbbl.tournament.get, "cache/api-tournament"
   )
@@ -264,15 +201,14 @@ class Tournament(
       pyfumbbl.tournament.schedule,
       "cache/api-tournament-schedule",
   )
+  name = field.config.DDField(
+      default=lambda inst, desc: inst.apiget(desc.key)
+  )
 
   def __init__(self, group_key, Id):
     super().__init__(group_key, Id)
     self._matchups = ...
     self._season = ...
-
-  excluded_teams = cibblbibbl.group.Group.excluded_teams
-  excluded_team_ids = cibblbibbl.group.Group.excluded_team_ids
-  exclude_teams = cibblbibbl.group.Group.exclude_teams
 
   def _iter_matchups(self):
     for d in self.apischedule:
@@ -285,7 +221,7 @@ class Tournament(
         team_ids[1],
       )
       yield matchup
-    for p in self.matchupsdir.glob("a-*.json"):
+    for p in self.matchupsconfigdir.glob("a-*.json"):
       jf = jsonfile(
           p,
           default_data = {},
@@ -320,12 +256,6 @@ class Tournament(
     return self._matchups
 
   @property
-  def name(self):
-    return self.config.get("name") or self.apiget["name"]
-  name = name.setter(cibblbibbl.config.setter("name"))
-  name = name.deleter(cibblbibbl.config.deleter("name"))
-
-  @property
   def rsym(self):
     d = self.config.get("rsym", {})
     dprest = d.setdefault("prestige", {})
@@ -358,8 +288,8 @@ class Tournament(
         "F": -2,
     })
     return d
-  rsym = rsym.setter(cibblbibbl.config.setter("rsym"))
-  rsym = rsym.deleter(cibblbibbl.config.deleter("rsym"))
+  rsym = rsym.setter(field.config.setter("rsym"))
+  rsym = rsym.deleter(field.config.deleter("rsym"))
 
   @property
   def season_nr(self):
@@ -407,8 +337,6 @@ class Tournament(
       return self.year_nr
     else:
       return int(year_nr)
-
-
 
   def standings(self):
     tpkeys = (

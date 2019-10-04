@@ -8,13 +8,21 @@ import cibblbibbl
 from .. import field
 
 
-class Achievement(
-    metaclass=cibblbibbl.helper.InstanceRepeater
-):
+class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
 
+  config = field.config.CachedConfig()
+  defaultconfig = field.config.CachedConfig()
+  group = field.inst.group_by_self_group_key
+  group_key = field.common.DiggedAttr("tournament", "group_key")
   registry = {}
-
-  dump_kwargs = field.config.dump_kwargs
+  season = field.common.DiggedAttr("tournament", "season")
+  season_nr = field.common.DiggedAttr("tournament", "season_nr")
+  subject = field.instrep.keyigetterproperty(1)
+  subjectId = field.common.DiggedAttr("subject", "Id")
+  tournament = field.instrep.keyigetterproperty(0)
+  tournamentId = field.common.DiggedAttr("tournament", "Id")
+  year = field.common.DiggedAttr("tournament", "year")
+  year_nr = field.common.DiggedAttr("tournament", "year_nr")
 
   def __init__(self, tournament, subject):
     self.tournament.achievements.add(self)
@@ -31,35 +39,19 @@ class Achievement(
   def __delitem__(self, key):
     return self.config.__delitem__(key, value)
 
-  def __eq__(self, other):
-    return (hash(self) == hash(other))
-
-  def __ge__(self, other):
-    return self._sortkey.__ge__(other._sortkey)
-
   def __getitem__(self, key):
     try:
       return self.config.__getitem__(key)
     except KeyError:
       return self.defaultconfig.__getitem__(key)
 
-  def __gt__(self, other):
-    return self._sortkey.__gt__(other._sortkey)
-
-  def __hash__(self):
-    return hash(self._KEY)
-
-  def __le__(self, other):
-    return self._sortkey.__le__(other._sortkey)
-
-  def __lt__(self, other):
-    return self._sortkey.__lt__(other._sortkey)
-
-  def __ne__(self, other):
-    return (hash(self) != hash(other))
-
   def __setitem__(self, key, value):
     return self.config.__setitem__(key, value)
+
+  __lt__ = field.ordering.PropTupCompar("_sortkey")
+  __le__ = field.ordering.PropTupCompar("_sortkey")
+  __gt__ = field.ordering.PropTupCompar("_sortkey")
+  __ge__ = field.ordering.PropTupCompar("_sortkey")
 
   @classmethod
   def agent00(cls, group_key):
@@ -79,6 +71,8 @@ class Achievement(
       subject = cls.subject_type(subjectId)
       yield cls(tournament, subject)
 
+  iterexisting = agent00
+
   @classmethod
   def collect(cls, group_key):
     nr = 0
@@ -92,18 +86,6 @@ class Achievement(
         break
       nr += 1
     return S
-
-  iterexisting = agent00
-
-  @property
-  def config(self):
-    jf = jsonfile(
-        self.configfilepath,
-        default_data = {},
-        autosave = True,
-        dump_kwargs = dict(self.dump_kwargs),
-    )
-    return jf.data
 
   @property
   def configfilepath(self):
@@ -121,16 +103,6 @@ class Achievement(
     return p
 
   @property
-  def defaultconfig(self):
-    jf = jsonfile(
-        self.defaultconfigfilepath,
-        default_data = {},
-        autosave = True,
-        dump_kwargs = dict(self.dump_kwargs),
-    )
-    return jf.data
-
-  @property
   def defaultconfigfilepath(self):
     return (
       cibblbibbl.data.path
@@ -138,20 +110,6 @@ class Achievement(
       / "achievement"
       / f'{type(self).__name__.lower()}.json'
     )
-
-  group = cibblbibbl.year.Year.group
-
-  @property
-  def group_key(self):
-    return self.tournament.group_key
-
-  @property
-  def season(self):
-    return self.tournament.season
-
-  @property
-  def season_nr(self):
-    return self.tournament.season_nr
 
   @property
   def _sortkey(self):
@@ -162,23 +120,3 @@ class Achievement(
         self.tournament,
         self.subjectId,
     )
-
-  subject = field.instrep.keyigetterproperty(1)
-
-  @property
-  def subjectId(self):
-    return self.subject.Id
-
-  tournament = field.instrep.keyigetterproperty(0)
-
-  @property
-  def tournamentId(self):
-    return self.tournament.Id
-
-  @property
-  def year(self):
-    return self.tournament.year
-
-  @property
-  def year_nr(self):
-    return self.tournament.year_nr

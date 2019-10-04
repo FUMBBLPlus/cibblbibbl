@@ -276,6 +276,13 @@ class JSONFileObject(JSONFileContainer):
     key = str(key)  # JSON obejct keys must be strings
     return super().__setitem__(key, value)
 
+  def get(self, key, default=None):
+    # avoid return of list/dict objects
+    try:
+      return self[key]
+    except KeyError:
+      return default
+
   def items(self):
     for k in self:
       yield k, self[k]

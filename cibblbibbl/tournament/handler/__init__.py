@@ -10,6 +10,7 @@ __all__ = list(
 
 from . import *
 
+
 def get_handler(group_key, Id):
   if str(Id).isdecimal():
     filename = f'{Id:0>8}'
@@ -24,6 +25,7 @@ def get_handler(group_key, Id):
     handlername = "default"
   handler = globals()[handlername]
   return handler
+
 
 del pkgutil
 del os

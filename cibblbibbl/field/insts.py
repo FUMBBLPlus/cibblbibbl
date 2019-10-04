@@ -2,6 +2,23 @@ import cibblbibbl
 
 
 @property
+def excluded_teams(self):
+  return frozenset(
+      cibblbibbl.team.Team(teamId)
+      for teamId in self.excluded_teamIds
+  )
+
+
+def exclude_teams(self, *teams):
+  for v in teams:
+    if hasattr(v, "Id"):
+      teamId = v.Id
+    else:
+      teamId = int(v)
+    self.excluded_team_ids.append(teamId)
+
+
+@property
 def self_tournament_achievements(self):
   return {
       A

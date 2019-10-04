@@ -8,12 +8,8 @@ from . import default
 from . import cbe
 from .. import tools
 
-class HighestR5Tournament(
-    default.Tournament,
-    metaclass=cibblbibbl.helper.InstanceRepeater,
-):
-  excluded_teams = default.Tournament.excluded_teams
-  rsym = default.Tournament.rsym
+class HighestR5Tournament(default.Tournament):
+
   sub = cbe.CBETournament.sub
 
   @property

@@ -7,15 +7,13 @@ import pyfumbbl
 import cibblbibbl
 
 
-class Group(
-    metaclass=cibblbibbl.helper.InstanceRepeater
-):
+class Group(metaclass=cibblbibbl.helper.InstanceRepeater):
 
   achievements = field.insts.self_tournament_achievements
-  config = field.config.cachedconfig
-  excluded_team_ids = field.config.field(
-      "excluded_teams", default=[]
-  )
+  config = field.config.CachedConfig()
+  excluded_teamIds = field.config.DDField(key="excluded_teams")
+  excluded_teams = field.insts.excluded_teams
+  exclude_teams = field.insts.exclude_teams
   key = field.instrep.keyigetterproperty(0)
   matchups = field.insts.self_tournaments_matchups
 
@@ -39,30 +37,13 @@ class Group(
   def configfilepath(self):
     return cibblbibbl.data.path / self.key / "config.json"
 
-  @property
-  def excluded_teams(self):
-    return frozenset(
-        cibblbibbl.team.Team(teamId)
-        for teamId in self.config.get("excluded_teams", [])
-    )
-  @excluded_teams.setter
-  def excluded_teams(self, sequence):
-    self.excluded_team_ids = [Te.Id for Te in sorted(sequence)]
-  @excluded_teams.deleter
-  def excluded_teams(self):
-    self.excluded_team_ids = []
+
 
   @property
   def season_names(self):
     return tuple(self.config["seasons"])
 
-  def exclude_teams(self, *teams):
-    for Te in teams:
-      if hasattr(Te, "nr"):
-        Te = Te.nr
-      L = self.excluded_team_ids
-      bisect.insort(L, int(Te))
-      self.excluded_team_ids = L  # directly is not good
+
 
   def register_achievements(self):
     cibblbibbl.achievement.collect(self.key)
