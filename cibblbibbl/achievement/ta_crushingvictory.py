@@ -15,6 +15,8 @@ class TA_CrushingVictory(Achievement):
         continue
       if T.posonly == "yes":
         continue
+      if T.friendly == "yes":
+        continue
       prestiges = collections.defaultdict(lambda: 0)
       for Mu in T.matchups:
         if Mu.abstract:

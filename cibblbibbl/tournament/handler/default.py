@@ -56,6 +56,9 @@ class BaseTournament(
   )
   Id = field.instrep.keyigetterproperty(1)
   ismain = property(lambda self: (not self.next))
+  friendly = field.config.yesnofield("friendly",
+      default=lambda inst: (inst.season.name == "Winter"),
+  )
   matchups = field.common.Call(tuple)
   matchupsconfigdir = field.config.MatchupsDirectory("Id")
   name = field.config.DDField()
@@ -271,7 +274,7 @@ class Tournament(BaseTournament):
   def rsym(self):
     d = self.config.get("rsym", {})
     dprest = d.setdefault("prestige", {})
-    if not dprest and self.season.name != "Winter":
+    if not dprest and not self.friendly:
       dprest.update({
           "W": 3,
           "B": 3,

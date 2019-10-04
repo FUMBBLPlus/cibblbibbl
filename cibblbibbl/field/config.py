@@ -263,7 +263,10 @@ def yesnofield(key, default=None, doc=None):
   )
 def yesnogetter(key, default=None):
   def fget(self):
-    return self.config.get(key, yesnomap[default])
+    default_ = default
+    if inspect.isfunction(default):
+      default_ = default(self)
+    return self.config.get(key, yesnomap[default_])
   return fget
 def yesnosetter(key):
   def fset(self, value):
