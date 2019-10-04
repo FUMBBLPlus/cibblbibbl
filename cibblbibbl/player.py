@@ -17,4 +17,4 @@ class Player(metaclass=cibblbibbl.helper.InstanceRepeater):
 
   @property
   def status(self):
-    return self.apiget()["status"]
+    return self.apiget["status"]

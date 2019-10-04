@@ -8,10 +8,12 @@ __all__ = list(
     in pkgutil.iter_modules([os.path.dirname(__file__)])
 )
 
-from . import *
-
-
 def get_handler(group_key, Id):
+  handler = globals()[get_handlername(group_key, Id)]
+  return handler
+
+
+def get_handlername(group_key, Id):
   if str(Id).isdecimal():
     filename = f'{Id:0>8}'
   else:
@@ -23,9 +25,10 @@ def get_handler(group_key, Id):
     handlername = cibblbibbl.data.jsonfile(p).data
   else:
     handlername = "default"
-  handler = globals()[handlername]
-  return handler
+  return handlername
 
+
+from . import *
 
 del pkgutil
 del os

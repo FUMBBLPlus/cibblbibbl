@@ -11,7 +11,9 @@ class Group(metaclass=cibblbibbl.helper.InstanceRepeater):
 
   achievements = field.insts.self_tournament_achievements
   config = field.config.CachedConfig()
-  excluded_teamIds = field.config.DDField(key="excluded_teams")
+  excluded_teamIds = field.config.DDField(
+      key="excluded_teams", default=lambda i, d: set()
+  )
   excluded_teams = field.insts.excluded_teams
   exclude_teams = field.insts.exclude_teams
   key = field.instrep.keyigetterproperty(0)

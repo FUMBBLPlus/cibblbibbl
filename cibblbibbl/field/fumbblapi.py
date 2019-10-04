@@ -34,14 +34,14 @@ class CachedFUMBBLAPIGetField:
         jf = cibblbibbl.data.jsonfile(p)
         if not p.is_file() or not p.stat().st_size:
           jf.dump_kwargs = self.dump_kwargs
-          o = api_func(*self.api_args_func(instance))
+          o = self.api_func(*self.api_args_func(instance))
           jf.data = o
           jf.save()
         else:
           o = jf._data
         self.cache[instance] = o
     else:
-      o = api_func(*self.api_args_func(instance))
+      o = self.api_func(*self.api_args_func(instance))
     return o
 
   def __delete__(self, instance):

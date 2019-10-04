@@ -10,6 +10,9 @@ from .. import field
 
 class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
 
+  baseprestige = field.config.DDField(key="prestige",
+      get_f_typecast=int, set_f_typecast=int
+  )
   config = field.config.CachedConfig()
   defaultconfig = field.config.CachedConfig()
   group = field.inst.group_by_self_group_key
@@ -33,8 +36,14 @@ class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
     Achievement.registry[cls.__name__.lower()] = cls
 
   def __del__(self):
-    self.tournament.achievements.remove(self)
-    self.subject.achievements.remove(self)
+    try:
+      self.tournament.achievements.remove(self)
+    except KeyError:
+      pass
+    try:
+      self.subject.achievements.remove(self)
+    except KeyError:
+      pass
 
   def __delitem__(self, key):
     return self.config.__delitem__(key, value)
@@ -87,6 +96,29 @@ class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
       nr += 1
     return S
 
+  @classmethod
+  def defaultconfigfilepath_of_group(cls, group_key):
+    return (
+      cibblbibbl.data.path
+      / group_key
+      / "achievement"
+      / f'{cls.__name__.lower()}.json'
+    )
+
+  @classmethod
+  def defaultconfig_of_group(cls, group_key):
+    jf = jsonfile(
+        cls.defaultconfigfilepath_of_group(group_key),
+        default_data = {},
+        autosave = True,
+        dump_kwargs = dict(field.config.dump_kwargs),
+    )
+    return jf.data
+
+  @classmethod
+  def getmember(cls, tournament, subject):
+    return cls.__members__.get((tournament, subject))
+
   @property
   def configfilepath(self):
     p = (
@@ -104,12 +136,7 @@ class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
 
   @property
   def defaultconfigfilepath(self):
-    return (
-      cibblbibbl.data.path
-      / self.tournament.group.key
-      / "achievement"
-      / f'{type(self).__name__.lower()}.json'
-    )
+    return self.defaultconfigfilepath_of_group(self.group_key)
 
   @property
   def _sortkey(self):

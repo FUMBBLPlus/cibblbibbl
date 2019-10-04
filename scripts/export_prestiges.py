@@ -2,25 +2,37 @@
 import cibblbibbl
 
 if __name__ == "__main__":
+  G = cibblbibbl.CIBBL
   show_team_id = True
-  Ts = sorted(
-      cibblbibbl.tournament.byGroup["cibbl"].values(),
-      key=lambda T: T.sortId,
-  )
+  Ts = sorted(G.tournaments.values())
   texts = []
-  exp_m = cibblbibbl.tournament.export.prestiges.plaintext
+  m_exp = cibblbibbl.tournament.export.prestiges.plaintext
+  f_exp = m_exp.export
   for T in Ts:
-    P = cibblbibbl.tournament.tools.prestiges.base(T)
-    s0 = exp_m.default(P, show_team_id=show_team_id)
+    if not T.ismain:
+      continue
+    s0 = f_exp(T, show_team_id=show_team_id)
         # TODO: handler matching standings func
-    if T.Id.isdecimal():
-      s1 = f'Prestiges of {T.name} ({T.Id} • {T.style})' \
-        f'\n\n{s0}'
-    else:
-      s1 = f'Prestiges of {T.name}\n\n{s0}'
-    texts.append(s1)
+    s1 = ""
+    if not T.abstract:
+      ids, styles_ = [T.Id,], [T.style,]
+      t = T
+      while t.prev:
+        ids.insert(0, t.prev.Id)
+        styles_.insert(0, t.prev.style)
+        t = t.prev
+      styles, s_styles = [], set()
+      for s in styles_:
+        if s not in s_styles:
+          styles.append(s)
+          s_styles.add(s)
+      idstr = ", ".join(str(x) for x in ids)
+      stylestr = ", ".join(styles)
+      s1 = f' ({idstr} • {stylestr})'
+    s2 = f'Prestiges of {T.name}{s1}\n\n{s0}'
+    texts.append(s2)
   p = cibblbibbl.data.path
-  p /= f'{T.group_key}/tournament/prestiges.txt'
+  p /= f'{G.key}/tournament/prestiges.txt'
   text = "\n\n\n\n".join(texts)
   with p.open("w") as f:
       f.write(text)

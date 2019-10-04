@@ -12,6 +12,7 @@ import cibblbibbl
 from ... import field
 from ...jsonfile import jsonfile
 from .. import tools
+from . import get_handlername
 
 
 class TournamentTime(field.base.TimeFieldProxyDDescriptorBase):
@@ -41,15 +42,26 @@ class BaseTournament(
   above = field.config.TournamentField()
   config = field.config.CachedConfig()
   end = TournamentTime()
-  excluded_teamIds = field.config.DDField(key="excluded_teams")
+  excluded_teamIds = field.config.DDField(
+      key="excluded_teams", default=lambda i, d: set()
+  )
   excluded_teams = field.insts.excluded_teams
   exclude_teams = field.insts.exclude_teams
   group = field.inst.group_by_self_group_key
   group_key = field.instrep.keyigetterproperty(0)
+  handlername = property(
+      lambda self: get_handlername(
+          self.group_key, self.Id
+      )
+  )
   Id = field.instrep.keyigetterproperty(1)
+  ismain = property(lambda self: (not self.next))
   matchups = field.common.Call(tuple)
   matchupsconfigdir = field.config.MatchupsDirectory("Id")
   name = field.config.DDField()
+  posonly = field.config.yesnofield(
+      "!posonly", default="no"
+  )
   ppos = field.config.DDField()
   rsym = field.config.DDField(default=dict, set_f_typecast=dict)
   season_nr = field.config.NDField(key="season",

@@ -3,21 +3,34 @@ import cibblbibbl
 
 from .mastercls import Achievement
 
-class TP_Match(Achievement):
+class TA_CrushingVictory(Achievement):
   subject_type = cibblbibbl.team.Team
 
   @classmethod
   def agent01(cls, group_key):
+    C = cls.defaultconfig_of_group(group_key)._data
     G = cibblbibbl.group.Group(group_key)
     for T in G.tournaments.values():
+      if T.abstract:
+        continue
       if T.posonly == "yes":
         continue
       prestiges = collections.defaultdict(lambda: 0)
       for Mu in T.matchups:
+        if Mu.abstract:
+          continue
         if Mu.excluded == "yes":
           continue
-        for Te in Mu.teams:
-          prestiges[Te] += Mu.performance(Te).get("prestige", 0)
+        teams = sorted(Mu.teams)
+        for i, Te in enumerate(teams):
+          tds = Mu.performance(Te).get("tds", 0)
+          if tds < C["mintds"]:
+            continue
+          oppoTe = teams[1-i]
+          oppotds = Mu.performance(oppoTe).get("tds", 0)
+          if C["oppomaxtds"] < oppotds:
+            continue
+          prestiges[Te] += C["value"]
       for Te, prestige in prestiges.items():
         A = cls(T, Te)
         if A["status"] == "proposed":
@@ -27,4 +40,4 @@ class TP_Match(Achievement):
         yield A
 
 
-cls = TP_Match
+cls = TA_CrushingVictory

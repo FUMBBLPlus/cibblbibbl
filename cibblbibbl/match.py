@@ -38,7 +38,7 @@ class Match(metaclass=cibblbibbl.helper.InstanceRepeater):
       # consumption
     if hasattr(self, "_replaydata"):
       self._replaydata.root._data = None
-    del self._replaydata
+      del self._replaydata
 
   @property
   def replaygamedata(self):
@@ -80,7 +80,7 @@ class Match(metaclass=cibblbibbl.helper.InstanceRepeater):
   @property
   def replayteamdata(self):
     return {
-        s: self.replaygamedata[f'team{s}']._data
+        s: self.replaygamedata[f'team{s}']
         for s in ("Home", "Away")
     }
 

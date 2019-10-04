@@ -15,7 +15,13 @@ def exclude_teams(self, *teams):
       teamId = v.Id
     else:
       teamId = int(v)
-    self.excluded_team_ids.append(teamId)
+    s = set(self.excluded_teamIds)
+    if teamId not in s:
+      self.excluded_teamIds.append(teamId)
+    team = cibblbibbl.team.Team(teamId)
+    for Mu in self.matchups:
+      if team in Mu.teams:
+        Mu.excluded = "yes"
 
 
 @property

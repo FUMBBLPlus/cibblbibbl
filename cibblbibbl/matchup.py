@@ -125,6 +125,8 @@ class Matchup(BaseMatchup):
     if not hasattr(self, "_apischedulerecord"):
       this_team_ids = self._KEY[3:5]
       for d in self.tournament.apischedule:
+        if self.round_ != d["round"]:
+          continue
         team_ids = tuple(sorted(d2["id"] for d2 in d["teams"]))
         if team_ids == this_team_ids:
           self._apischedulerecord = d
@@ -164,6 +166,13 @@ class Matchup(BaseMatchup):
   @property
   def schedulerecord(self):
     return self.apischedulerecord
+
+  @property
+  def teams(self):
+    return frozenset(
+        cibblbibbl.team.Team(teamId)
+        for teamId in self._KEY[3:5]
+    )
 
   def calculate_config(self):
     G = self.group
