@@ -85,7 +85,7 @@ class NDField(base.CustomKeyDescriptorBase):
     try:
       value = instance.config[self.key]
     except KeyError:
-      value = self.default(instance)
+      value = instance.config[self.key] = self.default(instance)
     if self.f_typecast:
       if self.f_typecast_a == 2:
         value = self.f_typecast(value, instance)

@@ -5,9 +5,9 @@ if __name__ == "__main__":
   G = cibblbibbl.CIBBL
   show_team_id = True
   Ts = sorted(G.tournaments.values())
-  texts = []
   m_exp = cibblbibbl.tournament.export.prestiges.plaintext
   f_exp = m_exp.export
+  texts = []
   for T in Ts:
     if not T.ismain:
       continue

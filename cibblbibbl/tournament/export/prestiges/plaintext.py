@@ -2,6 +2,7 @@ import texttable
 
 import cibblbibbl
 
+
 def export(T, *,
     show_team_id = False,
 ):
@@ -63,7 +64,8 @@ def export(T, *,
     if not show_team_id:
       del row[1]
     rows.append(row)
-  table.add_rows([[t[0] for t in params]] + rows)
+  rows.insert(0, [t[0] for t in params])
+  table.add_rows(rows)
   table.set_deco(
       texttable.Texttable.HEADER
       #| texttable.Texttable.VLINES

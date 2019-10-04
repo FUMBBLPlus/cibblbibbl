@@ -43,7 +43,7 @@ class BaseTournament(
   config = field.config.CachedConfig()
   end = TournamentTime()
   excluded_teamIds = field.config.DDField(
-      key="excluded_teams", default=lambda i, d: set()
+      key="excluded_teams", default=lambda i, d: list()
   )
   excluded_teams = field.insts.excluded_teams
   exclude_teams = field.insts.exclude_teams
@@ -439,7 +439,7 @@ class Tournament(BaseTournament):
       order = [str(teamId) for teamId in Co]
     S.default_factory = None
         # close defaultdict so it can raise KeyError exceptions
-    return [S[teamId] for teamId in order]
+    return [S[teamId] for teamId in order if teamId in S]
 
 
 
