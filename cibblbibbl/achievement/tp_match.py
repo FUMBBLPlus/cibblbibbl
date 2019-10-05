@@ -12,6 +12,9 @@ class TP_Match(Achievement):
     for T in G.tournaments.values():
       if T.posonly == "yes":
         continue
+      if T.friendly == "yes":
+        continue
+        # despite it should have zero prestige value too
       prestiges = collections.defaultdict(lambda: 0)
       for Mu in T.matchups:
         if Mu.excluded == "yes":

@@ -49,6 +49,24 @@ class BaseMatchup(metaclass=cibblbibbl.helper.InstanceRepeater):
   match = match.deleter(field.config.deleter("matchId"))
 
   @property
+  def player_perf_keys(self):
+    PP_items = self.config["player_performance"].items()
+    return frozenset(
+        (teamId, playerId)
+        for teamId, d0 in PP_items
+        for playerId, d1 in d0.items()
+    )
+
+  @property
+  def players(self):
+    PP_items = self.config["player_performance"].items()
+    return frozenset(
+        cibblbibbl.player.Player(int(playerId))
+        for teamId, playerId in self.player_perf_keys
+        if playerId.isdecimal()
+    )
+
+  @property
   def teams(self):
     return frozenset(
         cibblbibbl.team.Team(int(teamId))
@@ -58,13 +76,29 @@ class BaseMatchup(metaclass=cibblbibbl.helper.InstanceRepeater):
   def performance(self, subject):
     if isinstance(subject, cibblbibbl.team.Team):
       return self.config["team_performance"][str(subject.Id)]
-    elif isinstance(subject, cibblbibbl.player.Player):
-      return self.config["player_performance"][str(subject.Id)]
     else:
-      raise NotImplementedError(
-          f'unknown performance subject type: {subject!r}'
-      )
+      if isinstance(subject, cibblbibbl.player.Player):
+        playerId = str(subject.Id)
+      else:
+        playerId = str(subject)
+      PP_items = self.config["player_performance"].items()
+      for teamId, d0 in PP_items:
+        try:
+          return d0[playerId]
+        except KeyError:
+          continue
+    raise NotImplementedError(
+        f'unknown performance subject type: {subject!r}'
+    )
 
+  def team_of_player(self, player):
+    if hasattr(player, "Id"):
+      playerId0 = str(player.Id)
+    else:
+      playerId0 = str(player)
+    for teamId, playerId1 in self.player_perf_keys:
+      if playerId0 == playerId1:
+        return cibblbibbl.team.Team(int(teamId))
 
 
 class AbstractMatchup(BaseMatchup):

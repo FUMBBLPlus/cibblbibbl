@@ -15,9 +15,9 @@ def export(T, *,
       ("Coach", "t", "l", 19,),
       ("Perf.", "t", "l", 7,),
       ("GAM", "i" , "r", 3,),
-      ("CV", "t", "r", 3,),
+      (" CV", "t", "r", 2,),
       ("POS", "t", "r", 3,),
-      ("P", "i", "r", 3,),
+      (" P", "i", "r", 3,),
   ]
   if not show_team_id:
     del params[1]
