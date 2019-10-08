@@ -43,7 +43,10 @@ class BaseTournament(
   config = field.config.CachedConfig()
   end = TournamentTime()
   excluded_teamIds = field.config.DDField(
-      key="excluded_teams", default=lambda i, d: list()
+      key = "excluded_teams",
+      default = lambda i, d: list(),
+      get_f_typecast = set,
+      set_f_typecast = list,
   )
   excluded_teams = field.insts.excluded_teams
   exclude_teams = field.insts.exclude_teams
@@ -59,6 +62,7 @@ class BaseTournament(
   friendly = field.config.yesnofield("friendly",
       default=lambda inst: (inst.season.name == "Winter"),
   )
+  matches = field.insts.matchups_matches
   matchups = field.common.Call(tuple)
   matchupsconfigdir = field.config.MatchupsDirectory("Id")
   name = field.config.DDField()
@@ -66,6 +70,7 @@ class BaseTournament(
       "!posonly", default="no"
   )
   ppos = field.config.DDField()
+  replays = field.insts.matches_replays
   rsym = field.config.DDField(default=dict, set_f_typecast=dict)
   season_nr = field.config.NDField(key="season",
       f_typecast = (
@@ -272,7 +277,7 @@ class Tournament(BaseTournament):
 
   @property
   def rsym(self):
-    d = self.config.get("rsym", {})
+    d = self.config.get("r", {})
     dprest = d.setdefault("prestige", {})
     if not dprest and not self.friendly:
       dprest.update({
@@ -303,8 +308,8 @@ class Tournament(BaseTournament):
         "F": -2,
     })
     return d
-  rsym = rsym.setter(field.config.setter("rsym"))
-  rsym = rsym.deleter(field.config.deleter("rsym"))
+  rsym = rsym.setter(field.config.setter("r"))
+  rsym = rsym.deleter(field.config.deleter("r"))
 
   @property
   def season_nr(self):
@@ -357,7 +362,7 @@ class Tournament(BaseTournament):
     tpkeys = (
         "cas", "casdiff",
         "score", "scorediff",
-        "tds", "tdsdiff",
+        "td", "tddiff",
         "pts", "prestige"
     )
     template = {k: 0 for k in tpkeys}
@@ -373,18 +378,18 @@ class Tournament(BaseTournament):
       if Mu.excluded == "yes":
         continue
       HTH_result = {}
-      for teamId, TP in Mu.config["team_performance"].items():
+      for teamId, TP in Mu.config["team"].items():
         Te = cibblbibbl.team.Team(int(teamId))
-        rsym = TP["rsym"]
+        rsym = TP["r"]
         matchId = (Mu.match.Id if Mu.match else None)
         perf = rsym, matchId
         d = S[teamId]
         d.setdefault("team", Te)
         d["perf"].append(perf)
         for k in tpkeys:
-          d[k] += TP[k]
+          d[k] += TP.get(k, 0)
         if rsym.lower() not in ("b", "f", "x", "-"):
-          HTH_result[teamId] = TP["tds"]
+          HTH_result[teamId] = TP["td"]
       if len(HTH_result) == 2:
         HTH_results.append(HTH_result)
     bypts = collections.defaultdict(list)
@@ -430,7 +435,7 @@ class Tournament(BaseTournament):
           lambda teamId: (
               -S[teamId]["pts"],
               +S[teamId]["hth"],
-              -S[teamId]["tdsdiff"],
+              -S[teamId]["tddiff"],
               -S[teamId]["casdiff"],
               -S[teamId]["cto"]
           )

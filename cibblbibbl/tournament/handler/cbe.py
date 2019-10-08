@@ -45,8 +45,8 @@ class CBETournament(default.AbstractTournament):
         )
         if not AMu.config:
           d = copy.deepcopy(Mu.config._data)
-          d["player_performance"] = {}
-          dTP = d["team_performance"]
+          d["player"] = {}
+          dTP = d["team"]
           for teamId, d1 in list(dTP.items()):
             Te = cibblbibbl.team.Team(int(teamId))
             grnr, Gr = group_of_partner[Te]
@@ -54,7 +54,7 @@ class CBETournament(default.AbstractTournament):
             d1["prestige"] = 0
             dTP[str(grnr)] = d1
             del dTP[teamId]
-          AMu.update_config(d)
+          AMu.config = d
           AMu.modified = Mu.modified
         matchups.append(AMu)
       self._matchups = tuple(matchups)

@@ -6,7 +6,7 @@ from . import field
 
 import cibblbibbl
 
-from . import matchup_config as MC
+from . import matchup_config
 
 
 class BaseMatchup(metaclass=cibblbibbl.helper.InstanceRepeater):
@@ -30,7 +30,9 @@ class BaseMatchup(metaclass=cibblbibbl.helper.InstanceRepeater):
 
   @property
   def configfilepath(self):
-    return self.tournament.matchupsconfigdir / self.configfilename
+    return (
+        self.tournament.matchupsconfigdir / self.configfilename
+    )
 
   @property
   def keys(self):
@@ -50,7 +52,7 @@ class BaseMatchup(metaclass=cibblbibbl.helper.InstanceRepeater):
 
   @property
   def player_perf_keys(self):
-    PP_items = self.config["player_performance"].items()
+    PP_items = self.config["player"].items()
     return frozenset(
         (teamId, playerId)
         for teamId, d0 in PP_items
@@ -59,29 +61,31 @@ class BaseMatchup(metaclass=cibblbibbl.helper.InstanceRepeater):
 
   @property
   def players(self):
-    PP_items = self.config["player_performance"].items()
+    PP_items = self.config["player"].items()
     return frozenset(
-        cibblbibbl.player.Player(int(playerId))
-        for teamId, playerId in self.player_perf_keys
-        if playerId.isdecimal()
+        cibblbibbl.player.Player(playerId,  # must be str
+            name = d1["name"],
+        )
+        for teamId, d0 in PP_items
+        for playerId, d1 in d0.items()
     )
 
   @property
   def teams(self):
     return frozenset(
         cibblbibbl.team.Team(int(teamId))
-        for teamId in self.config["team_performance"]
+        for teamId in self.config["team"]
     )
 
   def performance(self, subject):
     if isinstance(subject, cibblbibbl.team.Team):
-      return self.config["team_performance"][str(subject.Id)]
+      return self.config["team"][str(subject.Id)]
     else:
       if isinstance(subject, cibblbibbl.player.Player):
         playerId = str(subject.Id)
       else:
         playerId = str(subject)
-      PP_items = self.config["player_performance"].items()
+      PP_items = self.config["player"].items()
       for teamId, d0 in PP_items:
         try:
           return d0[playerId]
@@ -124,6 +128,10 @@ class AbstractMatchup(BaseMatchup):
   def configfilename(self):
     filekeys = self.filekeys or self.keys
     return "a-" + "-".join(str(v) for v in filekeys) + ".json"
+
+  def iterdead(self):
+    # https://stackoverflow.com/a/13243920/2334951
+    yield from ()
 
 
 
@@ -184,14 +192,17 @@ class Matchup(BaseMatchup):
     return dir
 
   @property
-  def configfilename(self):
-    filename = (
+  def configfilebasename(self):
+    filebasename = (
         f'{self.round_:0>2}'
         f'-{self._KEY[3]:0>7}'
         f'-{self._KEY[4]:0>7}'
-        ".json"
     )
-    return filename
+    return filebasename
+
+  @property
+  def configfilename(self):
+    return self.configfilebasename + ".json"
 
   @property
   def configfilepath(self):
@@ -209,28 +220,13 @@ class Matchup(BaseMatchup):
     )
 
   def calculate_config(self):
-    G = self.group
-    T = self.tournament
-    R = self.apischedulerecord
-    D = {}
-    args = G, T, R, self, D
-    D.update(dict(MC.Ids(*args)))
-    D["!excluded"] = MC.excluded(*args)
-    PP = D["player_performance"] = {}
-    for t in MC.player_performances(*args):
-      teamId, playerId, D2 = t
-      PP.setdefault(teamId, {})[playerId] = D2
-    TP = D["team_performance"] = {}
-    for teamId, D2 in MC.team_performances(*args):
-      TP[teamId] = D2
-    Ma = self.match
-    if Ma:
-      del Ma.replaydata  # free up memory
-    return D
+    MCM = matchup_config.MatchupConfigMaker(self)
+    d = MCM()
+    return d
 
   def iterdead(self):
     C = self.config
-    for teamId, DPP in C["player_performance"].items():
+    for teamId, DPP in C["player"].items():
       for playerId, dpp in DPP.items():
         dead = dpp.get("dead")
         if not dead:

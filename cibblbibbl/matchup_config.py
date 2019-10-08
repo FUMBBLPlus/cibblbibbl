@@ -3,225 +3,261 @@ import cibblbibbl
 from . import helper
 
 
-def Ids(G, T, R, Mu, D):
-  Ma = Mu.match
-  if Ma:
-    yield "matchId", str(Ma.Id)
-    yield "replayId", str(Ma.replayId)
+class MatchupConfigMaker:
 
+  callchain = (
+      "Ids",
+      "Excluded",
+      "TeamCommon",
+      "PlayerCommon",
+      "PlayerPerformances",
+      "DeadPlayers",
+      "PlayerRetirements",
+      "TeamBasePerformances",
+      "TeamPerformanceDiffs",
+      "TeamMatchPrestiges",
+  )
 
-def excluded(G, T, R, Mu, D):
-  if (G.excluded_teams | T.excluded_teams) & Mu.teams:
-    return "yes"
-  else:
-    return "no"
+  diffkeys = {
+      "cas",
+      "score",
+      "td",
+  }
 
-
-def locked(G, T, R, Mu, D):
-  return "no"
-
-
-def player_performances(G, T, R, Mu, D):
-  Ma = Mu.match
-  if not Ma:
-    return
   spps = {
-    "cps": 1,
-    "tds": 3,
-    "int": 2,
-    "cas": 2,
-    "mvp": 5,
+      "comp": 1,
+      "td": 3,
+      "int": 2,
+      "cas": 2,
+      "mvp": 5,
   }
+
   playerType_trans = {
-    "Big Guy": "B",
-    "Irregular": "I",
-    "Journeyman": "J",  # not provided; only for reference
-    "Mercenary": "M",
-    "RaisedFromDead": "D",
-    "Regular": "R",
-    "Star": "S",
+      "Big Guy": "B",
+      "Irregular": "I",
+      "Journeyman": "J",  # not provided; only for reference
+      "Mercenary": "M",
+      "RaisedFromDead": "D",
+      "Regular": "R",
+      "Star": "S",
   }
-  PD_k_trans = {
-    "playerName": "name",
+
+  keytransPR = {
+      "blocks": "blocks",
+      "cas": "casualties",
+      "comp": "completions",
+      "prespp": "currentSpps",
+      "fouls": "fouls",
+      "int": "interceptions",
+      "pass": "passing",
+      "mvp": "playerAwards",
+      "rush": "rushing",
+      "td": "touchdowns",
+      "turns": "turnsPlayed"
   }
-  PR_k_trans = {
-    "blocks": "blk",
-    "casualties": "cas",
-    "completions": "cps",
-    "currentSpps": "prespp",
-    "fouls": "fou",
-    "interceptions": "int",
-    "passing": "pas",
-    "playerAwards": "mvp",
-    "rushing": "rus",
-    "touchdowns": "tds",
-    "turnsPlayed": "tur"
-  }
-  GR = Ma.replaygameresult
-  playerteam = {}
-  for side, DTE in Ma.replayteamdata.items():
-    DPD = {str(d["playerId"]): d for d in DTE["playerArray"]}
-    teamId = str(DTE["teamId"])
-    Te = cibblbibbl.team.Team(int(teamId))
-    # I check the next match players to determine retired
-    # players later.
-    Te_nextMa = Te.next_match(Ma)
-    if Te_nextMa is not None:
-      Te_nextMa_side = Te_nextMa.replayteamside[Te]
-      Te_nextMaRTD = Te_nextMa.replayteamdata[Te_nextMa_side]
-      Te_nextMa_Ps = set(
-        cibblbibbl.player.Player(int(d["playerId"]))
-        for d in Te_nextMaRTD["playerArray"]
-        if d["playerId"].isdecimal()
-      )
-      del Te_nextMa.replaydata  # free up memory
+
+  def __init__(self, matchup):
+    self.Mu = matchup
+    self.refresh_cache()
+    self.d = {
+      "player": {},
+      "team": {},
+    }
+    self.goto = "Ids"
+
+  def refresh_cache(self):
+    self.Ma = self.Mu.match
+    self.G = self.Mu.group
+    self.T = self.Mu.tournament
+    self.SR = self.Mu.schedulerecord
+    if self.Ma:
+      self.teams = self.Ma.teams
+      self.Re = self.Ma.replay
+      with self.Re as Re:
+        self.ReTD = self.Re.normteamdata
+        self.ReGRD = self.Re.normgameresultdata
     else:
-      Te_nextMa_Ps = None
-    DGR = GR[side]
-    for PR in DGR["playerResults"]:
-      playerId = PR["playerId"]
-      if playerId.isdecimal():
-        P = cibblbibbl.player.Player(int(playerId))
-      else:
-        P = None
-      PD = DPD[playerId]
-      playerteam[playerId] = teamId
-      d = {
-          PR_k_trans[k]: PR[k] for k in (
-              "blocks",
-              "casualties",
-              "completions",
-              "currentSpps",
-              "fouls",
-              "interceptions",
-              "passing",
-              "playerAwards",
-              "rushing",
-              "touchdowns",
-              "turnsPlayed",
+      self.teams = [
+          cibblbibbl.team.Team(self.SR["teams"][i]["id"])
+          for i in range(2)
+      ]
+
+  def __call__(self, callchain=None):
+    if callchain is None:
+      callchain = self.callchain
+    for methodname in callchain:
+      getattr(self, methodname)()
+    return self.d
+
+  def Ids(self):
+    if self.Ma:
+      self.d["matchId"] = str(self.Ma.Id)
+      self.d["replayId"] = str(self.Ma.replayId)
+    self.goto = "Excluded"
+
+  def Excluded(self):
+    excl = self.G.excluded_teams | self.T.excluded_teams
+    if excl & self.Mu.teams:
+      self.d["!excluded"] = "yes"
+    else:
+      self.d["!excluded"] = "no"
+
+  def TeamCommon(self):
+    dTe = self.d.setdefault("team", {})
+    if self.Ma:
+      for Te, d in self.ReTD.items():
+        d1 = dTe.setdefault(str(Te.Id), {})
+        d1["name"] = helper.norm_name(d["teamName"])
+    else:
+      for d0 in self.SR["teams"]:
+        teamId = str(d0["id"])
+        d1 = dTe.setdefault(teamId, {})
+        d1["name"] = helper.norm_name(d0["name"])
+
+  def PlayerCommon(self, keys=None):
+    if not self.Ma:
+      return
+    pd = self.d["player"]
+    for Te, TD in self.ReTD.items():
+      ptd = pd.setdefault(str(Te.Id), {})
+      for PD in TD["playerArray"]:
+        playerId = str(PD["playerId"])
+        ptpd = ptd.setdefault(playerId, {})
+        if keys is None or "name" in keys:
+          name = helper.norm_name(PD["playerName"])
+          ptpd["name"] = name
+        if keys is None or "type" in keys:
+          ptpd["type"] = self.playerType_trans[PD["playerType"]]
+          if 16 < PD["playerNr"] and ptpd["type"] == "R":
+            ptpd["type"] = "J"  # must be a Journeyman
+
+  def PlayerPerformances(self, keys=None):
+    if not self.Ma:
+      return
+    Ks = set(self.keytransPR)
+    if keys is not None:
+      Ks &= keys
+    pd = self.d["player"]
+    for Te, TGRD in self.ReGRD.items():
+      ptd = pd.setdefault(str(Te.Id), {})
+      for PR in TGRD["playerResults"]:
+        playerId = PR["playerId"]
+        ptpd = ptd.setdefault(playerId, {})
+        for key in Ks:
+          value = PR[self.keytransPR[key]]
+          if value:
+            ptpd[key] = value
+        if keys is None or "spp" in keys:
+          value = sum(
+              ptpd.get(k, 0) * v
+              for k, v in self.spps.items()
           )
-          if PR[k]
-      }
-      spp = sum(
-          d.get(k, 0) * v
-          for k, v in spps.items()
-      )
-      if spp:
-        d["spp"] = spp
-      d.update({
-          PD_k_trans[k]: PD[k] for k in (
-              "playerName",
-          )
-          if PD[k]
-      })
-      d["type"] = playerType_trans[PD["playerType"]]
-      if 16 < PD["playerNr"] and d["type"] == "R":
-        d["type"] = "J"  # must be a Journeyman
-      if PR["seriousInjury"] == "Dead (RIP)":
-        riprecord = [
-            PR["sendToBoxHalf"],
-            PR["sendToBoxTurn"],
-            PR["sendToBoxReason"],
-            PR["sendToBoxByPlayerId"],
-        ]
-        d["dead"] = riprecord
-      # now I check for retirements
-      if P is not None:
-        if Te_nextMa_Ps is None or P not in Te_nextMa_Ps:
-          P_status = P.status
-          if P_status == "Dead":
-            if not d.get("dead"):
-              raise Exception(
-                  f'dead mismatch: {Ma}, [{P.Id}] {d["name"]}'
-              )
-          elif P_status == "Retired":
-            # print(f'{P_status} ({Ma}): [{P.Id}] {d["name"]}')
-            d["retired"] = True
-          elif P_status == "Retired Journeyman":
-            # here I know about a Journeyman for sure
-            # print(f'{P_status} ({Ma}): [{P.Id}] {d["name"]}')
-            d["type"] = "J"
-            d["retired"] = True
-          elif Te_nextMa_Ps is not None:
-            raise Exception(
-                "mssing from next but not retired: "
-                f'{Ma}, [{P.Id}] {d["name"]}, {P_status}'
-            )
+          if value:
+            ptpd["spp"] = value
+
+  def DeadPlayers(self):
+    if not self.Ma:
+      return
+    pd = self.d["player"]
+    for Te, TGRD in self.ReGRD.items():
+      ptd = pd.setdefault(str(Te.Id), {})
+      for PR in TGRD["playerResults"]:
+        playerId = PR["playerId"]
+        ptpd = ptd.setdefault(playerId, {})
+        if PR["seriousInjury"] == "Dead (RIP)":
+          riprecord = [
+              PR["sendToBoxHalf"],
+              PR["sendToBoxTurn"],
+              PR["sendToBoxReason"],
+              PR["sendToBoxByPlayerId"],
+          ]
+          ptpd["dead"] = riprecord
 
 
-      yield teamId, playerId, d
-
-
-
-def team_performances(G, T, R, Mu, D):
-  """
-  Generates the team performance dictionaries.
-  """
-  RR = R["result"]
-  def subgen():
-    if RR.get("id"):
-        # having a positive Id value in a result means that
-        # there was a match played
-      M = cibblbibbl.match.Match(RR["id"])
-      rd = {d["teamId"]: d for d in M.replayteamdata.values()}
-      conceded = M.conceded()
-      casualties = M.casualties()
-      for i in range(2):
-        teamId = str(RR["teams"][i]["id"])
-        PPL = list(D["player_performance"][teamId].values())
+  def PlayerRetirements(self):
+    if not self.Ma:
+      return
+    for teamId, ptd in self.d["player"].items():
+      for playerId, ptpd in ptd.items():
+        playerId1 = playerId
+        typ = ptpd["type"]
+        if not ptpd.get("dead"):
+          continue
+        elif typ in ("M", "S"):
+          continue
+        elif typ == "D":
+          playerId1 = playerid.split("_")[-1]
+          if playerId1 == "0":
+            ptpd["retired"] = True
+            continue
         Te = cibblbibbl.team.Team(int(teamId))
-        d = {"name": helper.norm_name(rd[teamId]["teamName"])}
-        oppo_teamId = str(RR["teams"][1-i]["id"])
-        oppo_PPL = list(
-            D["player_performance"][oppo_teamId].values()
-        )
-        oppo_Te = cibblbibbl.team.Team(int(oppo_teamId))
-        score = d["score"] = RR["teams"][i]["score"]
-        oppo_score = RR["teams"][1-i]["score"]
-        scorediff = d["scorediff"] = score - oppo_score
-        tds = d["tds"] = sum(d.get("tds", 0) for d in PPL)
-        oppo_tds = sum(d.get("tds", 0) for d in oppo_PPL)
-        tdsdiff = d["tdsdiff"] = tds - oppo_tds
-        cas = d["cas"] = casualties[Te]
-        oppo_cas = casualties[oppo_Te]
-        casdiff = d["casdiff"] = cas - oppo_cas
-        if 0 < scorediff:
-          rsym = d["rsym"] = "W"
-        elif scorediff == 0:
-          rsym = d["rsym"] = "D"
+        Ma = Te.next_match(self.Ma)
+        if Ma:
+          with Ma.replay as Re:
+            if playerId1 not in Re.normplayerIds:
+              ptpd["retired"] = True
+          continue
+        elif playerId1.isdecimal():
+          P = cibblbibbl.player.player(playerId1)
+          status = P.status
+          if P.status == "Retired":
+            ptpd["retired"] = True
+          elif P.status == "Retired Journeyman":
+            ptpd["retired"] = True
+            ptpd["type"] = "J"
+          else:
+            ptpd["retired"] = None  # indicates unknown
+
+  def TeamBasePerformances(self, keys=None):
+    Ks = set(self.keytransPR)
+    if keys:
+      Ks &= keys
+    for teamId, ptd in self.d["player"].items():
+      d = self.d["team"].setdefault(teamId, {})
+      for playerId, ptpd in ptd.items():
+        for k in Ks:
+          d.setdefault(k, 0)
+          d[k] += ptpd.get(k, 0)
+    if self.Ma:
+      scores = tuple(self.Ma.scores().items())
+      conceded = self.Ma.conceded()
+      opposcores = {
+        Te: scores[1-i][1]
+        for i, (Te, score) in enumerate(scores)
+      }
+      for Te, score in scores:
+        d = self.d["team"][str(Te.Id)]
+        d["score"] = score
+        opposcore = opposcores[Te]
+        if opposcore < score:
+          d["r"] = "W"
+        elif opposcore == score:
+          d["r"] = "D"
         elif conceded is Te:
-            # check for concessions on loosers first
-          rsym = d["rsym"] = "C"
+          d["r"] = "C"
         else:
-          rsym = d["rsym"] = "L"
-        yield Te, d
+          d["r"] = "L"
     else:
-        # a zero Id value in a result means that the game was
-        # forfeited
-      winner_Id = str(RR["winner"])
-      teamname = {str(d["id"]): d["name"] for d in R["teams"]}
-      for Te in Mu.teams:
-        d = {"name": helper.norm_name(teamname[str(Te.Id)])}
-        d["score"] = d["scorediff"] = 0
-        d["tds"] = d["tdsdiff"] = 0
-        d["cas"] = d["casdiff"] = 0
-        if str(Te.Id) == winner_Id:
-          rsym = d["rsym"] = "B"
+      winnerteamId = str(self.SR["result"]["winner"])
+      for teamId, d in self.d["team"].items():
+        if teamId == winnerteamId:
+          d["r"] = "B"
+          d["score"] = 2
         else:
-          rsym = d["rsym"] = "F"
-        yield Te, d
-  for Te, d in subgen():
-    teamId = str(Te.Id)
-    for k in (
-        "score",
-        "scorediff",
-        "tds",
-        "tdsdiff",
-        "cas",
-        "casdiff",
-      ):
-      value = T.rsym.get(k, {}).get(d["rsym"], 0)
-      d[k] += value
-    for k in ("pts", "prestige"):
-      d[k] = T.rsym.get(k, {}).get(d["rsym"], 0)
-    yield teamId, d
+          d["r"] = "F"
+          d["score"] = 0
+
+  def TeamPerformanceDiffs(self):
+    teamIds = list(self.d["team"])
+    for i, teamId in enumerate(teamIds):
+      oppoteamId = teamIds[1-i]
+      d = self.d["team"][teamId]
+      oppod = self.d["team"][oppoteamId]
+      for k in self.diffkeys:
+        d[f'{k}diff'] = d.get(k, 0) - oppod.get(k, 0)
+
+  def TeamMatchPrestiges(self):
+    T = self.Mu.tournament
+    for teamId, d in self.d["team"].items():
+      for k in ("pts", "prestige"):
+        d[k] = T.rsym.get(k, {}).get(d["r"], 0)

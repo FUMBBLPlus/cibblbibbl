@@ -9,6 +9,11 @@ def group_by_self_group_key(self):
 
 
 @property
+def position_by_self_positionId(self):
+  return cibblbibbl.position.Position(self.positionId)
+
+
+@property
 def tournament(self):
   return self.group.tournaments[self.tournamentId]
 

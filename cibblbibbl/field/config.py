@@ -45,7 +45,8 @@ class CachedConfig(base.CustomKeyDescriptorBase):
       )
       calcattrname = f'calculate_{self.key}'
       if not jf.data and hasattr(instance, calcattrname):
-        jf.data.update(getattr(instance, calcattrname)())
+        d = getattr(instance, calcattrname)()
+        jf.data.update(d)
       setattr(instance, attrname, jf.data)
     return getattr(instance, attrname)
 
@@ -85,7 +86,7 @@ class NDField(base.CustomKeyDescriptorBase):
     try:
       value = instance.config[self.key]
     except KeyError:
-      value = instance.config[self.key] = self.default(instance)
+      value = self.default(instance)
     if self.f_typecast:
       if self.f_typecast_a == 2:
         value = self.f_typecast(value, instance)
@@ -101,7 +102,7 @@ class DDField(NDField):
   def __init__(self, *args,
       default = AttributeError,
       defaulterrorfstr = 'unreadable attribute',
-      default_set_delete = False,
+      default_set_delete = True,
       delete_set_default = False,
       get_f_typecast = None,
       set_f_typecast = None,

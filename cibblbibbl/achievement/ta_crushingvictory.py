@@ -25,11 +25,11 @@ class TA_CrushingVictory(Achievement):
           continue
         teams = sorted(Mu.teams)
         for i, Te in enumerate(teams):
-          tds = Mu.performance(Te).get("tds", 0)
+          tds = Mu.performance(Te).get("td", 0)
           if tds < C["mintds"]:
             continue
           oppoTe = teams[1-i]
-          oppotds = Mu.performance(oppoTe).get("tds", 0)
+          oppotds = Mu.performance(oppoTe).get("td", 0)
           if C["oppomaxtds"] < oppotds:
             continue
           prestiges[Te] += C["value"]

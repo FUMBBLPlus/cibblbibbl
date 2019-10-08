@@ -9,9 +9,11 @@ from . import data
 from . import helper
 
 
+from . import position
 from . import coach
 from . import team
 from . import player
+from . import replay
 from . import match
 
 from . import group
@@ -22,6 +24,8 @@ from . import matchup
 
 from . import achievement
 
+
 CIBBL = group.Group("cibbl")
+
 
 from . import admin

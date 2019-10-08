@@ -17,6 +17,8 @@ class PA_StarPlayer(Achievement):
         continue
       for Mu in T.matchups:
         for Pl in Mu.players:
+          if not Pl.Id.isdecimal():
+            continue
           d = Mu.performance(Pl)
           prespp = d.get("prespp", 0)
           postspp = prespp + d.get("spp", 0)

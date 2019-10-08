@@ -13,6 +13,7 @@ class CachedFUMBBLAPIGetField:
       dir_path=None,
       api_args_func=None,
       id_func=None,
+      **kwargs,
   ):
     self.dir_path = dir_path
     self.api_func = api_func
@@ -22,6 +23,7 @@ class CachedFUMBBLAPIGetField:
     self.id_func = id_func or (lambda inst: inst.Id)
     if dir_path:
       self.cache = {}
+    self.kwargs = kwargs
 
   def __get__(self, instance, owner):
     if instance is None:
@@ -33,15 +35,21 @@ class CachedFUMBBLAPIGetField:
         p = cibblbibbl.data.path / self.dir_path / filename
         jf = cibblbibbl.data.jsonfile(p)
         if not p.is_file() or not p.stat().st_size:
-          jf.dump_kwargs = self.dump_kwargs
-          o = self.api_func(*self.api_args_func(instance))
+          jf.dump_kwargs = dict(self.dump_kwargs)
+          o = self.api_func(
+            *self.api_args_func(instance),
+            **self.kwargs,
+          )
           jf.data = o
           jf.save()
         else:
           o = jf._data
         self.cache[instance] = o
     else:
-      o = self.api_func(*self.api_args_func(instance))
+      o = self.api_func(
+        *self.api_args_func(instance),
+        **self.kwargs,
+      )
     return o
 
   def __delete__(self, instance):

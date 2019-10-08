@@ -1,0 +1,201 @@
+import copy
+
+import fumbblreplay
+import pyfumbbl
+
+from . import field
+
+import cibblbibbl
+
+
+@cibblbibbl.helper.idkey
+class Replay(metaclass=cibblbibbl.helper.InstanceRepeater):
+
+  config = field.config.CachedConfig()
+  playerIdnorm = field.config.DDField(
+      default=lambda i, d: i.calculate_playerIdnorm()
+  )
+
+  def __init__(self, replayId: int, match=None):
+    self.match = match
+    pass
+
+  def __enter__(self):
+    self.reload_data()
+    return self
+
+  def __exit__(self, exc_type, exc_val, exc_tb):
+      del self.data
+
+  @property
+  def configfilepath(self):
+    return (
+        cibblbibbl.data.path
+        / "replay"
+        / f'{self.Id:0>8}.json'
+    )
+
+  @property
+  def data(self):
+    return self._data
+  @data.deleter
+  def data(self):
+    del self._data
+    self._data = ...
+
+  @property
+  def gamedata(self):
+    if not hasattr(self, "_gamedata"):
+      for d in self.data:
+        try:
+          self._gamedata = d["game"]
+        except KeyError:
+          pass
+        else:
+          break
+    return self._gamedata
+  @gamedata.deleter
+  def gamedata(self):
+    del self._gamedata
+
+  @property
+  def gameresultdata(self):
+    d1 = self.gamedata
+    return {
+        self.teams[i]: d1["gameResult"][f'teamResult{s}']
+        for i, s in enumerate(("Home", "Away"))
+    }
+
+  @property
+  def normgameresultdata(self):
+    data = copy.deepcopy(self.gameresultdata)
+    for d0 in data.values():
+        for d1 in d0["playerResults"]:
+            for k in ("playerId", "sendToBoxByPlayerId"):
+                v = d1[k]
+                d1[k] = self.playerIdnorm.get(v, v)
+    return data
+
+  @property
+  def normplayerIds(self):
+    return {
+      self.playerIdnorm.get(playerId, playerId)
+      for playerId in self.playerIds
+    }
+
+  @property
+  def normteamdata(self):
+    data = copy.deepcopy(self.teamdata)
+    for d0 in data.values():
+        for d1 in d0["playerArray"]:
+            for k in ("playerId",):
+                v = playerId = d1[k]
+                d1[k] = self.playerIdnorm.get(v, v)
+    return data
+
+  @property
+  def playerIds(self):
+    return {
+      d1["playerId"]
+      for d0 in self.teamdata.values()
+      for d1 in d0["playerArray"]
+    }
+
+  @property
+  def positiondata(self):
+    d = {}
+    for d0 in self.rosterdata.values():
+      for d1 in d0["positionArray"]:
+        positionId = d1["positionId"]
+        d[positionId] = d1
+    return d
+
+  @property
+  def rosterdata(self):
+    d = {}
+    for d0 in self.teamdata.values():
+      roster = d0["roster"]
+      d[roster["rosterId"]] = roster
+    return d
+
+  @property
+  def teamdata(self):
+    d = {}
+    for s in ("Home", "Away"):
+      d1 = self.gamedata[f'team{s}']
+      Te = cibblbibbl.team.Team(int(d1["teamId"]))
+      d[Te] = d1
+    return d
+
+
+
+  @property
+  def teams(self):
+    if not hasattr(self, "_teams"):
+      self._teams = tuple(
+          cibblbibbl.team.Team(
+              int(self.gamedata[f'team{s}']["teamId"])
+          )
+          for s in ("Home", "Away")
+      )
+    return self._teams
+
+  def reload_data(self, download=False):
+    filename = f'{self.Id:0>8}.json'
+    dir_path = "cache/replay"
+    p = cibblbibbl.data.path / dir_path / filename
+    jf = cibblbibbl.data.jsonfile(p)
+    if download or not p.is_file() or not p.stat().st_size:
+      jf.dump_kwargs = cibblbibbl.settings.dump_kwargs
+      print(f'Downloading REPLAY {self.Id}...')
+      jf.data = fumbblreplay.get_replay_data(
+          self.match.replayId
+      )
+      jf.save()
+    self._data = jf._data
+
+  def calculate_playerIdnorm(self):
+    d = {}
+    Id = self.Id
+    with self:
+      finished = self.gamedata["finished"]
+      positiondata = self.positiondata
+      for Te, d1 in self.teamdata.items():
+        for d2 in d1["playerArray"]:
+          playerId = normplayerId = d2["playerId"]
+          playerName = d2["playerName"]
+          playerType = d2["playerType"]
+          positionId = d2["positionId"]
+          if playerType in ("Regular", "Big Guy", "Irregular"):
+            continue
+          elif playerType == "Star":
+            normplayerId = f'STAR-{positionId}'
+          elif playerType == "Mercenary":
+            hashv = hash((finished, playerId))
+            randomnrstr = f'{hashv & 0xFFF:0>4}'
+            normplayerId = f'MERC-{positionId}-{randomnrstr}'
+          elif playerType == "RaisedFromDead":
+            baseId = f'RAISED-{positionId}'
+            aliveplayerId = playerId.split("R")[0]
+            postplayerId = "UNKNOWN"
+            found = []
+            d3 = Te.legacyapiget
+            for p in d3["players"] + d3["pastplayers"]:
+              if p["name"] == playerName:
+                found.append(p)
+            if len(found) == 1:
+              postplayerId = found[0]["id"]
+            else:
+              postplayerId += f'{len(found)}'
+            normplayerId = "_".join(
+                (baseId, aliveplayerId, postplayerId)
+            )
+          else:
+            raise NotImplementedError(
+                "Unhandled playerType: "
+                f'{playerType} (Replay: {self.Id})'
+            )
+          if playerId != normplayerId:
+            d[playerId] = normplayerId
+    return d
+

@@ -131,3 +131,7 @@ def norm_name(s):
   s = s.strip(EXTRA_STRIP)
   s = re.sub(f'[{IGNORE}]', "", s)
   return s
+
+
+def roster_name(s):
+  return re.sub('\s*\(.+$', '', s)  # CIBBL/BIBBL specific!

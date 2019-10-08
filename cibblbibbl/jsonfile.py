@@ -207,10 +207,14 @@ class JSONFileContainer(JSONFileBase):
     return self._data.__iter__()
 
   def __getattr__(self, name):
-    if name in self._change_method_names:
-      return self._change_method(name)
-    else:
-      return getattr(self._data, name)
+    return getattr(self._data, name)
+
+  def __getattribute__(self, name):
+    Ns = object.__getattribute__(self, "_change_method_names")
+    if name in Ns:
+      m = object.__getattribute__(self, "_change_method")
+      return m(name)
+    return object.__getattribute__(self, name)
 
   def __getitem__(self, key):
     data = self._data[key]
@@ -241,7 +245,7 @@ class JSONFileContainer(JSONFileBase):
 
 
 
-class JSONFileArray(JSONFileContainer):
+class JSONFileArray(JSONFileContainer, list):
 
   _change_method_names = (
     "__delitem__",
@@ -260,7 +264,7 @@ class JSONFileArray(JSONFileContainer):
 
 
 
-class JSONFileObject(JSONFileContainer):
+class JSONFileObject(JSONFileContainer, dict):
 
   _change_method_names = (
     "__delitem__",

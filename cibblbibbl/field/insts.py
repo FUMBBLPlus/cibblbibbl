@@ -25,6 +25,20 @@ def exclude_teams(self, *teams):
 
 
 @property
+def matches_replays(self):
+  return tuple(
+      Ma.replay for Ma in self.matches
+  )
+
+
+@property
+def matchups_matches(self):
+  return tuple(
+      Mu.match for Mu in self.matchups if Mu.match
+  )
+
+
+@property
 def self_tournament_achievements(self):
   return {
       A
@@ -37,10 +51,10 @@ def self_tournament_achievements(self):
 def self_tournaments_matchups(self):
   if not hasattr(self, "_matchups"):
     self._matchups = tuple(
-        cibblbibbl.matchup.sort_by_modified(
-            M
+        cibblbibbl.matchup.sort_by_modified({
+            Mu
             for T in self.tournaments.values()
-            for M in T.matchups
-        )
+            for Mu in T.matchups
+        })
     )
   return self._matchups

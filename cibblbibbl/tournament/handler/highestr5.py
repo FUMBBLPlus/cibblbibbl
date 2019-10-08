@@ -22,15 +22,15 @@ class HighestR5Tournament(default.Tournament):
         sortf = (
             lambda Mu: sum(
                 ranks[cibblbibbl.team.Team(int(teamId))]
-                for teamId in Mu.config["team_performance"]
+                for teamId in Mu.config["team"]
             )
         )
         matchups_by_rank = sorted(matchups, key=sortf)
         for Mu in matchups_by_rank:
-          for TP in Mu.config["team_performance"].values():
-            if not TP.get("rsym"):
+          for TP in Mu.config["team"].values():
+            if not TP.get("r"):
               break  # not yet played
-            elif TP["rsym"] == "W":
+            elif TP["r"] == "W":
               if TP["pts"] < 100:
                 TP["pts"] += 100
               break

@@ -1,4 +1,26 @@
+import inspect
+
 from . import base
+
+
+class AttrKey(base.CustomKeyDescriptorBase):
+
+  def __init__(self, attrname, key=None, default=None):
+    super().__init__(key=key)
+    self.attrname = attrname
+    self.default = default
+
+  def __get__(self, instance, owner):
+    if instance is None:
+      return self
+    o = getattr(instance, self.attrname)
+    try:
+      return o[self.key]
+    except KeyError as e:
+      if self.default is KeyError:
+        raise
+      else:
+        return self.default
 
 
 class Call:
@@ -25,20 +47,6 @@ class Constant:
     return self._value
 
 
-class DictAttrGetterNDescriptor(base.CustomKeyDescriptorBase):
-
-  def __init__(self, attrname, key=None, default=None):
-    super().__init__(key=key)
-    self.attrname = attrname
-    self.default = default
-
-  def __get__(self, instance, owner):
-    if instance is None:
-      return self
-    d = getattr(instance, self.attrname)
-    return d.get(self.key, self.default)
-
-
 class DiggedAttr:
 
   def __init__(self, *attrkeys):
@@ -51,3 +59,43 @@ class DiggedAttr:
     for k in self.attrkeys:
       v = getattr(v, k)
     return v
+
+
+class DiggedKeys:
+
+  def __init__(self, attrname, *keys,
+      default = None,
+      f_typecast = None,
+  ):
+    self.attrname = attrname
+    self.keys = keys
+    self.default = default
+    self.f_typecast = f_typecast
+    try:
+      self.f_typecast_a = len(
+          inspect.getargspec(f_typecast).args
+      )
+    except TypeError:
+      self.f_typecast_a = 1
+
+  def __get__(self, instance, owner):
+    if instance is None:
+      return self
+    o = getattr(instance, self.attrname)
+    for k in self.keys:
+      try:
+        o = o[k]
+      except KeyError as e:
+        if self.default is KeyError:
+          raise
+        else:
+          return self.default
+    if self.f_typecast:
+      if self.f_typecast_a == 2:
+        o = self.f_typecast(o, instance)
+      elif self.f_typecast_a == 3:
+        o = self.f_typecast(o, instance, self)
+      else:
+        o = self.f_typecast(o)
+    return o
+

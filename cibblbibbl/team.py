@@ -16,6 +16,12 @@ class Team(metaclass=cibblbibbl.helper.InstanceRepeater):
   apimatches = field.fumbblapi.CachedFUMBBLAPIGetField(
       pyfumbbl.team.get_all_matches, "cache/api-team-matches"
   )
+  legacyapiget = field.fumbblapi.CachedFUMBBLAPIGetField(
+      pyfumbbl.team.get_legacy_data, "cache/lagacy-api-team",
+      flags = pyfumbbl.team.PAST_PLAYERS
+  )
+  replays = field.insts.matches_replays
+
 
   def __init__(self, teamId: int):
     self._matchups = {}

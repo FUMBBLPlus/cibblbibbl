@@ -11,8 +11,10 @@ class Season(
   achievements = field.insts.self_tournament_achievements
   group = field.inst.group_by_self_group_key
   group_key = field.instrep.keyigetterproperty(0)
+  matches = field.insts.matchups_matches
   matchups = field.insts.self_tournaments_matchups
   nr = field.instrep.keyigetterproperty(2)
+  replays = field.insts.matches_replays
   year = field.inst.year_by_self_group_key_and_year_nr
   year_nr = field.instrep.keyigetterproperty(1)
 

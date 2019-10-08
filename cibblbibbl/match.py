@@ -12,7 +12,7 @@ class Match(metaclass=cibblbibbl.helper.InstanceRepeater):
   apiget = field.fumbblapi.CachedFUMBBLAPIGetField(
       pyfumbbl.match.get, "cache/api-match"
   )
-  replayId = field.common.DictAttrGetterNDescriptor("apiget")
+  replayId = field.common.AttrKey("apiget")
 
   def __init__(self, matchId: int):
     pass
@@ -28,61 +28,10 @@ class Match(metaclass=cibblbibbl.helper.InstanceRepeater):
     del self._matchup
 
   @property
-  def replaydata(self):
-    if not hasattr(self, "_replaydata"):
-      self.reload_replaydata()
-    return self._replaydata
-  @replaydata.deleter
-  def replaydata(self):
-      # replaydata should be deleted to avoid huge memory
-      # consumption
-    if hasattr(self, "_replaydata"):
-      self._replaydata.root._data = None
-      del self._replaydata
-
-  @property
-  def replaygamedata(self):
-    if not hasattr(self, "_replaygamedata"):
-      for d in self.replaydata:
-        try:
-          self._replaygamedata = d["game"]
-        except KeyError:
-          pass
-        else:
-          break
-    return self._replaygamedata
-  @replaygamedata.deleter
-  def replaygamedata(self):
-    del self._replaygamedata
-
-  @property
-  def replaygameresult(self):
-    d = self.replaygamedata
-    return {
-        s: d["gameResult"][f'teamResult{s}']
-        for s in ("Home", "Away")
-    }
-
-  @property
-  def replayteam(self):
-    return {
-        k: cibblbibbl.team.Team(int(d["teamId"]))
-        for k, d in self.replayteamdata.items()
-    }
-
-  @property
-  def replayteamside(self):
-    return {
-        cibblbibbl.team.Team(int(d["teamId"])): k
-        for k, d in self.replayteamdata.items()
-    }
-
-  @property
-  def replayteamdata(self):
-    return {
-        s: self.replaygamedata[f'team{s}']
-        for s in ("Home", "Away")
-    }
+  def replay(self):
+    Re = cibblbibbl.replay.Replay(self.replayId)
+    Re.match = self
+    return Re
 
   @property
   def teams(self):
@@ -99,8 +48,8 @@ class Match(metaclass=cibblbibbl.helper.InstanceRepeater):
       return cibblbibbl.team.Team(d2["id"])
 
   def casualties(self):
-    d = self.apiget
     result = {}
+    d = self.apiget
     for n in range(1,3):
       d2 = d[f'team{n}']
       Te = cibblbibbl.team.Team(d2["id"])
@@ -108,14 +57,12 @@ class Match(metaclass=cibblbibbl.helper.InstanceRepeater):
       result[Te] = cas
     return result
 
-  def reload_replaydata(self, reload=False):
-    filename = f'{self.replayId:0>8}.json'
-    dir_path = "cache/replay"
-    p = cibblbibbl.data.path / dir_path / filename
-    jf = cibblbibbl.data.jsonfile(p)
-    if reload or not p.is_file() or not p.stat().st_size:
-      jf.dump_kwargs = cibblbibbl.settings.dump_kwargs
-      print(f'REPLAY {self.Id} - {self.replayId}')
-      jf.data = fumbblreplay.get_replay_data(self.replayId)
-      jf.save()
-    self._replaydata = jf.data
+  def scores(self):
+    d = self.apiget
+    r = {}
+    for n in range(1, 3):
+      Te = cibblbibbl.team.Team(int(d[f'team{n}']["id"]))
+      score = int(d[f'team{n}']["score"])
+      r[Te] = score
+    return r
+
