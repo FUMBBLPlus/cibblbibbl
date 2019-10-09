@@ -1,4 +1,5 @@
 import copy
+import collections
 
 import pyfumbbl
 
@@ -9,6 +10,8 @@ from . import default
 from .. import tools
 
 class CBETournament(default.AbstractTournament):
+
+  season_nr = default.Tournament.season_nr
 
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
@@ -52,7 +55,8 @@ class CBETournament(default.AbstractTournament):
             grnr, Gr = group_of_partner[Te]
             d1["id"] = teamId
             d1["prestige"] = 0
-            dTP[str(grnr)] = d1
+            groupId = f'{self.Id}-group{grnr:0>2}'
+            dTP[groupId] = d1
             del dTP[teamId]
           AMu.config = d
           AMu.modified = Mu.modified
@@ -93,6 +97,11 @@ class CBETournament(default.AbstractTournament):
     self.config["sub"] = {name: T.Id for name, T in d.items()}
   sub = sub.deleter(field.config.deleter("sub"))
 
+  def get_team(self, teamId):
+    group_nr = int(teamId[-2:])
+    group_index = group_nr - 1
+    return self.partner_groups[group_index]
+
   def standings(self):
     # As the team performance keys are replaced with the group
     # numbers, the team records provided by the default
@@ -111,9 +120,7 @@ class CBETournament(default.AbstractTournament):
     dsub = {S["team"]: S for S in substandings}
     standings = default.Tournament.standings(self)
     for d in standings:
-      group = group_of_number[d["team"].Id]
-      d["team"] = group
-      d["perfs"] = [dsub[Te]["perf"] for Te in group]
+      d["perfs"] = [dsub[Te]["perf"] for Te in d["team"]]
     return standings
 
 

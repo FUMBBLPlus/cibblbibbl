@@ -71,7 +71,10 @@ class BaseTournament(
   )
   ppos = field.config.DDField()
   replays = field.insts.matches_replays
-  rsym = field.config.DDField(default=dict, set_f_typecast=dict)
+  rprestige = field.config.DDField(
+      default=dict, set_f_typecast=dict
+  )
+  rpts = field.config.DDField(default=dict, set_f_typecast=dict)
   season_nr = field.config.NDField(key="season",
       f_typecast = (
           lambda v, instance:
@@ -276,46 +279,46 @@ class Tournament(BaseTournament):
     return self._matchups
 
   @property
-  def rsym(self):
-    d = self.config.get("r", {})
-    dprest = d.setdefault("prestige", {})
-    if not dprest and not self.friendly:
-      dprest.update({
+  def rprestige(self):
+    d = self.config.get("rprestige", {})
+    if not d and self.friendly == "no":
+       d = {
           "W": 3,
           "B": 3,
           "D": 1,
           "C": -10,
-      })
-    dpts = d.setdefault("pts", {})
-    if not dpts:
-      if self.season.name == "Summer":
-        dpts.update({
-          "W": 2,
-          "D": 1,
-          "B": 2,
-        })
-      else:
-        dpts.update({
-          "W": 3,
-          "D": 1,
-          "B": 3,
-        })
-    dscore = d.setdefault("score", {
-        "B": 2,
-    })
-    dscorediff = d.setdefault("scorediff", {
-        "B": 2,
-        "F": -2,
-    })
+      }
     return d
-  rsym = rsym.setter(field.config.setter("r"))
-  rsym = rsym.deleter(field.config.deleter("r"))
+  rprestige = rprestige.setter(field.config.setter("rprestige"))
+  rprestige = rprestige.deleter(field.config.deleter(
+      "rprestige"
+  ))
+
+  @property
+  def rpts(self):
+    d = self.config.get("rpts", {})
+    if not d:
+      if self.season.name == "Summer":
+        d = {
+            "W": 2,
+            "D": 1,
+            "B": 2,
+        }
+      else:
+        d = {
+            "W": 3,
+            "D": 1,
+            "B": 3,
+        }
+    return d
+  rpts = rpts.setter(field.config.setter("rpts"))
+  rpts = rpts.deleter(field.config.deleter("rpts"))
 
   @property
   def season_nr(self):
-    season_name = self.config.get("season")
+    season_name = self.config.get("season", ...)
     season_names = self.group.season_names
-    if season_name is None:
+    if season_name is ...:
       tournament_name = self.name.lower()
       gen = reversed(list(enumerate(season_names, 1)))
           # I go reversed as I want a Spring/Summer tournament
@@ -350,10 +353,10 @@ class Tournament(BaseTournament):
 
   @property
   def year_nr(self):
-    year_nr = self.config.get("year")
-    if year_nr is None:
+    year_nr = self.config.get("year", ...)
+    if year_nr is ...:
       year_nr = int(self.apiget["season"])
-      self.year = year_nr
+      self.year = year_nr  # saves in the config
       return self.year_nr
     else:
       return int(year_nr)
@@ -379,16 +382,19 @@ class Tournament(BaseTournament):
         continue
       HTH_result = {}
       for teamId, TP in Mu.config["team"].items():
-        Te = cibblbibbl.team.Team(int(teamId))
-        rsym = TP["r"]
+        if teamId.isdecimal():
+          Te = cibblbibbl.team.Team(int(teamId))
+        else:
+          Te = self.get_team(teamId)
+        r = TP["r"]
         matchId = (Mu.match.Id if Mu.match else None)
-        perf = rsym, matchId
+        perf = r, matchId
         d = S[teamId]
         d.setdefault("team", Te)
         d["perf"].append(perf)
         for k in tpkeys:
           d[k] += TP.get(k, 0)
-        if rsym.lower() not in ("b", "f", "x", "-"):
+        if r.lower() not in ("b", "f", "x", "-", ""):
           HTH_result[teamId] = TP["td"]
       if len(HTH_result) == 2:
         HTH_results.append(HTH_result)

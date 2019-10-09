@@ -33,12 +33,12 @@ def export(T, *,
       multiline = True
       key = (T, Te[0])  # all members has same values
       perf = "\n".join(
-          "".join(rsym for rsym, matchId in seq)
+          "".join(r for r, matchId in seq)
           for seq in r["perfs"]
       )
     else:
       key = (T, Te)
-      perf = "".join(rsym for rsym, matchId in r["perf"])
+      perf = "".join(r for r, matchId in r["perf"])
     pgamcls = cibblbibbl.achievement.tp_match.cls
     pgama = pgamcls.getmember(*key)
     pgam = (pgama["prestige"] if pgama else 0)

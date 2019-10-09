@@ -36,19 +36,35 @@ class CachedConfig(base.CustomKeyDescriptorBase):
       return self
     attrname = f'_{self.key}'
     if not hasattr(instance, attrname):
-      filepath = getattr(instance, f'{self.key}filepath')
-      jf = jsonfile(
-          filepath,
-          default_data = {},
-          autosave = True,
-          dump_kwargs = dict(dump_kwargs),
-      )
+      jf = self.jsonfile(instance)
       calcattrname = f'calculate_{self.key}'
       if not jf.data and hasattr(instance, calcattrname):
         d = getattr(instance, calcattrname)()
         jf.data.update(d)
       setattr(instance, attrname, jf.data)
     return getattr(instance, attrname)
+
+  def __set__(self, instance, value):
+    attrname = f'_{self.key}'
+    jf = self.jsonfile(instance)
+    jf.data = value
+    setattr(instance, attrname, jf.data)
+
+  def __delete__(self, instance):
+    attrname = f'_{self.key}'
+    self.jsonfile(instance).delete()
+    del instance.__dict__[attrname]
+
+  def jsonfile(self, instance):
+    filepath = getattr(instance, f'{self.key}filepath')
+    jf = jsonfile(
+        filepath,
+        default_data = {},
+        autosave = True,
+        dump_kwargs = dict(dump_kwargs),
+    )
+    return jf
+
 
 class NDField(base.CustomKeyDescriptorBase):
 
@@ -277,6 +293,3 @@ def yesnosetter(key):
       raise ValueError(f'invalid yes/no value: {value}')
   return fset
 yesnodeleter = deleter
-
-
-

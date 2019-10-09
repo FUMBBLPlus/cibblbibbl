@@ -13,7 +13,10 @@ class MatchupConfigMaker:
       "PlayerPerformances",
       "DeadPlayers",
       "PlayerRetirements",
-      "TeamBasePerformances",
+      "TeamCumPlayerPerformances",
+      "TeamScores",
+      "TeamCas",
+      "TeamResults",
       "TeamPerformanceDiffs",
       "TeamMatchPrestiges",
   )
@@ -136,7 +139,7 @@ class MatchupConfigMaker:
       return
     Ks = set(self.keytransPR)
     if keys is not None:
-      Ks &= keys
+      Ks &= set(keys)
     pd = self.d["player"]
     for Te, TGRD in self.ReGRD.items():
       ptd = pd.setdefault(str(Te.Id), {})
@@ -208,26 +211,54 @@ class MatchupConfigMaker:
           else:
             ptpd["retired"] = None  # indicates unknown
 
-  def TeamBasePerformances(self, keys=None):
-    Ks = set(self.keytransPR)
+  def TeamCumPlayerPerformances(self, keys=None):
+    Ks = set(self.keytransPR) - {"cas",}
     if keys:
-      Ks &= keys
+      Ks &= set(keys)
     for teamId, ptd in self.d["player"].items():
       d = self.d["team"].setdefault(teamId, {})
       for playerId, ptpd in ptd.items():
         for k in Ks:
           d.setdefault(k, 0)
           d[k] += ptpd.get(k, 0)
+
+  def TeamScores(self):
     if self.Ma:
       scores = tuple(self.Ma.scores().items())
-      conceded = self.Ma.conceded()
+      for Te, score in scores:
+        d = self.d["team"][str(Te.Id)]
+        d["score"] = score
+    else:
+      winnerteamId = str(self.SR["result"]["winner"])
+      for teamId, d in self.d["team"].items():
+        if teamId == winnerteamId:
+          d["score"] = 2
+        else:
+          d["score"] = 0
+
+  def TeamCas(self):
+    if self.Ma:
+      casualties = self.Ma.casualties()
+      for Te, cas_value in casualties.items():
+        d = self.d["team"][str(Te.Id)]
+        d["cas"] = cas_value
+    else:
+      for teamId, d in self.d["team"].items():
+        d["cas"] = 0
+
+  def TeamResults(self):
+    if self.Ma:
+      scores = tuple(
+          (cibblbibbl.team.Team(int(teamId)), d["score"])
+          for teamId, d in self.d["team"].items()
+      )
       opposcores = {
         Te: scores[1-i][1]
         for i, (Te, score) in enumerate(scores)
       }
+      conceded = self.Ma.conceded()
       for Te, score in scores:
         d = self.d["team"][str(Te.Id)]
-        d["score"] = score
         opposcore = opposcores[Te]
         if opposcore < score:
           d["r"] = "W"
@@ -242,10 +273,8 @@ class MatchupConfigMaker:
       for teamId, d in self.d["team"].items():
         if teamId == winnerteamId:
           d["r"] = "B"
-          d["score"] = 2
         else:
           d["r"] = "F"
-          d["score"] = 0
 
   def TeamPerformanceDiffs(self):
     teamIds = list(self.d["team"])
@@ -260,4 +289,5 @@ class MatchupConfigMaker:
     T = self.Mu.tournament
     for teamId, d in self.d["team"].items():
       for k in ("pts", "prestige"):
-        d[k] = T.rsym.get(k, {}).get(d["r"], 0)
+        dT = getattr(T, f'r{k}')
+        d[k] = dT.get(d["r"], 0)

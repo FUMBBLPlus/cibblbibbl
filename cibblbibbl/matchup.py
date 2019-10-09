@@ -75,6 +75,7 @@ class BaseMatchup(metaclass=cibblbibbl.helper.InstanceRepeater):
     return frozenset(
         cibblbibbl.team.Team(int(teamId))
         for teamId in self.config["team"]
+        if teamId.isdecimal()
     )
 
   def performance(self, subject):
@@ -209,6 +210,10 @@ class Matchup(BaseMatchup):
     return self.configdir / self.configfilename
 
   @property
+  def configmaker(self):
+    return matchup_config.MatchupConfigMaker(self)
+
+  @property
   def schedulerecord(self):
     return self.apischedulerecord
 
@@ -220,8 +225,7 @@ class Matchup(BaseMatchup):
     )
 
   def calculate_config(self):
-    MCM = matchup_config.MatchupConfigMaker(self)
-    d = MCM()
+    d = self.configmaker()
     return d
 
   def iterdead(self):

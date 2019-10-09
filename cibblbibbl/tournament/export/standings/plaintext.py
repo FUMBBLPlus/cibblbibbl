@@ -36,11 +36,11 @@ def export(T, *,
     if isinstance(Te, cibblbibbl.team.GroupOfTeams):
       multiline = True
       perf = "\n".join(
-          "".join(rsym for rsym, matchId in seq)
+          "".join(r for r, matchId in seq)
           for seq in r["perfs"]
       )
     else:
-      perf = "".join(rsym for rsym, matchId in r["perf"])
+      perf = "".join(r for r, matchId in r["perf"])
     pts = r["pts"]
     if 100 <= pts:
       pts = f'W{pts-100}'
