@@ -8,22 +8,53 @@ import cibblbibbl
 
 class BasePlayer(metaclass=cibblbibbl.helper.InstanceRepeater):
 
+  config = field.config.CachedConfig()
+  configfilename = field.filepath.idfilename
   Id = field.instrep.keyigetterproperty(0)
   matches = field.insts.matchups_matches
   matchups = cibblbibbl.team.Team.matchups
   position = field.inst.position_by_self_positionId
+  prevId = field.config.DDField(
+      default = lambda i, d: i.get_prevId(),
+      default_set_delete = False,
+  )
   replays = field.insts.matches_replays
 
-  def __init__(self, playerId: int, name=None):
+  def __init__(self, playerId, name=None):
     self._matchups = {}
     self._name = name
     if name is not None:
       self._name = helper.norm_name(name)
     self.achievements = set()
+    self._nextIds = set()
+    if hasattr(self, "get_nextIds"):
+      self._nextIds |= self.get_nextIds()
+      for p in self.nexts:
+        p.prevId = self.Id
+    prev = self.prev
+    if prev:
+      self.prevId = prev.Id  # ensure saved in config
+      prev._nextIds.add(self.Id)
+
 
   def __repr__(self):
     clsname = self.__class__.__name__
     return f'{clsname}({self.Id!r}, {self.name!r})'
+
+  __eq__ = field.ordering.eq_when_is
+  __lt__ = field.ordering.PropTupCompar("sort_key")
+  __le__ = field.ordering.PropTupCompar("sort_key")
+  __ne__ = field.ordering.ne_when_is_not
+  __gt__ = field.ordering.PropTupCompar("sort_key")
+  __ge__ = field.ordering.PropTupCompar("sort_key")
+
+  @property
+  def configfilepath(self):
+    return (
+        cibblbibbl.data.path
+        / "player"
+        / self.configfilename
+    )
 
   @property
   def name(self):
@@ -31,6 +62,20 @@ class BasePlayer(metaclass=cibblbibbl.helper.InstanceRepeater):
       self._name = helper.norm_name(self.getname)
     return self._name
 
+  @property
+  def nexts(self):
+    nextIds = self._nextIds
+    if nextIds is not None:
+      return set(player(Id) for Id in list(nextIds))
+
+  @property
+  def prev(self):
+    prevId = self.prevId
+    if prevId is not None:
+      return player(prevId)
+
+  def get_prevId(self):
+    return None
 
 
 class MercenaryPlayer(BasePlayer):
@@ -45,6 +90,11 @@ class MercenaryPlayer(BasePlayer):
   @property
   def positionId(self):
     return self.Id.split("-")[1]
+
+  @property
+  def sort_key(self):
+    idvals = tuple(int(x) for x in self.Id.split("-")[1:])
+    return (1000,) + idvals
 
 
 class NormalPlayer(BasePlayer):
@@ -63,6 +113,10 @@ class NormalPlayer(BasePlayer):
       self._name = self.apiget["name"]
     return self._name
 
+  @property
+  def sort_key(self):
+    return (1, int(self.Id))
+
 
 Player = NormalPlayer
 
@@ -71,25 +125,31 @@ class RaisedDeadPlayer(BasePlayer):
 
   getname = field.common.DiggedAttr("prev", "getname")
 
-  @property
-  def next(self):
-    nextplayerId = self.Id.split("_")[-1]
-    if nextplayerId.startswith("UNKNOWN"):
+  def get_nextIds(self):
+    nextId = self.Id.split("_")[-1]
+    if nextId.startswith("UNKNOWN"):
       raise Exception(
-          f'uncahained raised dead player: {self.Id}'
+          f'unchained raised dead player: {self.Id}'
       )
-    elif nextplayerId == "0":
-      return None
-    else:
-      return player(nextplayerId)
+    elif nextId == "0":
+      return set()
+    return {nextId}
 
   @property
   def positionId(self):
     return self.Id.split("_")[0].split("-")[1]
 
+  def get_prevId(self):
+    print("get_prevId", self)
+    return self.Id.split("_")[-2]
+
   @property
-  def prev(self):
-    return player(self.Id.split("_")[-1])
+  def sort_key(self):
+    nextIds = self._nextIds
+    if nextIds:
+      return (1, int(next(iter(nextIds))) - 0.1)
+    else:
+      return (1, int(self.prevId) + 0.1)
 
   @property
   def status(self):
@@ -117,8 +177,13 @@ class StarPlayer(BasePlayer):
   def positionId(self):
     return self.Id.split("-")[1]
 
+  @property
+  def sort_key(self):
+    return (100, int(self.positionId))
+
 
 def player(playerId, **kwargs):
+  playerId = str(playerId)
   if playerId.isdecimal():
     return NormalPlayer(playerId, **kwargs)
   elif playerId.startswith("MERC"):

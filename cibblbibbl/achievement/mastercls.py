@@ -57,10 +57,10 @@ class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
   def __setitem__(self, key, value):
     return self.config.__setitem__(key, value)
 
-  __lt__ = field.ordering.PropTupCompar("_sortkey")
-  __le__ = field.ordering.PropTupCompar("_sortkey")
-  __gt__ = field.ordering.PropTupCompar("_sortkey")
-  __ge__ = field.ordering.PropTupCompar("_sortkey")
+  __lt__ = field.ordering.PropTupCompar("sort_key")
+  __le__ = field.ordering.PropTupCompar("sort_key")
+  __gt__ = field.ordering.PropTupCompar("sort_key")
+  __ge__ = field.ordering.PropTupCompar("sort_key")
 
   @classmethod
   def agent00(cls, group_key):
@@ -139,7 +139,7 @@ class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
     return self.defaultconfigfilepath_of_group(self.group_key)
 
   @property
-  def _sortkey(self):
+  def sort_key(self):
     Ttimesortkeyf = cibblbibbl.tournament.tools.timesortkey()
     return (
         self.group_key,

@@ -41,6 +41,7 @@ class BaseTournament(
 
   above = field.config.TournamentField()
   config = field.config.CachedConfig()
+  configfilename = field.filepath.idfilename
   end = TournamentTime()
   excluded_teamIds = field.config.DDField(
       key = "excluded_teams",
@@ -182,12 +183,9 @@ class BaseTournament(
   status = status.deleter(field.config.deleter("status"))
 
   def filepath(self, key):
-    if self.Id.isdecimal():
-      filename = f'{self.Id:0>8}.json'
-    else:
-      filename = f'{self.Id}.json'
     p = cibblbibbl.data.path
-    p /= f'{self.group_key}/tournament/{key}/{filename}'
+    fname = self.configfilename
+    p /= f'{self.group_key}/tournament/{key}/{fname}'
     return p
 
   def unregister(self):

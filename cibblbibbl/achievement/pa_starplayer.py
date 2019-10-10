@@ -4,7 +4,7 @@ import cibblbibbl
 from .mastercls import Achievement
 
 class PA_StarPlayer(Achievement):
-  subject_type = cibblbibbl.player.Player
+  subject_type = cibblbibbl.player.player
 
   @classmethod
   def agent01(cls, group_key):
@@ -17,8 +17,8 @@ class PA_StarPlayer(Achievement):
         continue
       for Mu in T.matchups:
         for Pl in Mu.players:
-          if not Pl.Id.isdecimal():
-            continue
+          #if not Pl.Id.isdecimal():  #TODO FIX
+          #  continue
           d = Mu.performance(Pl)
           prespp = d.get("prespp", 0)
           postspp = prespp + d.get("spp", 0)

@@ -63,7 +63,7 @@ class BaseMatchup(metaclass=cibblbibbl.helper.InstanceRepeater):
   def players(self):
     PP_items = self.config["player"].items()
     return frozenset(
-        cibblbibbl.player.Player(playerId,  # must be str
+        cibblbibbl.player.player(playerId,  # must be str
             name = d1["name"],
         )
         for teamId, d0 in PP_items
@@ -82,7 +82,7 @@ class BaseMatchup(metaclass=cibblbibbl.helper.InstanceRepeater):
     if isinstance(subject, cibblbibbl.team.Team):
       return self.config["team"][str(subject.Id)]
     else:
-      if isinstance(subject, cibblbibbl.player.Player):
+      if isinstance(subject, cibblbibbl.player.BasePlayer):
         playerId = str(subject.Id)
       else:
         playerId = str(subject)

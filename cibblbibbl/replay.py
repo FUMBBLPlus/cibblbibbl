@@ -184,7 +184,7 @@ class Replay(metaclass=cibblbibbl.helper.InstanceRepeater):
               if p["name"] == playerName:
                 found.append(p)
             if len(found) == 1:
-              postplayerId = found[0]["id"]
+              postplayerId = str(found[0]["id"])
             else:
               postplayerId += f'{len(found)}'
             normplayerId = "_".join(

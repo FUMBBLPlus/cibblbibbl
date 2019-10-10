@@ -22,3 +22,11 @@ class PropTupCompar(base.CustomKeyDescriptorBase):
         tuple(getattr(other, na) for na in self.propnames),
       )
     )
+
+
+def eq_when_is(self, other):
+  return (self is other)
+
+
+def ne_when_is_not(self, other):
+  return not (self is other)
