@@ -44,6 +44,17 @@ class Replay(metaclass=cibblbibbl.helper.InstanceRepeater):
     self._data = ...
 
   @property
+  def deadplayerIds(self):
+    d = {}
+    with self:
+      for Te, d0 in self.gameresultdata.items():
+        s = d[Te] = set()
+        for d1 in d0["playerResults"]:
+          if d1["seriousInjury"] == "Dead (RIP)":
+            s.add(d1["playerId"])
+    return d
+
+  @property
   def gamedata(self):
     if not hasattr(self, "_gamedata"):
       for d in self.data:
@@ -64,6 +75,15 @@ class Replay(metaclass=cibblbibbl.helper.InstanceRepeater):
     return {
         self.teams[i]: d1["gameResult"][f'teamResult{s}']
         for i, s in enumerate(("Home", "Away"))
+    }
+
+  @property
+  def normdeadplayerIds(self):
+    return {
+        Te: {
+            self.playerIdnorm.get(v, v) for v in deadplayerIds
+        }
+        for Te, deadplayerIds in self.deadplayerIds.items()
     }
 
   @property
@@ -178,13 +198,12 @@ class Replay(metaclass=cibblbibbl.helper.InstanceRepeater):
             baseId = f'RAISED-{positionId}'
             aliveplayerId = playerId.split("R")[0]
             postplayerId = "UNKNOWN"
-            found = []
-            d3 = Te.legacyapiget
-            for p in d3["players"] + d3["pastplayers"]:
-              if p["name"] == playerName:
-                found.append(p)
+            found = Te.search_player(playerName,
+                in_pastplayers = True,
+            )
             if len(found) == 1:
-              postplayerId = str(found[0]["id"])
+              player = next(iter(found))
+              postplayerId = player.Id
             else:
               postplayerId += f'{len(found)}'
             normplayerId = "_".join(
@@ -198,4 +217,3 @@ class Replay(metaclass=cibblbibbl.helper.InstanceRepeater):
           if playerId != normplayerId:
             d[playerId] = normplayerId
     return d
-

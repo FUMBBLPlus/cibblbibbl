@@ -69,7 +69,7 @@ class CachedConfig(base.CustomKeyDescriptorBase):
 class NDField(base.CustomKeyDescriptorBase):
 
   def __init__(self, *args,
-      default = AttributeError,
+      default = None,
       defaulterrorfstr = 'unreadable attribute',
       f_typecast = None,
       **kwargs
@@ -116,7 +116,7 @@ class NDField(base.CustomKeyDescriptorBase):
 class DDField(NDField):
 
   def __init__(self, *args,
-      default = AttributeError,
+      default = None,
       defaulterrorfstr = 'unreadable attribute',
       default_set_delete = True,
       delete_set_default = False,

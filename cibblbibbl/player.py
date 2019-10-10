@@ -10,6 +10,7 @@ class BasePlayer(metaclass=cibblbibbl.helper.InstanceRepeater):
 
   config = field.config.CachedConfig()
   configfilename = field.filepath.idfilename
+  dummy = field.config.DDField(default="no")
   Id = field.instrep.keyigetterproperty(0)
   matches = field.insts.matchups_matches
   matchups = cibblbibbl.team.Team.matchups
@@ -18,6 +19,10 @@ class BasePlayer(metaclass=cibblbibbl.helper.InstanceRepeater):
       default = lambda i, d: i.get_prevId(),
       default_set_delete = False,
   )
+  prevachievmul = field.config.DDField(default=1)
+  prevdeadmatchId = field.config.DDField()
+  prevreason = field.config.DDField()
+  prevsppmul = field.config.DDField(default=1)
   replays = field.insts.matches_replays
 
   def __init__(self, playerId, name=None):
@@ -74,12 +79,15 @@ class BasePlayer(metaclass=cibblbibbl.helper.InstanceRepeater):
     if prevId is not None:
       return player(prevId)
 
+  # TODO prevId setter which backchains instantly
+
   def get_prevId(self):
     return None
 
 
 class MercenaryPlayer(BasePlayer):
 
+  prevsppmul = field.config.DDField(default=0)
   status = field.common.Constant("Active")
 
   @property
@@ -124,6 +132,7 @@ Player = NormalPlayer
 class RaisedDeadPlayer(BasePlayer):
 
   getname = field.common.DiggedAttr("prev", "getname")
+  prevsppmul = field.config.DDField(default=0)
 
   def get_nextIds(self):
     nextId = self.Id.split("_")[-1]
@@ -163,6 +172,7 @@ class RaisedDeadPlayer(BasePlayer):
 class StarPlayer(BasePlayer):
   config = field.config.CachedConfig()
   getname = field.common.DiggedAttr("position", "name")
+  prevsppmul = field.config.DDField(default=0)
   status = field.config.DDField(default="Active")
 
   @property

@@ -233,7 +233,8 @@ class JSONFileContainer(JSONFileBase):
   def _change_method(self, name):
     def wrapped_method(*args, **kwargs):
       old_data = copy.copy(self._data)
-      m = object.__getattribute__(self._data, name)
+      _data = object.__getattribute__(self, "_data")
+      m = getattr(_data, name)
       try:
         r = m(*args, **kwargs)
         self._root.may_changed(self, old_data)
@@ -272,7 +273,7 @@ class JSONFileObject(JSONFileContainer, dict):
     "clear",
     "pop",
     "popitem",
-    "setdefault",
+    # "setdefault",  # handled exceptionally
     "update",
   )
 
@@ -290,6 +291,13 @@ class JSONFileObject(JSONFileContainer, dict):
   def items(self):
     for k in self:
       yield k, self[k]
+
+  def setdefault(self, key, default):
+    try:
+      return self[key]
+    except KeyError:
+      self[key] = default
+    return self[key]
 
   def values(self):
     for k in self:

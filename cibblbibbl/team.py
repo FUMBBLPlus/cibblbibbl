@@ -16,6 +16,8 @@ class Team(metaclass=cibblbibbl.helper.InstanceRepeater):
   apimatches = field.fumbblapi.CachedFUMBBLAPIGetField(
       pyfumbbl.team.get_all_matches, "cache/api-team-matches"
   )
+  config = field.config.CachedConfig()
+  configfilename = field.filepath.idfilename
   legacyapiget = field.fumbblapi.CachedFUMBBLAPIGetField(
       pyfumbbl.team.get_legacy_data, "cache/lagacy-api-team",
       flags = pyfumbbl.team.PAST_PLAYERS
@@ -26,6 +28,19 @@ class Team(metaclass=cibblbibbl.helper.InstanceRepeater):
   def __init__(self, teamId: int):
     self._matchups = {}
     self.achievements = set()
+
+  @property
+  def coach_name(self):
+    s = self.apiget["coach"]["name"]
+    return cibblbibbl.helper.norm_name(s)
+
+  @property
+  def configfilepath(self):
+    return (
+        cibblbibbl.data.path
+        / "team"
+        / self.configfilename
+    )
 
   @property
   def matches(self):
@@ -40,9 +55,16 @@ class Team(metaclass=cibblbibbl.helper.InstanceRepeater):
     return cibblbibbl.helper.norm_name(s)
 
   @property
-  def coach_name(self):
-    s = self.apiget["coach"]["name"]
-    return cibblbibbl.helper.norm_name(s)
+  def players(self):
+    return {
+        cibblbibbl.player.player(str(d["id"]))
+        for k in ("players", "pastplayers")
+        for d in self.legacyapiget[k]
+    }
+
+  @property
+  def roster(self):
+    return cibblbibbl.roster.Roster(int(self.rosterId))
 
   @property
   def rosterId(self):
@@ -84,6 +106,18 @@ class Team(metaclass=cibblbibbl.helper.InstanceRepeater):
     except StopIteration:
       pass
 
+  def search_player(self, name, in_pastplayers=True):
+    S = set()
+    d = self.legacyapiget
+    if in_pastplayers:
+      L = d["players"] + d["pastplayers"]
+    else:
+      L = d["players"]
+    for p in L:
+      if p["name"] == name:
+        playerId = str(p["id"])
+        S.add(cibblbibbl.player.player(playerId, name=name))
+    return S
 
 
 
