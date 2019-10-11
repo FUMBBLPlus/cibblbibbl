@@ -1,10 +1,9 @@
 import collections
 import cibblbibbl
 
-from .mastercls import Achievement
+from .mastercls import TeamAchievement
 
-class TA_CrushingVictory(Achievement):
-  subject_type = cibblbibbl.team.Team
+class TA_CrushingVictory(TeamAchievement):
 
   @classmethod
   def agent01(cls, group_key):

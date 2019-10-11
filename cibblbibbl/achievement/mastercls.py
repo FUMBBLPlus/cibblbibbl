@@ -1,18 +1,18 @@
 import collections
 import copy
+import math
 
 from ..jsonfile import jsonfile
 
 import cibblbibbl
 
 from .. import field
+from . import agent
 
 
 class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
 
-  baseprestige = field.config.DDField(key="prestige",
-      get_f_typecast=int, set_f_typecast=int
-  )
+  baseprestige = field.config.DDField(key="prestige")
   config = field.config.CachedConfig()
   defaultconfig = field.config.CachedConfig()
   group = field.inst.group_by_self_group_key
@@ -20,9 +20,9 @@ class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
   registry = {}
   season = field.common.DiggedAttr("tournament", "season")
   season_nr = field.common.DiggedAttr("tournament", "season_nr")
-  subject = field.instrep.keyigetterproperty(1)
+  subject = field.instrep.keyigetterproperty(2)
   subjectId = field.common.DiggedAttr("subject", "Id")
-  tournament = field.instrep.keyigetterproperty(0)
+  tournament = field.instrep.keyigetterproperty(1)
   tournamentId = field.common.DiggedAttr("tournament", "Id")
   year = field.common.DiggedAttr("tournament", "year")
   year_nr = field.common.DiggedAttr("tournament", "year_nr")
@@ -33,7 +33,7 @@ class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
 
   def __init_subclass__(cls, **kwargs):
     super().__init_subclass__(**kwargs)
-    Achievement.registry[cls.__name__.lower()] = cls
+    Achievement.registry[cls.clskey()] = cls
 
   def __del__(self):
     try:
@@ -63,38 +63,25 @@ class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
   __ge__ = field.ordering.PropTupCompar("sort_key")
 
   @classmethod
-  def agent00(cls, group_key):
-    G = cibblbibbl.group.Group(group_key)
-    dir = (
-      cibblbibbl.data.path
-      / group_key
-      / "achievement"
-      / f'{cls.__name__.lower()}'
-    )
-    for p in dir.glob("**/*.json"):
-      tournamentId = p.parent.name
-      if tournamentId.isdecimal():
-        tournamentId = tournamentId.lstrip("0")
-      tournament = G.tournaments[tournamentId]
-      subjectId = int(p.stem)
-      subject = cls.subject_type(subjectId)
-      yield cls(tournament, subject)
+  def _get_key(cls, tournament, subject):
+    return (cls.clskey(), tournament, subject)
 
-  iterexisting = agent00
+  agent00 = classmethod(agent.iterexisting)
+
+  @classmethod
+  def clskey(cls):
+    return cls.__name__.lower()
 
   @classmethod
   def collect(cls, group_key):
-    nr = 0
-    S = set()
-    while nr < 100:
-      attrname = f'agent{nr:0>2}'
-      if hasattr(cls, attrname):
-        agentmethod = getattr(cls, attrname)
-        S |= set(agentmethod(group_key))
-      else:
-        break
-      nr += 1
-    return S
+    agents = tuple(sorted((
+        a for a in dir(cls) if a.startswith("agent")
+    ), key=lambda a: int(a[-2:])))
+    return {
+        A
+        for a in agents
+        for A in getattr(cls, a)(group_key)
+    }
 
   @classmethod
   def defaultconfigfilepath_of_group(cls, group_key):
@@ -102,7 +89,7 @@ class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
       cibblbibbl.data.path
       / group_key
       / "achievement"
-      / f'{cls.__name__.lower()}.json'
+      / f'{cls.clskey()}.json'
     )
 
   @classmethod
@@ -120,12 +107,16 @@ class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
     return cls.__members__.get((tournament, subject))
 
   @property
+  def key(self):
+    return self._KEY
+
+  @property
   def configfilepath(self):
     p = (
       cibblbibbl.data.path
       / self.tournament.group.key
       / "achievement"
-      / f'{type(self).__name__.lower()}'
+      / f'{self.clskey()}'
     )
     if self.tournament.Id.isdecimal():
       p /= f'{self.tournament.Id:0>8}'
@@ -143,7 +134,24 @@ class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
     Ttimesortkeyf = cibblbibbl.tournament.tools.timesortkey()
     return (
         self.group_key,
-        type(self).__name__.lower(),
+        self.clskey(),
         self.tournament,
         self.subjectId,
     )
+
+
+class TeamAchievement(Achievement):
+  subject_factory = cibblbibbl.team.Team
+
+  @classmethod
+  def subjectIdcast(cls, subjectId):
+    return int(subjectId)
+
+
+class PlayerAchievement(Achievement):
+  subject_factory = cibblbibbl.player.player
+  agent99 = classmethod(agent.iterprevs)
+
+  @classmethod
+  def subjectIdcast(cls, subjectId):
+    return str(subjectId)

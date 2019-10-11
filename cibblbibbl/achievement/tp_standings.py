@@ -2,11 +2,10 @@ import collections
 import cibblbibbl
 import itertools
 
-from .mastercls import Achievement
+from .mastercls import TeamAchievement
 
 
-class TP_Standings(Achievement):
-  subject_type = cibblbibbl.team.Team
+class TP_Standings(TeamAchievement):
 
   @classmethod
   def agent01(cls, group_key):

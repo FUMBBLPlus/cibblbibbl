@@ -12,10 +12,13 @@ __all__ = list(
 from . import *
 
 
+Achievement = mastercls.Achievement
+
+
 def collect(group_key):
   return {
       a
-      for cls in mastercls.Achievement.registry.values()
+      for cls in Achievement.registry.values()
       for a in cls.collect(group_key)
   }
 

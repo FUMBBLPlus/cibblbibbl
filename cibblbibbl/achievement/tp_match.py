@@ -1,10 +1,9 @@
 import collections
 import cibblbibbl
 
-from .mastercls import Achievement
+from .mastercls import TeamAchievement
 
-class TP_Match(Achievement):
-  subject_type = cibblbibbl.team.Team
+class TP_Match(TeamAchievement):
 
   @classmethod
   def agent01(cls, group_key):

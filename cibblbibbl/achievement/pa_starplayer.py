@@ -1,10 +1,9 @@
 import collections
 import cibblbibbl
 
-from .mastercls import Achievement
+from .mastercls import PlayerAchievement
 
-class PA_StarPlayer(Achievement):
-  subject_type = cibblbibbl.player.player
+class PA_StarPlayer(PlayerAchievement):
 
   @classmethod
   def agent01(cls, group_key):
