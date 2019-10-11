@@ -23,9 +23,9 @@ class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
   registry = {}
   season = field.common.DiggedAttr("tournament", "season")
   season_nr = field.common.DiggedAttr("tournament", "season_nr")
-  subject = field.instrep.keyigetterproperty(2)
+  subject = field.instrep.keyigetterproperty(1)
   subjectId = field.common.DiggedAttr("subject", "Id")
-  tournament = field.instrep.keyigetterproperty(1)
+  tournament = field.instrep.keyigetterproperty(0)
   tournamentId = field.common.DiggedAttr("tournament", "Id")
   year = field.common.DiggedAttr("tournament", "year")
   year_nr = field.common.DiggedAttr("tournament", "year_nr")
@@ -64,10 +64,6 @@ class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
   __le__ = field.ordering.PropTupCompar("sort_key")
   __gt__ = field.ordering.PropTupCompar("sort_key")
   __ge__ = field.ordering.PropTupCompar("sort_key")
-
-  @classmethod
-  def _get_key(cls, tournament, subject):
-    return (cls.clskey(), tournament, subject)
 
   agent00 = classmethod(agent.iterexisting)
 
