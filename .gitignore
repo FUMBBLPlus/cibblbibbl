@@ -6,5 +6,6 @@ include/
 lib/
 lib64
 lib64/
+login.json
 pip-selfcheck.json
 pyvenv.cfg
