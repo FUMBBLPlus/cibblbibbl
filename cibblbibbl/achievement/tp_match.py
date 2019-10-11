@@ -21,6 +21,8 @@ class TP_Match(TeamAchievement):
         for Te in Mu.teams:
           prestiges[Te] += Mu.performance(Te).get("prestige", 0)
       for Te, prestige in prestiges.items():
+        if not prestige:
+          continue
         A = cls(T, Te)
         if A["status"] == "proposed":
           if prestige or A["prestige"]:

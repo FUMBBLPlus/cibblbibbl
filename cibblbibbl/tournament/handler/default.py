@@ -281,10 +281,10 @@ class Tournament(BaseTournament):
     d = self.config.get("rprestige", {})
     if not d and self.friendly == "no":
        d = {
-          "W": 3,
-          "B": 3,
-          "D": 1,
-          "C": -10,
+          "W": 30,
+          "B": 30,
+          "D": 10,
+          "C": -100,
       }
     return d
   rprestige = rprestige.setter(field.config.setter("rprestige"))

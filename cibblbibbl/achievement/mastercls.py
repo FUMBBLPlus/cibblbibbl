@@ -12,7 +12,10 @@ from . import agent
 
 class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
 
-  baseprestige = field.config.DDField(key="prestige")
+  baseprestige = field.config.DDField(key="prestige",
+    get_f_typecast = int,
+    set_f_typecast = lambda x: math.floor(float(x)),
+  )
   config = field.config.CachedConfig()
   defaultconfig = field.config.CachedConfig()
   group = field.inst.group_by_self_group_key

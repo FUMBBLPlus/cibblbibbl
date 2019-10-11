@@ -33,6 +33,8 @@ class TA_CrushingVictory(TeamAchievement):
             continue
           prestiges[Te] += C["value"]
       for Te, prestige in prestiges.items():
+        if not prestige:
+          continue
         A = cls(T, Te)
         if A["status"] == "proposed":
           if prestige or A["prestige"]:

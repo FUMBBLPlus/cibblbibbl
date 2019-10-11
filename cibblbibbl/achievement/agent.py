@@ -1,4 +1,5 @@
 import copy
+import math
 
 import cibblbibbl
 
@@ -39,5 +40,6 @@ def iterprevs(cls, group_key):
       A1 = cls(tournament, subject)
       if not A1.config:
         A1.config.data = copy.deepcopy(A0.config._data)
-        A1.baseprestige = A0.baseprestige * prevachievmul
+        v = A0.baseprestige * prevachievmul
+        A1.baseprestige = math.floor(v)
       yield A1
