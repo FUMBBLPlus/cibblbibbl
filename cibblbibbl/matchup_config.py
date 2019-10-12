@@ -28,11 +28,11 @@ class MatchupConfigMaker:
   }
 
   spps = {
-      "comp": 1,
-      "td": 3,
-      "int": 2,
       "cas": 2,
+      "comp": 1,
+      "int": 2,
       "mvp": 5,
+      "td": 3,
   }
 
   playerType_trans = {
@@ -49,26 +49,34 @@ class MatchupConfigMaker:
       "blocks": "blocks",
       "cas": "casualties",
       "comp": "completions",
-      "prespp": "currentSpps",
       "fouls": "fouls",
       "int": "interceptions",
-      "pass": "passing",
       "mvp": "playerAwards",
+      "pass": "passing",
+      "prespp": "currentSpps",
       "rush": "rushing",
       "td": "touchdowns",
-      "turns": "turnsPlayed"
+      "turns": "turnsPlayed",
   }
 
-  def __init__(self, matchup):
+  def __init__(self, matchup, *,
+    direct = False,
+    refresh_cache = True,
+  ):
     self.Mu = matchup
-    self.refresh_cache()
-    self.d = {
-      "player": {},
-      "team": {},
-    }
+    if refresh_cache:
+      self.refresh_cache()
+    if direct:
+      self.d = matchup.config
+    else:
+      self.d = {
+        "player": {},
+        "team": {},
+      }
     self.goto = "Ids"
 
   def refresh_cache(self):
+    print("hello")
     self.Ma = self.Mu.match
     self.G = self.Mu.group
     self.T = self.Mu.tournament
@@ -184,12 +192,12 @@ class MatchupConfigMaker:
       for playerId, ptpd in ptd.items():
         playerId1 = playerId
         typ = ptpd["type"]
-        if not ptpd.get("dead"):
-          continue
-        elif typ in ("M", "S"):
+        if ptpd.get("dead") or typ in ("M", "S"):
+          if "retired" in ptpd:
+            del ptpd["retired"]
           continue
         elif typ == "D":
-          playerId1 = playerid.split("_")[-1]
+          playerId1 = playerId.split("_")[-1]
           if playerId1 == "0":
             ptpd["retired"] = True
             continue
@@ -199,6 +207,8 @@ class MatchupConfigMaker:
           with Ma.replay as Re:
             if playerId1 not in Re.normplayerIds:
               ptpd["retired"] = True
+            elif "retired" in ptpd:
+              del ptpd["retired"]
           continue
         elif playerId1.isdecimal():
           P = cibblbibbl.player.player(playerId1)
@@ -208,8 +218,8 @@ class MatchupConfigMaker:
           elif P.status == "Retired Journeyman":
             ptpd["retired"] = True
             ptpd["type"] = "J"
-          else:
-            ptpd["retired"] = None  # indicates unknown
+          elif "retired" in ptpd:
+            del ptpd["retired"]
 
   def TeamCumPlayerPerformances(self, keys=None):
     Ks = set(self.keytransPR) - {"cas",}

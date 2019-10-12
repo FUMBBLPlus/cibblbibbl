@@ -2,6 +2,7 @@ import pyfumbbl
 
 from . import field
 from . import helper
+from .jsonfile import jsonfile
 
 import cibblbibbl
 
@@ -53,13 +54,13 @@ class BasePlayer(metaclass=cibblbibbl.helper.InstanceRepeater):
   __gt__ = field.ordering.PropTupCompar("sort_key")
   __ge__ = field.ordering.PropTupCompar("sort_key")
 
+  @staticmethod
+  def configfilepathroot():
+    return cibblbibbl.data.path / "player"
+
   @property
   def configfilepath(self):
-    return (
-        cibblbibbl.data.path
-        / "player"
-        / self.configfilename
-    )
+    return self.configfilepathroot() / self.configfilename
 
   @property
   def name(self):
@@ -192,6 +193,14 @@ class StarPlayer(BasePlayer):
     return (100, int(self.positionId))
 
 
+def iterexisting():
+  directory = Player.configfilepathroot()
+  for p in directory.glob("**/*.json"):
+    playerId = p.stem
+    Pl = player(playerId)
+    yield Pl
+
+
 def player(playerId, **kwargs):
   playerId = str(playerId)
   if playerId.isdecimal():
@@ -203,4 +212,3 @@ def player(playerId, **kwargs):
   elif playerId.startswith("RAISED"):
     return RaisedDeadPlayer(playerId, **kwargs)
   raise NotImplementedError(f'unknown playerId: {playerId}')
-

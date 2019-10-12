@@ -359,6 +359,47 @@ class Tournament(BaseTournament):
     else:
       return int(year_nr)
 
+  def playerperformances(self):
+    perfkeys = {
+        "blocks",
+        "cas",
+        "comp",
+        "fouls",
+        "int",
+        "mvp",
+        "pass",
+        "prespp",
+        "rush",
+        "spp",
+        "td",
+        "turns",
+    }
+    d = {}
+    for Mu in self.matchups:
+      if Mu.excluded == "yes":
+        continue
+      matchId = (Mu.match.Id if Mu.match else None)
+      for teamId, d0 in Mu.config["player"].items():
+        Te = cibblbibbl.team.Team(int(teamId))
+        r = Mu.config["team"][teamId]["r"]
+        for playerId, d1 in d0.items():
+          Pl = cibblbibbl.player.player(playerId)
+          if not (Pl in d):
+            d[Pl] = {k: d1.get(k, 0) for k in perfkeys}
+            d[Pl]["team"] = Te
+            d[Pl]["name"] = d1["name"]
+            d[Pl]["type"] = d1["type"]
+            d[Pl]["perf"] = [(r, matchId),]
+          else:
+            for k in perfkeys:
+              d[Pl][k] += d1.get(k, 0)
+            d[Pl]["perf"].append((r, matchId))
+          if d1.get("retired") is not None:
+            d[Pl]["retired"] = d1["retired"]
+          if d1.get("dead") is not None:
+            d[Pl]["dead"] = copy.copy(d1["dead"]._data)
+    return d
+
   def standings(self):
     tpkeys = (
         "cas", "casdiff",

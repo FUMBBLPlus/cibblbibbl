@@ -61,14 +61,29 @@ class BaseMatchup(metaclass=cibblbibbl.helper.InstanceRepeater):
 
   @property
   def players(self):
+    RaisedDeadPlayer = cibblbibbl.player.RaisedDeadPlayer
     PP_items = self.config["player"].items()
-    return frozenset(
-        cibblbibbl.player.player(playerId,  # must be str
+    S = set()
+    for teamId, d0 in PP_items:
+      Te = cibblbibbl.team.Team(int(teamId))
+      for playerId, d1 in d0.items():
+        Pl = cibblbibbl.player.player(playerId,  # must be str
             name = d1["name"],
         )
-        for teamId, d0 in PP_items
-        for playerId, d1 in d0.items()
-    )
+        if isinstance(Pl, RaisedDeadPlayer):
+          if self.match:
+            if not Pl.prevdeadmatchId:
+              Pl.prevdeadmatchId = self.match.Id
+            if not Pl.prevreason:
+              Re = self.match.replay
+              with Re:
+                rosterdata = Re.teamdata[Te]["roster"]
+                if rosterdata["necromancer"]:
+                  Pl.prevreason = "raisedfromdead"
+                else:
+                  Pl.prevreason = "infected"
+        S.add(Pl)
+    return frozenset(S)
 
   @property
   def teams(self):
@@ -209,9 +224,8 @@ class Matchup(BaseMatchup):
   def configfilepath(self):
     return self.configdir / self.configfilename
 
-  @property
-  def configmaker(self):
-    return matchup_config.MatchupConfigMaker(self)
+  def configmaker(self, **kwargs):
+    return matchup_config.MatchupConfigMaker(self, **kwargs)
 
   @property
   def schedulerecord(self):
@@ -225,7 +239,7 @@ class Matchup(BaseMatchup):
     )
 
   def calculate_config(self):
-    d = self.configmaker()
+    d = self.configmaker()()
     return d
 
   def iterdead(self):

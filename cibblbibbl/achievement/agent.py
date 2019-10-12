@@ -8,13 +8,13 @@ from .. import field
 
 def iterexisting(cls, group_key):
   G = cibblbibbl.group.Group(group_key)
-  dir = (
+  directory = (
     cibblbibbl.data.path
     / group_key
     / "achievement"
     / f'{cls.__name__.lower()}'
   )
-  for p in dir.glob("**/*.json"):
+  for p in directory.glob("**/*.json"):
     tournamentId = p.parent.name
     if tournamentId.isdecimal():
       tournamentId = tournamentId.lstrip("0")

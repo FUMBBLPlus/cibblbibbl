@@ -26,6 +26,7 @@ from . import matchup
 from . import achievement
 
 
+_init_existing_players = frozenset(player.iterexisting())
 CIBBL = group.Group("cibbl")
 
 

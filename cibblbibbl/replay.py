@@ -116,7 +116,7 @@ class Replay(metaclass=cibblbibbl.helper.InstanceRepeater):
   @property
   def playerIds(self):
     return {
-      d1["playerId"]
+      str(d1["playerId"])
       for d0 in self.teamdata.values()
       for d1 in d0["playerArray"]
     }
