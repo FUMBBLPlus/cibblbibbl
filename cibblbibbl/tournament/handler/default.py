@@ -41,6 +41,7 @@ class BaseTournament(
 ):
 
   above = field.config.TournamentField()
+  bestplayersname = field.config.DDField(default=None)
   config = field.config.CachedConfig()
   configfilename = field.filepath.idfilename
   end = TournamentTime()
