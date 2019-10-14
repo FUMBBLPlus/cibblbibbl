@@ -22,8 +22,8 @@ class PA_AerodynamicAim(PlayerAchievement):
       for Mu in T.matchups:
         for Pl in Mu.players:
           d = Mu.performance(Pl)
-          value = d.get(perfkey, 0)
-          if perfvaltarget <= value:
+          tvalue = d.get(perfkey, 0)
+          if perfvaltarget <= tvalue:
             A = cls(T, Pl)
             if A["status"] == "proposed":
               if value or A["prestige"]:
