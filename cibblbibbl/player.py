@@ -26,11 +26,17 @@ class BasePlayer(metaclass=cibblbibbl.helper.InstanceRepeater):
   prevsppmul = field.config.DDField(default=1)
   replays = field.insts.matches_replays
 
-  def __init__(self, playerId, name=None):
+  def __init__(self, playerId,
+      name = ...,
+      team = ...,
+      typechar = ...,
+  ):
     self._matchups = {}
     self._name = name
-    if name is not None:
+    if name is not ...:
       self._name = helper.norm_name(name)
+    self._team = team
+    self._typechar = typechar
     self.achievements = set()
     self._nextIds = set()
     if hasattr(self, "get_nextIds"):
@@ -64,7 +70,7 @@ class BasePlayer(metaclass=cibblbibbl.helper.InstanceRepeater):
 
   @property
   def name(self):
-    if self._name is None:
+    if self._name is ...:
       self._name = helper.norm_name(self.getname)
     return self._name
 
@@ -79,6 +85,45 @@ class BasePlayer(metaclass=cibblbibbl.helper.InstanceRepeater):
     prevId = self.prevId
     if prevId is not None:
       return player(prevId)
+
+  @property
+  def team(self):
+    if self._team is ...:
+      teamId = self.config.get("team")
+      if teamId is not None:
+        self._team = cibblbibbl.team.Team(int(teamId))
+      else:
+        self._team = None
+    return self._team
+  @team.setter
+  def team(self, value):
+    self._team = value
+    self.config["team"] = value.Id
+  @team.deleter
+  def team(self):
+    self._team = ...
+    try:
+      del self.config["team"]
+    except KeyError:
+      pass
+
+  @property
+  def typechar(self):
+    if self._typechar is ...:
+      self._typechar = self.config.get("typechar")
+    return self._typechar
+  @typechar.setter
+  def typechar(self, value):
+    self._typechar = value
+    self.config["typechar"] = value
+  @typechar.deleter
+  def typechar(self):
+    self._typechar = ...
+    try:
+      del self.config["typechar"]
+    except KeyError:
+      pass
+
 
   # TODO prevId setter which backchains instantly
 
@@ -97,6 +142,10 @@ class MercenaryPlayer(BasePlayer):
     return f'Mercenary {self.position.name} #{nr}'
 
   @property
+  def name(self):
+    return self.getname
+
+  @property
   def positionId(self):
     return self.Id.split("-")[1]
 
@@ -104,6 +153,14 @@ class MercenaryPlayer(BasePlayer):
   def sort_key(self):
     idvals = tuple(int(x) for x in self.Id.split("-")[1:])
     return (1000,) + idvals
+
+  @property
+  def team(self):
+    return
+
+  @property
+  def typechar(self):
+    return "M"
 
 
 class NormalPlayer(BasePlayer):
@@ -118,9 +175,29 @@ class NormalPlayer(BasePlayer):
 
   @property
   def getname(self):
-    if self._name is None:
+    if self._name is ...:
       self._name = self.apiget["name"]
     return self._name
+
+  @property
+  def team(self):
+    team = BasePlayer.team.fget(self)
+    if team is None:
+      prev = self.prev
+      if isinstance(self.prev, RaisedDeadPlayer):
+        self._team = self.prev.team
+    return self._team
+  team = team.setter(BasePlayer.team.fset)
+  team = team.deleter(BasePlayer.team.fdel)
+
+  @property
+  def typechar(self):
+    typechar = BasePlayer.typechar.fget(self)
+    if typechar is None:
+      self._typechar = "R"
+    return self._typechar
+  typechar = typechar.setter(BasePlayer.typechar.fset)
+  typechar = typechar.deleter(BasePlayer.typechar.fdel)
 
   @property
   def sort_key(self):
@@ -135,23 +212,24 @@ class RaisedDeadPlayer(BasePlayer):
   getname = field.common.DiggedAttr("prev", "getname")
   prevsppmul = field.config.DDField(default=0)
 
-  def get_nextIds(self):
+  @property
+  def next(self):
+    nextId = self.nextId
+    return (player(nextId) if nextId is not None else None)
+
+  @property
+  def nextId(self):
     nextId = self.Id.split("_")[-1]
     if nextId.startswith("UNKNOWN"):
       raise Exception(
           f'unchained raised dead player: {self.Id}'
       )
-    elif nextId == "0":
-      return set()
-    return {nextId}
+    elif nextId != "0":
+      return nextId
 
   @property
   def positionId(self):
     return self.Id.split("_")[0].split("-")[1]
-
-  def get_prevId(self):
-    print("get_prevId", self)
-    return self.Id.split("_")[-2]
 
   @property
   def sort_key(self):
@@ -168,6 +246,19 @@ class RaisedDeadPlayer(BasePlayer):
       return next.status
     else:
       return "Retired"
+
+  @property
+  def typechar(self):
+    return "D"
+
+  def get_nextIds(self):
+    nextId = self.nextId
+    return ({nextId} if nextId is not None else set())
+
+  def get_prevId(self):
+    return self.Id.split("_")[-2]
+
+
 
 
 class StarPlayer(BasePlayer):
@@ -192,6 +283,13 @@ class StarPlayer(BasePlayer):
   def sort_key(self):
     return (100, int(self.positionId))
 
+  @property
+  def team(self):
+    return
+
+  @property
+  def typechar(self):
+    return "S"
 
 def iterexisting():
   directory = Player.configfilepathroot()

@@ -12,6 +12,7 @@ import cibblbibbl
 from ... import field
 from ...jsonfile import jsonfile
 from .. import tools
+from .. import performance
 from . import get_handlername
 
 
@@ -359,20 +360,96 @@ class Tournament(BaseTournament):
     else:
       return int(year_nr)
 
+  def bestplayers(self):
+    dPP = self.playerperformances()
+    return performance.bestperformers(dPP)
+
+  def extraplayerperformances(self, join=False):
+    dPP = self.playerperformances()
+    return performance.extraperformances(dPP, join=join)
+
+  def lastteammatches(self):
+    d = {}
+    for ds in self.standings():
+      Te = ds["team"]
+      perf = ds["perf"]
+      for r, matchId in reversed(perf):
+        if matchId:
+          d[Te] = cibblbibbl.match.Match(matchId)
+          break
+      else:
+        d[Te] = None
+    return d
+
+  def playerperformancesources(self, *, RPP=None):
+    RaisedDeadPlayer = cibblbibbl.player.RaisedDeadPlayer
+    StarPlayer = cibblbibbl.player.StarPlayer
+    RPP = RPP or self.rawplayerperformances()
+    deadplayers = {Pl for Pl, d in RPP.items() if d.get("dead")}
+    perfsource0 = {Pl: {Pl} for Pl in RPP}
+    exclude = set()
+    for Pl in sorted(deadplayers):
+      if Pl in exclude:
+        continue
+      if not Pl.nexts:
+        continue
+      if isinstance(Pl, StarPlayer):
+        continue
+      for Pl1 in Pl.nexts:
+        if (
+            isinstance(Pl1, RaisedDeadPlayer)
+            and Pl1.nexts
+        ):
+          for Pl2 in Pl1.nexts:
+            s0 = perfsource0.get(Pl2, set())
+            perfsource0[Pl2] = s0 | {Pl, Pl1}
+            exclude |= {Pl, Pl1}
+        else:
+          s0 = perfsource0.get(Pl1, set())
+          perfsource0[Pl1] = s0 | {Pl,}
+          exclude |= {Pl,}
+    perfsource1 = {
+        Pl: S
+        for Pl, S in perfsource0.items()
+        if Pl not in exclude
+    }
+    return perfsource1
+
   def playerperformances(self):
-    perfkeys = {
-        "blocks",
-        "cas",
-        "comp",
-        "fouls",
-        "int",
-        "mvp",
-        "pass",
-        "prespp",
-        "rush",
-        "spp",
-        "td",
-        "turns",
+    perfkeys = set(performance.performancekeytrans.values())
+    RPP = self.rawplayerperformances()
+    d = {}
+    for Pl, S in self.playerperformancesources(RPP=RPP).items():
+      dt = d[Pl] = {k: 0 for k in perfkeys}
+      dt["perf"] = []
+      perfS = set()
+      tookpart = False
+      for Pl1 in sorted(S):
+        ds = RPP[Pl1]
+        if Pl1 is Pl:
+          tookpart = True
+          for k in {"team", "name", "type"} & set(ds):
+            dt[k] = ds[k]
+        for k in perfkeys:
+          dt[k] += ds[k]
+        for t in ds["perf"]:
+          if t not in perfS:
+            dt["perf"].append(t)
+            perfS.add(t)
+      else:
+        for k in {"dead", "retired"} & set(ds):
+          dt[k] = ds[k]
+      if not tookpart:
+        dt["name"] = Pl.name
+        dt["team"] = Pl.team
+        dt["type"] = Pl.typechar
+    return d
+
+  def rawplayerperformances(self):
+    perfkeys = set(performance.performancekeytrans.values())
+    lastteammatchIds = {
+      Te: (Ma.Id if Ma else None)
+      for Te, Ma in self.lastteammatches().items()
     }
     d = {}
     for Mu in self.matchups:
@@ -394,10 +471,12 @@ class Tournament(BaseTournament):
             for k in perfkeys:
               d[Pl][k] += d1.get(k, 0)
             d[Pl]["perf"].append((r, matchId))
-          if d1.get("retired") is not None:
-            d[Pl]["retired"] = d1["retired"]
           if d1.get("dead") is not None:
             d[Pl]["dead"] = copy.copy(d1["dead"]._data)
+          if d1.get("retired") is not None:
+            if matchId != lastteammatchIds[Te]:
+                # retirements after last match are ignored
+              d[Pl]["retired"] = d1["retired"]
     return d
 
   def standings(self):

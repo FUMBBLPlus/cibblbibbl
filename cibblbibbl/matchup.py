@@ -67,9 +67,10 @@ class BaseMatchup(metaclass=cibblbibbl.helper.InstanceRepeater):
     for teamId, d0 in PP_items:
       Te = cibblbibbl.team.Team(int(teamId))
       for playerId, d1 in d0.items():
-        Pl = cibblbibbl.player.player(playerId,  # must be str
-            name = d1["name"],
-        )
+        Pl = cibblbibbl.player.player(playerId)
+        Pl._name = d1["name"]
+        Pl._team = Te
+        Pl._typechar = d1["type"]
         if isinstance(Pl, RaisedDeadPlayer):
           if self.match:
             if not Pl.prevdeadmatchId:

@@ -97,10 +97,19 @@ class CBETournament(default.AbstractTournament):
     self.config["sub"] = {name: T.Id for name, T in d.items()}
   sub = sub.deleter(field.config.deleter("sub"))
 
+  def bestplayers(self):
+    return {}
+
+  def extraplayerperformances(self, join=False):
+    return {}
+
   def get_team(self, teamId):
     group_nr = int(teamId[-2:])
     group_index = group_nr - 1
     return self.partner_groups[group_index]
+
+  def playerperformances(self):
+    return{}
 
   def standings(self):
     # As the team performance keys are replaced with the group
