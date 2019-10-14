@@ -18,7 +18,10 @@ Achievement = mastercls.Achievement
 def collect(group_key):
   return {
       a
-      for cls in Achievement.registry.values()
+      for cls in sorted(
+          Achievement.registry.values(),
+          key = lambda c: c.rank
+      )
       for a in cls.collect(group_key)
   }
 

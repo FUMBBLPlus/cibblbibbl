@@ -7,6 +7,8 @@ from .mastercls import TeamAchievement
 
 class TP_Standings(TeamAchievement):
 
+  rank = 10
+
   @classmethod
   def agent01(cls, group_key):
     G = cibblbibbl.group.Group(group_key)

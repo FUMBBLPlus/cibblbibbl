@@ -5,6 +5,8 @@ from .mastercls import TeamAchievement
 
 class TA_CrushingVictory(TeamAchievement):
 
+  rank = 10
+
   @classmethod
   def agent01(cls, group_key):
     C = cls.defaultconfig_of_group(group_key)._data

@@ -476,6 +476,7 @@ class Tournament(BaseTournament):
             d[Pl]["perf"].append((r, matchId))
           if d1.get("dead") is not None:
             d[Pl]["dead"] = copy.copy(d1["dead"]._data)
+            d[Pl]["dead"].insert(0, Mu.match.Id)
           if d1.get("retired") is not None:
             d[Pl]["retired"] = d1["retired"]
             if matchId == lastteammatchIds[Te]:

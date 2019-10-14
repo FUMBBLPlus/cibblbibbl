@@ -3,27 +3,27 @@ import cibblbibbl
 
 from .mastercls import PlayerAchievement
 
-class PA_StarPlayer(PlayerAchievement):
+class PA_AerodynamicAim(PlayerAchievement):
 
   rank = 10
 
   @classmethod
   def agent01(cls, group_key):
     C = cls.defaultconfig_of_group(group_key)._data
-    trigspp = C["trigspp"]
     value = C["value"]
+    perfkey = C["perfkey"]
+    perfvaltarget = C["perfvaltarget"]
     G = cibblbibbl.group.Group(group_key)
     for T in G.tournaments.values():
       if T.posonly == "yes":
         continue
+      if T.friendly == "yes":
+        continue
       for Mu in T.matchups:
         for Pl in Mu.players:
-          #if not Pl.Id.isdecimal():  #TODO FIX
-          #  continue
           d = Mu.performance(Pl)
-          prespp = d.get("prespp", 0)
-          postspp = prespp + d.get("spp", 0)
-          if prespp < trigspp and trigspp <= postspp:
+          value = d.get(perfkey, 0)
+          if perfvaltarget <= value:
             A = cls(T, Pl)
             if A["status"] == "proposed":
               if value or A["prestige"]:
@@ -38,4 +38,4 @@ class PA_StarPlayer(PlayerAchievement):
             yield A
 
 
-cls = PA_StarPlayer
+cls = PA_AerodynamicAim

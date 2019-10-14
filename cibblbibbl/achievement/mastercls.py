@@ -12,6 +12,8 @@ from . import agent
 
 class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
 
+  rank = 0
+
   baseprestige = field.config.DDField(key="prestige",
     get_f_typecast = int,
     set_f_typecast = lambda x: math.floor(float(x)),
