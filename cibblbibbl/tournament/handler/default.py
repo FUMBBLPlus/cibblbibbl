@@ -394,6 +394,9 @@ class Tournament(BaseTournament):
       if not Pl.nexts:
         continue
       if isinstance(Pl, StarPlayer):
+          # Raised Star Players are too complicated to handle
+          # because of their personal apothecary. Best to
+          # exclude them from performance stacking.
         continue
       for Pl1 in Pl.nexts:
         if (
@@ -437,7 +440,7 @@ class Tournament(BaseTournament):
             dt["perf"].append(t)
             perfS.add(t)
       else:
-        for k in {"dead", "retired"} & set(ds):
+        for k in {"dead", "retired", "retiredlast"} & set(ds):
           dt[k] = ds[k]
       if not tookpart:
         dt["name"] = Pl.name
@@ -474,9 +477,11 @@ class Tournament(BaseTournament):
           if d1.get("dead") is not None:
             d[Pl]["dead"] = copy.copy(d1["dead"]._data)
           if d1.get("retired") is not None:
-            if matchId != lastteammatchIds[Te]:
-                # retirements after last match are ignored
-              d[Pl]["retired"] = d1["retired"]
+            d[Pl]["retired"] = d1["retired"]
+            if matchId == lastteammatchIds[Te]:
+                # retirements of last matches are tegged
+                d[Pl]["retiredlast"] = True
+
     return d
 
   def standings(self):
