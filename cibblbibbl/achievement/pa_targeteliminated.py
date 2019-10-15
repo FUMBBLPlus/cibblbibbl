@@ -24,7 +24,7 @@ class PA_TargetEliminated(PlayerAchievement):
           continue
         for A0 in Pl0.achievements:
           if 10 <= A0.baseprestige:
-            break  # TODO: calculate real value
+            break
         else:
           continue
         matchId, half, turn, reason, killerId = dead
@@ -49,6 +49,9 @@ class PA_TargetEliminated(PlayerAchievement):
               A["turn"] = turn
               A["reason"] = reason
           yield A
+
+    #agent02 = agent01  # TODO: might need more passes but it
+                        # seems that not
 
 
 cls = PA_TargetEliminated

@@ -19,6 +19,7 @@ class Group(metaclass=cibblbibbl.helper.InstanceRepeater):
   key = field.instrep.keyigetterproperty(0)
   matches = field.insts.matchups_matches
   matchups = field.insts.self_tournaments_matchups
+  regions = field.config.DDField()
   replays = field.insts.matches_replays
 
   def __init__(self, key: str, *,

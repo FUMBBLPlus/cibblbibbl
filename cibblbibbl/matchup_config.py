@@ -76,7 +76,6 @@ class MatchupConfigMaker:
     self.goto = "Ids"
 
   def refresh_cache(self):
-    print("hello")
     self.Ma = self.Mu.match
     self.G = self.Mu.group
     self.T = self.Mu.tournament

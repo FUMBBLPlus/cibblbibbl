@@ -44,21 +44,23 @@ def bestperformers(performances, extraperformances_=None):
     extraperformances_ = extraperformances(performances)
   d = {}
   perf = performances
-  for K, k in performancekeytrans.items():
-    topval = max(d[k] for d in perf.values())
-    L = [Sj for Sj, d1 in perf.items() if d1[k] == topval]
-    if len(L) == 1:
-      d[K] = L[0]
-    else:
-      d[K] = None
+  if perf:
+    for K, k in performancekeytrans.items():
+      topval = max(d[k] for d in perf.values())
+      L = [Sj for Sj, d1 in perf.items() if d1[k] == topval]
+      if len(L) == 1:
+        d[K] = L[0]
+      else:
+        d[K] = None
   eperf = extraperformances_
-  for K in extraperformancekeys:
-    topval = max(d[K] for d in eperf.values())
-    L = [Sj for Sj, d1 in eperf.items() if d1[K] == topval]
-    if len(L) == 1:
-      d[K] = L[0]
-    else:
-      d[K] = None
+  if eperf:
+    for K in extraperformancekeys:
+      topval = max(d[K] for d in eperf.values())
+      L = [Sj for Sj, d1 in eperf.items() if d1[K] == topval]
+      if len(L) == 1:
+        d[K] = L[0]
+      else:
+        d[K] = None
   return d
 
 

@@ -49,11 +49,11 @@ class Season(
     given season was earlier.
     """
     c = 0
-    if season.KEY[1:] < self._KEY[1:]:
+    if season._KEY[1:] < self._KEY[1:]:
       while season is not self:
         season = season.next
         c += 1
-    elif self._KEY[1:] < season.KEY[1:]:
+    elif self._KEY[1:] < season._KEY[1:]:
       while season is not self:
         season = season.prec
         c -= 1

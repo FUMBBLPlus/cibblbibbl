@@ -140,6 +140,46 @@ class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
         self.subjectId,
     )
 
+  def decaymul(self, season=None):
+    season = season or max(self.group.seasons)
+    i = season.since(self.season)
+    dacaymularray = self["decaymul"]
+    try:
+      return dacaymularray[i]
+    except IndexError:
+      if 0 < i:
+        return dacaymularray[-1]
+      else:
+        return 0
+
+
+  def decayval(self, season=None):
+    season = season or max(self.group.seasons)
+    return self.baseprestige * self.decaymul(season)
+
+  def prestige(self, season=None):
+    season = season or max(self.group.seasons)
+    stackmuls = self["stackmul"]
+    if stackmuls == 1:
+      i = 0
+    else:
+      i = self.stackidx(season)
+    v = self.decayval(season) * stackmuls[0]
+    return math.floor(v)
+
+  def stackidx(self, season=None):
+    season = season or max(self.group.seasons)
+    sort_key = self.sort_key
+    L = [
+      A
+      for A in self.subject.achievements
+      if A.sort_key[:2] == sort_key[:2]
+    ]
+    L.sort(reverse=True, key=lambda A: (
+        A.decayval(season),
+        A.sort_key[2],
+    ))
+    return L.index(self)
 
 class TeamAchievement(Achievement):
   subject_factory = cibblbibbl.team.Team
@@ -147,6 +187,7 @@ class TeamAchievement(Achievement):
   @classmethod
   def subjectIdcast(cls, subjectId):
     return int(subjectId)
+
 
 
 class PlayerAchievement(Achievement):
