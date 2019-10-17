@@ -31,9 +31,8 @@ class TP_Standings(TeamAchievement):
         for Te in teams:
           A = cls(T, Te)
           if A["status"] == "proposed":
-            if prestige or A["prestige"]:
-              A["prestige"] = prestige
-              A["status"] = "proposed"  # explicit
+            A["prestige"] = prestige
+            A["status"] = "proposed"  # explicit
           yield A
 
 

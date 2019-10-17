@@ -55,7 +55,7 @@ class Season(
         c += 1
     elif self._KEY[1:] < season._KEY[1:]:
       while season is not self:
-        season = season.prec
+        season = season.prev
         c -= 1
     return c
 

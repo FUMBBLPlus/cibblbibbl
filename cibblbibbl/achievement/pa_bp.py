@@ -141,19 +141,25 @@ class PA_BPS_ACC(PA_BP_Child): pass
 class PA_BPS_BC(PA_BP_Child): pass
 class PA_BPS_CAK(PA_BP_Child): pass
 class PA_BPS_CBE(PA_BP_Child): pass
-class PA_BPS_Climax(PA_BP_Child): pass
 class PA_BPS_CVI(PA_BP_Child): pass
+class PA_BPS_Climax(PA_BP_Child): pass
 class PA_BPS_DG(PA_BP_Child): pass
 class PA_BPS_EE(PA_BP_Child): pass
+class PA_BPS_FG(PA_BP_Child): pass
 class PA_BPS_GCECC(PA_BP_Child): pass
 class PA_BPS_HoG(PA_BP_Child): pass
 class PA_BPS_LC(PA_BP_Child): pass
+class PA_BPS_LG(PA_BP_Child): pass
 class PA_BPS_MS(PA_BP_Child): pass
+class PA_BPS_MaG(PA_BP_Child): pass
+class PA_BPS_MuG(PA_BP_Child): pass
 class PA_BPS_OC(PA_BP_Child): pass
 class PA_BPS_PC(PA_BP_Child): pass
 class PA_BPS_SC(PA_BP_Child): pass
+class PA_BPS_SG(PA_BP_Child): pass
+class PA_BPS_TGB(PA_BP_Child): pass
+class PA_BPS_TGW(PA_BP_Child): pass
 class PA_BPS_VC(PA_BP_Child): pass
 class PA_BPS_YS(PA_BP_Child): pass
-
 
 cls = PA_BP_Mother

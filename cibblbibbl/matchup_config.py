@@ -204,7 +204,7 @@ class MatchupConfigMaker:
         Ma = Te.next_match(self.Ma)
         if Ma:
           with Ma.replay as Re:
-            if playerId1 not in Re.normplayerIds:
+            if playerId1 not in Re.normallplayerIds:
               ptpd["retired"] = True
             elif "retired" in ptpd:
               del ptpd["retired"]

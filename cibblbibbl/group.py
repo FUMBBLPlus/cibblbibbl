@@ -66,6 +66,13 @@ class Group(metaclass=cibblbibbl.helper.InstanceRepeater):
           self.players.add(Pl)
           Pl._matchups[self.key] = []
         Pl._matchups[self.key].append(Mu)
+    for Te in self.teams:
+      prevMu = None
+      for Mu in sorted(Te.matchups(self.key)):
+        if prevMu:
+          prevMu._teamlinked[Te]["next"] = Mu
+          Mu._teamlinked[Te]["prev"] = prevMu
+        prevMu = Mu
 
   def register_tournaments(self):
     C = self.config

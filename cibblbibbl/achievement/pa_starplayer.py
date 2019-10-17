@@ -26,15 +26,14 @@ class PA_StarPlayer(PlayerAchievement):
           if prespp < trigspp and trigspp <= postspp:
             A = cls(T, Pl)
             if A["status"] == "proposed":
-              if value or A["prestige"]:
-                A["prestige"] = value
-                A["matchup"] = list(Mu.keys)
-                Te = Mu.team_of_player(Pl)
-                if Te:
-                  A["team"] = str(Te.Id)
-                A["status"] = "proposed"  # explicit
-                if Mu.excluded == "yes":
-                  A["matchup_excluded"] = "yes"
+              A["prestige"] = value
+              A["matchup"] = list(Mu.keys)
+              Te = Mu.team_of_player(Pl)
+              if Te:
+                A["team"] = str(Te.Id)
+              A["status"] = "proposed"  # explicit
+              if Mu.excluded == "yes":
+                A["matchup_excluded"] = "yes"
             yield A
 
 

@@ -133,6 +133,7 @@ class BasePlayer(metaclass=cibblbibbl.helper.InstanceRepeater):
 
 class MercenaryPlayer(BasePlayer):
 
+  permanent = field.common.Constant(False)
   prevsppmul = field.config.DDField(default=0)
   status = field.common.Constant("Active")
 
@@ -168,6 +169,7 @@ class NormalPlayer(BasePlayer):
   apiget = field.fumbblapi.CachedFUMBBLAPIGetField(
       pyfumbbl.player.get,
   )
+  permanent = field.common.Constant(True)
   positionId = field.common.DiggedKeys(
       "apiget", "position", "id",
   )
@@ -210,6 +212,7 @@ Player = NormalPlayer
 class RaisedDeadPlayer(BasePlayer):
 
   getname = field.common.DiggedAttr("prev", "getname")
+  permanent = field.common.Constant(True)
   prevsppmul = field.config.DDField(default=0)
 
   @property
@@ -264,6 +267,7 @@ class RaisedDeadPlayer(BasePlayer):
 class StarPlayer(BasePlayer):
   config = field.config.CachedConfig()
   getname = field.common.DiggedAttr("position", "name")
+  permanent = field.common.Constant(False)
   prevsppmul = field.config.DDField(default=0)
   status = field.config.DDField(default="Active")
 

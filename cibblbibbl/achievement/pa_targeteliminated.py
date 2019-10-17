@@ -34,20 +34,19 @@ class PA_TargetEliminated(PlayerAchievement):
           Mu = Ma.matchup
           A = cls(T, Pl)
           if A["status"] == "proposed":
-            if value or A["prestige"]:
-              A["prestige"] = value
-              A["matchup"] = list(Mu.keys)
-              Te = Mu.team_of_player(Pl)
-              if Te:
-                A["team"] = str(Te.Id)
-              A["status"] = "proposed"  # explicit
-              if Mu.excluded == "yes":
-                A["matchup_excluded"] = "yes"
-              A["victimId"] = Pl0.Id
-              A["matchId"] = matchId
-              A["half"] = half
-              A["turn"] = turn
-              A["reason"] = reason
+            A["prestige"] = value
+            A["matchup"] = list(Mu.keys)
+            Te = Mu.team_of_player(Pl)
+            if Te:
+              A["team"] = str(Te.Id)
+            A["status"] = "proposed"  # explicit
+            if Mu.excluded == "yes":
+              A["matchup_excluded"] = "yes"
+            A["victimId"] = Pl0.Id
+            A["matchId"] = matchId
+            A["half"] = half
+            A["turn"] = turn
+            A["reason"] = reason
           yield A
 
     #agent02 = agent01  # TODO: might need more passes but it

@@ -177,7 +177,10 @@ class Matchup(BaseMatchup):
         low_teamId,
         high_teamId,
     )
-    pass
+    self._teamlinked = {
+        Te: {"prev": None, "next": None}
+        for Te in self.teams
+    }
 
   @property
   def apischedulerecord(self):
@@ -252,6 +255,11 @@ class Matchup(BaseMatchup):
           continue
         yield teamId, playerId, dpp
 
+  def teamnextmatchup(self, team):
+    return self._teamlinked[team]["next"]
+
+  def teamprevmatchup(self, team):
+    return self._teamlinked[team]["prev"]
 
 
 def sort_by_modified(matchups):

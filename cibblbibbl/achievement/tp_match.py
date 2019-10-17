@@ -27,9 +27,8 @@ class TP_Match(TeamAchievement):
           continue
         A = cls(T, Te)
         if A["status"] == "proposed":
-          if prestige or A["prestige"]:
-            A["prestige"] = prestige
-            A["status"] = "proposed"  # explicit; easier to edit
+          A["prestige"] = prestige
+          A["status"] = "proposed"  # explicit; easier to edit
         yield A
 
 

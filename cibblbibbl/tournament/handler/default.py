@@ -369,6 +369,19 @@ class Tournament(BaseTournament):
     dPP = self.playerperformances()
     return performance.extraperformances(dPP, join=join)
 
+  def firstteammatches(self):
+    d = {}
+    for ds in self.standings():
+      Te = ds["team"]
+      perf = ds["perf"]
+      for r, matchId in perf:
+        if matchId:
+          d[Te] = cibblbibbl.match.Match(matchId)
+          break
+      else:
+        d[Te] = None
+    return d
+
   def lastteammatches(self):
     d = {}
     for ds in self.standings():
@@ -380,6 +393,60 @@ class Tournament(BaseTournament):
           break
       else:
         d[Te] = None
+    return d
+
+  def playerachievements(self):
+    filter_f = lambda Pl: Pl.permanent
+    d = {}
+    lastteammatches = self.lastteammatches()
+    firstteammatches = self.firstteammatches()
+    for Te, lastMa in lastteammatches.items():
+      if not lastMa:
+        d[Te] =  [set(), set()]
+        continue
+      firstMa = firstteammatches[Te]
+      Mu = firstMa.matchup
+      preMa = None
+      while not preMa:
+        Mu = Mu.teamprevmatchup(Te)
+        if Mu:
+          preMa = Mu.match
+        else:
+          break
+      prePls, firstPls, lastPls = set(), set(), set()
+      if preMa:
+        with preMa.replay as Re:
+          prePls = set(filter(filter_f, Re.aliveplayers[Te]))
+      if firstMa:
+        with firstMa.replay as Re:
+          firstPls = set(filter(filter_f, Re.players[Te]))
+      if lastMa:
+        with lastMa.replay as Re:
+          lastPls = set(filter(filter_f, Re.aliveplayers[Te]))
+      firstAs = {
+        A
+        for Pl in prePls | firstPls
+        for A in Pl.achievements
+        if A.tournament < self
+      }
+      lastAs = {
+        A
+        for Pl in lastPls
+        for A in Pl.achievements
+        if A.tournament <= self
+      }
+      d[Te] = [firstAs, lastAs]
+    return d
+
+  def playerachievementvalues(self):
+    d = {}
+    season = self.season
+    for Te, firstlastAs in self.playerachievements().items():
+        prestiges = [
+            (sum(A.prestige(season) for A in As) if As else 0)
+            for As in firstlastAs
+        ]
+        d[Te] = prestiges
     return d
 
   def playerperformancesources(self, *, RPP=None):
@@ -481,7 +548,7 @@ class Tournament(BaseTournament):
           if d1.get("retired") is not None:
             d[Pl]["retired"] = d1["retired"]
             if matchId == lastteammatchIds[Te]:
-                # retirements of last matches are tegged
+                # retirements of last matches are tagged
                 d[Pl]["retiredlast"] = True
 
     return d
@@ -576,6 +643,7 @@ class Tournament(BaseTournament):
     S.default_factory = None
         # close defaultdict so it can raise KeyError exceptions
     return [S[teamId] for teamId in order if teamId in S]
+
 
 
 

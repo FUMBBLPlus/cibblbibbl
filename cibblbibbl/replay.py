@@ -28,6 +28,17 @@ class Replay(metaclass=cibblbibbl.helper.InstanceRepeater):
       del self.data
 
   @property
+  def aliveplayers(self):
+    return {
+        Te: {
+            cibblbibbl.player.player(playerId)
+            for playerId
+            in playerIds
+        }
+        for Te, playerIds in self.normaliveplayerIds.items()
+    }
+
+  @property
   def configfilepath(self):
     return (
         cibblbibbl.data.path
@@ -55,6 +66,17 @@ class Replay(metaclass=cibblbibbl.helper.InstanceRepeater):
     return d
 
   @property
+  def deadplayers(self):
+    return {
+        Te: {
+            cibblbibbl.player.player(playerId)
+            for playerId
+            in playerIds
+        }
+        for Te, playerIds in self.normdeadplayerIds.items()
+    }
+
+  @property
   def gamedata(self):
     if not hasattr(self, "_gamedata"):
       for d in self.data:
@@ -78,6 +100,18 @@ class Replay(metaclass=cibblbibbl.helper.InstanceRepeater):
     }
 
   @property
+  def normaliveplayerIds(self):
+    dead = self.normdeadplayerIds
+    return {
+      Te: {
+          playerId
+          for playerId in S
+          if playerId not in dead[Te]
+      }
+      for Te, S in self.normplayerIds.items()
+    }
+
+  @property
   def normdeadplayerIds(self):
     return {
         Te: {
@@ -97,10 +131,20 @@ class Replay(metaclass=cibblbibbl.helper.InstanceRepeater):
     return data
 
   @property
-  def normplayerIds(self):
+  def normallplayerIds(self):
     return {
       self.playerIdnorm.get(playerId, playerId)
-      for playerId in self.playerIds
+      for playerId in self.allplayerIds
+    }
+
+  @property
+  def normplayerIds(self):
+    return {
+      Te: {
+          self.playerIdnorm.get(playerId, playerId)
+          for playerId in S
+      }
+      for Te, S in self.playerIds.items()
     }
 
   @property
@@ -114,11 +158,32 @@ class Replay(metaclass=cibblbibbl.helper.InstanceRepeater):
     return data
 
   @property
+  def allplayerIds(self):
+    return {
+      playerId
+      for S in self.playerIds.values()
+      for playerId in S
+    }
+
+  @property
   def playerIds(self):
     return {
-      str(d1["playerId"])
-      for d0 in self.teamdata.values()
-      for d1 in d0["playerArray"]
+        Te: {
+            str(d1["playerId"])
+            for d1 in d0["playerArray"]
+        }
+        for Te, d0 in self.teamdata.items()
+    }
+
+  @property
+  def players(self):
+    return {
+        Te: {
+            cibblbibbl.player.player(playerId)
+            for playerId
+            in playerIds
+        }
+        for Te, playerIds in self.normplayerIds.items()
     }
 
   @property
