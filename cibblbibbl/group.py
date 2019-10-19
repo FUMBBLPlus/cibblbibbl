@@ -88,3 +88,6 @@ class Group(metaclass=cibblbibbl.helper.InstanceRepeater):
       handler_ = get_handler_f(self.key, Id)
       T = handler_.init(self.key, Id)
       T.register()
+    for T in self.tournaments.values():
+      for Te in T.teams:
+        Te.tournaments.add(T)

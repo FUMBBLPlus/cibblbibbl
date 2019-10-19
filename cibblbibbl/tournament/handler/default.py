@@ -28,8 +28,6 @@ class TournamentTime(field.base.TimeFieldProxyDDescriptorBase):
       return getattr(instance.next, self.name)
     elif instance.above:
       return getattr(instance.above, self.name)
-    elif instance.status == "In Progress":
-      return
     elif instance.matchups:
       return max(Mu.modified for Mu in instance.matchups)
     return t
@@ -183,6 +181,15 @@ class BaseTournament(
     return "Unknown"
   status = status.setter(field.config.setter("status"))
   status = status.deleter(field.config.deleter("status"))
+
+  @property
+  def teams(self):
+    return {
+        Te
+        for Mu in self.matchups
+        for Te in Mu.teams
+        if Mu.excluded == "no"
+    } - self.excluded_teams
 
   def filepath(self, key):
     p = cibblbibbl.data.path
@@ -399,54 +406,29 @@ class Tournament(BaseTournament):
     filter_f = lambda Pl: Pl.permanent
     d = {}
     lastteammatches = self.lastteammatches()
-    firstteammatches = self.firstteammatches()
     for Te, lastMa in lastteammatches.items():
       if not lastMa:
-        d[Te] =  [set(), set()]
+        d[Te] =  set()
         continue
-      firstMa = firstteammatches[Te]
-      Mu = firstMa.matchup
-      preMa = None
-      while not preMa:
-        Mu = Mu.teamprevmatchup(Te)
-        if Mu:
-          preMa = Mu.match
-        else:
-          break
-      prePls, firstPls, lastPls = set(), set(), set()
-      if preMa:
-        with preMa.replay as Re:
-          prePls = set(filter(filter_f, Re.aliveplayers[Te]))
-      if firstMa:
-        with firstMa.replay as Re:
-          firstPls = set(filter(filter_f, Re.players[Te]))
-      if lastMa:
-        with lastMa.replay as Re:
-          lastPls = set(filter(filter_f, Re.aliveplayers[Te]))
-      firstAs = {
-        A
-        for Pl in prePls | firstPls
-        for A in Pl.achievements
-        if A.tournament < self
-      }
+      with lastMa.replay as Re:
+        lastPls = set(filter(filter_f, Re.aliveplayers[Te]))
       lastAs = {
         A
         for Pl in lastPls
         for A in Pl.achievements
         if A.tournament <= self
       }
-      d[Te] = [firstAs, lastAs]
+      d[Te] = lastAs
     return d
 
   def playerachievementvalues(self):
     d = {}
     season = self.season
-    for Te, firstlastAs in self.playerachievements().items():
-        prestiges = [
-            (sum(A.prestige(season) for A in As) if As else 0)
-            for As in firstlastAs
-        ]
-        d[Te] = prestiges
+    for Te, lastAs in self.playerachievements().items():
+      if lastAs:
+        d[Te] = sum(A.prestige(season) for A in lastAs)
+      else:
+        d[Te] = 0
     return d
 
   def playerperformancesources(self, *, RPP=None):

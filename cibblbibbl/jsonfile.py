@@ -147,7 +147,7 @@ class JSONFile(JSONFileRoot):
     return super().may_changed(inst, old_data)
 
   def on_change(self):
-    print("on change", self, self.autosave)
+    #print("on change", self, self.autosave)
     if self.autosave:
       self.save()
 

@@ -25,16 +25,24 @@ class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
   registry = {}
   season = field.common.DiggedAttr("tournament", "season")
   season_nr = field.common.DiggedAttr("tournament", "season_nr")
-  subject = field.instrep.keyigetterproperty(1)
+  subject = field.instrep.keyigetterproperty(2)
   subjectId = field.common.DiggedAttr("subject", "Id")
-  tournament = field.instrep.keyigetterproperty(0)
+  tournament = field.instrep.keyigetterproperty(1)
   tournamentId = field.common.DiggedAttr("tournament", "Id")
   year = field.common.DiggedAttr("tournament", "year")
   year_nr = field.common.DiggedAttr("tournament", "year_nr")
 
+  @classmethod
+  def _get_key(cls, tournament, subject):
+    return (cls.clskey(), tournament, subject)
+
   def __init__(self, tournament, subject):
+    assert tournament is self.tournament
     self.tournament.achievements.add(self)
+    assert subject is self.subject
     self.subject.achievements.add(self)
+    #if tournament.Id == "44074":
+    #  print("init", self, self.subject, self.subject.achievements)
 
   def __init_subclass__(cls, **kwargs):
     super().__init_subclass__(**kwargs)

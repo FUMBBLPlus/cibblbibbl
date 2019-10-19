@@ -21,8 +21,8 @@ def iterexisting(cls, group_key):
     tournament = G.tournaments[tournamentId]
     subjectId = cls.subjectIdcast(p.stem)
     subject = cls.subject_factory(subjectId)
-    yield cls(tournament, subject)
-
+    A = cls(tournament, subject)
+    yield A
 
 def iterprevs(cls, group_key):
   G = cibblbibbl.group.Group(group_key)
@@ -37,9 +37,9 @@ def iterprevs(cls, group_key):
         continue
       tournament = A0.tournament
       subject = Pl
-      A1 = cls(tournament, subject)
-      if not A1.config:
-        A1.config.data = copy.deepcopy(A0.config._data)
+      A = cls(tournament, subject)
+      if not A.config:
+        A.config = copy.deepcopy(A0.config._data)
         v = A0.baseprestige * prevachievmul
-        A1.baseprestige = math.floor(v)
-      yield A1
+        A.baseprestige = math.floor(v)
+      yield A

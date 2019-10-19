@@ -1,5 +1,7 @@
 import re
 
+import sortedcontainers
+
 import pyfumbbl
 
 from . import field
@@ -28,6 +30,7 @@ class Team(metaclass=cibblbibbl.helper.InstanceRepeater):
   def __init__(self, teamId: int):
     self._matchups = {}
     self.achievements = set()
+    self.tournaments = sortedcontainers.SortedSet()
 
   @property
   def coach_name(self):
@@ -105,6 +108,31 @@ class Team(metaclass=cibblbibbl.helper.InstanceRepeater):
       return cibblbibbl.match.Match(int(next(gen)["id"]))
     except StopIteration:
       pass
+
+  def next_tournament(self, tournament, anygroup=False):
+    G = tournament.group
+    i = self.tournaments.index(tournament)
+    while True:
+      if i == len(self.tournaments) - 1:
+        return
+      else:
+        T = self.tournaments[i + 1]
+        if not anygroup or T.group is G:
+          return T
+        i += 1
+
+  def prev_tournament(self, tournament, anygroup=False):
+    G = tournament.group
+    i = self.tournaments.index(tournament)
+    while True:
+      if i == 0:
+        return
+      else:
+        T = self.tournaments[i - 1]
+        if not anygroup or T.group is G:
+          return T
+        i -= 1
+
 
   def search_player(self, name, in_pastplayers=True):
     S = set()

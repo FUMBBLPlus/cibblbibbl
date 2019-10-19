@@ -14,7 +14,8 @@ class PA_BP_Mother(PlayerAchievement):
 
   @classmethod
   def agent00(cls, group_key):
-    yield from ()
+    for cls1 in cls.children.values():
+      yield from cls1.agent00(group_key)
 
   @classmethod
   def agent01(cls, group_key):
@@ -69,15 +70,14 @@ class PA_BP_Mother(PlayerAchievement):
           A["categs"] = sorted(categories)
         yield A
 
-
-  agent99 = agent00
+  @classmethod
+  def agent99(cls, group_key):
+    for cls1 in cls.children.values():
+      yield from cls1.agent99(group_key)
 
 
 
 class PA_BP_Child(PlayerAchievement):
-
-  agent00 = PA_BP_Mother.agent00
-  agent99 = agent00
 
   default_categories = (  # TODO hardcoded; make it config based
       "SPP",
