@@ -21,7 +21,7 @@ class PA_StarPlayer(PlayerAchievement):
           #if not Pl.Id.isdecimal():  #TODO FIX
           #  continue
           d = Mu.performance(Pl)
-          prespp = d.get("prespp", 0)
+          prespp = Pl.prespp(Mu)
           postspp = prespp + d.get("spp", 0)
           if prespp < trigspp and trigspp <= postspp:
             A = cls(T, Pl)

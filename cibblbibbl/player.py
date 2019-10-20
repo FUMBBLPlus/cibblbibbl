@@ -16,6 +16,9 @@ class BasePlayer(metaclass=cibblbibbl.helper.InstanceRepeater):
   matches = field.insts.matchups_matches
   matchups = cibblbibbl.team.Team.matchups
   position = field.inst.position_by_self_positionId
+  adminspp = field.config.DDField(
+      default=lambda inst, desc: dict()
+  )
   prevId = field.config.DDField(
       default = lambda i, d: i.get_prevId(),
       default_set_delete = False,
@@ -130,6 +133,15 @@ class BasePlayer(metaclass=cibblbibbl.helper.InstanceRepeater):
   def get_prevId(self):
     return None
 
+  def prespp(self, matchup):
+    value = matchup.performance(self).get("prespp", 0)
+    matchId = matchup.match.Id
+    for matchId1, value1 in self.adminspp.items():
+      if int(matchId1) <= matchId:
+        value += value1
+    return value
+
+
 
 class MercenaryPlayer(BasePlayer):
 
@@ -162,6 +174,9 @@ class MercenaryPlayer(BasePlayer):
   @property
   def typechar(self):
     return "M"
+
+  def prespp(self, matchup):
+    return 0
 
 
 class NormalPlayer(BasePlayer):
@@ -261,6 +276,9 @@ class RaisedDeadPlayer(BasePlayer):
   def get_prevId(self):
     return self.Id.split("_")[-2]
 
+  def prespp(self, matchup):
+    return 0
+
 
 
 
@@ -294,6 +312,10 @@ class StarPlayer(BasePlayer):
   @property
   def typechar(self):
     return "S"
+
+  def prespp(self, matchup):
+    return 0
+
 
 def iterexisting():
   directory = Player.configfilepathroot()

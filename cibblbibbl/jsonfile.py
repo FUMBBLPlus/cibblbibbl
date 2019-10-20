@@ -196,6 +196,9 @@ class JSONFileContainer(JSONFileBase):
     m = self._change_method("__delitem__")
     return m(key)
 
+  def __eq__(self, other):  # has to be explicit
+    return self._data.__eq__(other)
+
   def __dir__(self):
     return self._data.__dir__()
 
@@ -222,6 +225,9 @@ class JSONFileContainer(JSONFileBase):
 
   def __len__(self):
     return self._data.__len__()
+
+  def __ne__(self, other):  # has to be explicit
+    return self._data.__ne__(other)
 
   def __repr__(self):
     return self._data.__repr__()
