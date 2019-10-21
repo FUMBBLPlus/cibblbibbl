@@ -7,6 +7,8 @@ class PA_FameKiller(PlayerAchievement):
 
   rank = 10
   victimcls = cibblbibbl.player.StarPlayer
+  sortrank = 10
+  sortrank = 1100
 
   @classmethod
   def agent01(cls, group_key):

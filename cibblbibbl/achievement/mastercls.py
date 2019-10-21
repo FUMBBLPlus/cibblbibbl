@@ -41,8 +41,6 @@ class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
     self.tournament.achievements.add(self)
     assert subject is self.subject
     self.subject.achievements.add(self)
-    #if tournament.Id == "44074":
-    #  print("init", self, self.subject, self.subject.achievements)
 
   def __init_subclass__(cls, **kwargs):
     super().__init_subclass__(**kwargs)
@@ -140,12 +138,20 @@ class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
 
   @property
   def sort_key(self):
-    Ttimesortkeyf = cibblbibbl.tournament.tools.timesortkey()
     return (
         self.group_key,
-        self.clskey(),
         self.tournament,
-        self.subjectId,
+        self.sortrank,
+        self["name"],
+        -self.baseprestige,
+        self.subject.name,
+    )
+
+  @property
+  def stack_sort_key(self):
+    return (
+        self.clskey(),
+        self.subject,
     )
 
   def decaymul(self, season=None):
@@ -168,29 +174,36 @@ class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
   def prestige(self, season=None):
     season = season or max(self.group.seasons)
     stackmuls = self["stackmul"]
-    if stackmuls == 1:
+    if len(stackmuls) == 1:
       i = 0
     else:
-      i = self.stackidx(season)
-    v = self.decayval(season) * stackmuls[0]
+      i = min(self.stackidx(season), len(stackmuls) - 1)
+    v = self.decayval(season) * stackmuls[i]
     return math.floor(v)
 
-  def stackidx(self, season=None):
+  def stack(self, season=None):
     season = season or max(self.group.seasons)
-    sort_key = self.sort_key
+    stack_sort_key = self.stack_sort_key
     L = [
       A
       for A in self.subject.achievements
-      if A.sort_key[:2] == sort_key[:2]
+      if A.stack_sort_key == stack_sort_key
+      and A.tournament.season <= season
     ]
     L.sort(reverse=True, key=lambda A: (
         A.decayval(season),
-        A.sort_key[2],
+        A.tournament,
     ))
-    return L.index(self)
+    return L
+
+  def stackidx(self, season=None):
+    return self.stack(season=season).index(self)
+
+
 
 class TeamAchievement(Achievement):
   subject_factory = cibblbibbl.team.Team
+  subject_typename = "Team"
 
   @classmethod
   def subjectIdcast(cls, subjectId):
@@ -200,6 +213,7 @@ class TeamAchievement(Achievement):
 
 class PlayerAchievement(Achievement):
   subject_factory = cibblbibbl.player.player
+  subject_typename = "Player"
   agent99 = classmethod(agent.iterprevs)
 
   @classmethod

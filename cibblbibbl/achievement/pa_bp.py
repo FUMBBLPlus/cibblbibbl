@@ -79,6 +79,8 @@ class PA_BP_Mother(PlayerAchievement):
 
 class PA_BP_Child(PlayerAchievement):
 
+  sortrank = 1005
+
   default_categories = (  # TODO hardcoded; make it config based
       "SPP",
       "Touchdowns",

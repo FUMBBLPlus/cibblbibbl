@@ -8,6 +8,7 @@ from .mastercls import TeamAchievement
 class TP_Standings(TeamAchievement):
 
   rank = 10
+  sortrank = 20
 
   @classmethod
   def agent01(cls, group_key):

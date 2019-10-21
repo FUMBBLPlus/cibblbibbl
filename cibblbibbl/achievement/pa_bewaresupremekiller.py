@@ -6,6 +6,7 @@ from .mastercls import PlayerAchievement
 class PA_BewareSupremeKiller(PlayerAchievement):
 
   rank = 20
+  sortrank = 1110
 
 
   @classmethod
@@ -18,10 +19,7 @@ class PA_BewareSupremeKiller(PlayerAchievement):
         continue
       if T.friendly == "yes":
         continue
-      for Pl0, d in T.playerperformances().items():
-        dead = d.get("dead")
-        if not dead:
-          continue
+      for Pl0, dead in T.deadplayers().items():
         for A0 in Pl0.achievements:
           if A0.clskey() == "pa_superstarplayer":
             break  # TODO: only awarded ones

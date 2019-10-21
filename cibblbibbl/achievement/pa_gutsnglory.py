@@ -6,6 +6,7 @@ from .mastercls import PlayerAchievement
 class PA_GutsNGlory(PlayerAchievement):
     # added manually
   rank = 10
+  sortrank = 1009
 
 
 cls = PA_GutsNGlory

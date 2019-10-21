@@ -100,6 +100,9 @@ class CBETournament(default.AbstractTournament):
   def bestplayers(self):
     return {}
 
+  def deadplayers(self):
+    return {}
+
   def extraplayerperformances(self, join=False):
     return {}
 

@@ -1,3 +1,4 @@
+from . import awards
 from . import bestplayers
 from . import playerperformances
 from . import prestiges

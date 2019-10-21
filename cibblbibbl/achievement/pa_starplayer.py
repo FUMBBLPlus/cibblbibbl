@@ -6,6 +6,7 @@ from .mastercls import PlayerAchievement
 class PA_StarPlayer(PlayerAchievement):
 
   rank = 10
+  sortrank = 1013
 
   @classmethod
   def agent01(cls, group_key):

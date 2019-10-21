@@ -6,6 +6,7 @@ from .mastercls import PlayerAchievement
 class PA_AerodynamicAim(PlayerAchievement):
 
   rank = 10
+  sortrank = 1020
 
   @classmethod
   def agent01(cls, group_key):

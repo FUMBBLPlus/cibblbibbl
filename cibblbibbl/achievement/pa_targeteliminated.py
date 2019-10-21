@@ -6,6 +6,7 @@ from .mastercls import PlayerAchievement
 class PA_TargetEliminated(PlayerAchievement):
 
   rank = 30
+  sortrank = 1120
 
 
   @classmethod
@@ -18,10 +19,7 @@ class PA_TargetEliminated(PlayerAchievement):
         continue
       if T.friendly == "yes":
         continue
-      for Pl0, d in T.playerperformances().items():
-        dead = d.get("dead")
-        if not dead:
-          continue
+      for Pl0, dead in T.deadplayers().items():
         for A0 in Pl0.achievements:
           if 10 <= A0.baseprestige:
             break

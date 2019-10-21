@@ -372,6 +372,16 @@ class Tournament(BaseTournament):
     dPP = self.playerperformances()
     return performance.bestperformers(dPP)
 
+  def deadplayers(self, *, RPP=None):
+    RaisedDeadPlayer = cibblbibbl.player.RaisedDeadPlayer
+    StarPlayer = cibblbibbl.player.StarPlayer
+    RPP = RPP or self.rawplayerperformances()
+    return {
+        Pl: d["dead"] for Pl, d in RPP.items()
+        if d.get("dead")
+        and not Pl.nexts
+    }
+
   def extraplayerperformances(self, join=False):
     dPP = self.playerperformances()
     return performance.extraperformances(dPP, join=join)

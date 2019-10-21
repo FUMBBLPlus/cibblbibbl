@@ -6,6 +6,7 @@ from .mastercls import TeamAchievement
 class TA_CrushingVictory(TeamAchievement):
 
   rank = 10
+  sortrank = 30
 
   @classmethod
   def agent01(cls, group_key):
