@@ -3,7 +3,7 @@ import cibblbibbl
 
 if __name__ == "__main__":
   G = cibblbibbl.CIBBL
-  show_team_id = True
+  show_id = True
   Ts = sorted(G.tournaments.values())
   m_exp = cibblbibbl.tournament.export.standings.plaintext
   f_exp = m_exp.export
@@ -11,7 +11,7 @@ if __name__ == "__main__":
   for T in Ts:
     if not T.ismain:
       continue
-    s0 = f_exp(T, show_team_id=show_team_id)
+    s0 = f_exp(T, show_id=show_id)
         # TODO: handler matching standings func
     s1 = ""
     if not T.abstract:

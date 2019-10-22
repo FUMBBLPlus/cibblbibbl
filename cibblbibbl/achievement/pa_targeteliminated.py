@@ -25,6 +25,8 @@ class PA_TargetEliminated(PlayerAchievement):
             break
         else:
           continue
+        if A0["status"] != "awarded":
+          continue
         matchId, half, turn, reason, killerId = dead
         if killerId:
           Pl = cibblbibbl.player.player(killerId)

@@ -103,17 +103,7 @@ class PA_BP_Child(PlayerAchievement):
 
 class PA_BP_Youngbloods(PA_BP_Child): pass
 
-class PA_BPA_Bronze(PA_BP_Child): pass
-class PA_BPA_Clay(PA_BP_Child): pass
-class PA_BPA_Cloth(PA_BP_Child): pass
-class PA_BPA_Copper(PA_BP_Child): pass
-class PA_BPA_Gold(PA_BP_Child): pass
-class PA_BPA_Granite(PA_BP_Child): pass
-class PA_BPA_Iron(PA_BP_Child): pass
-class PA_BPA_Marble(PA_BP_Child): pass
-class PA_BPA_Silver(PA_BP_Child): pass
-class PA_BPA_Tin(PA_BP_Child): pass
-class PA_BPA_Wood(PA_BP_Child): pass
+class PA_BPW_ChildOfWinter(PA_BP_Child): pass
 
 class PA_BPR_Albion_Norsca(PA_BP_Child): pass
 class PA_BPR_AthelLoren(PA_BP_Child): pass
@@ -163,5 +153,18 @@ class PA_BPS_TGB(PA_BP_Child): pass
 class PA_BPS_TGW(PA_BP_Child): pass
 class PA_BPS_VC(PA_BP_Child): pass
 class PA_BPS_YS(PA_BP_Child): pass
+
+class PA_BPA_Bronze(PA_BP_Child): pass
+class PA_BPA_Clay(PA_BP_Child): pass
+class PA_BPA_Cloth(PA_BP_Child): pass
+class PA_BPA_Copper(PA_BP_Child): pass
+class PA_BPA_Gold(PA_BP_Child): pass
+class PA_BPA_Granite(PA_BP_Child): pass
+class PA_BPA_Iron(PA_BP_Child): pass
+class PA_BPA_Marble(PA_BP_Child): pass
+class PA_BPA_Silver(PA_BP_Child): pass
+class PA_BPA_Tin(PA_BP_Child): pass
+class PA_BPA_Wood(PA_BP_Child): pass
+
 
 cls = PA_BP_Mother

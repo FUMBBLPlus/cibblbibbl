@@ -3,7 +3,9 @@ import collections
 import cibblbibbl
 
 
-def export(T):
+def export(T, *,
+    show_id = False,
+):
   dPAv1 = T.playerachievementvalues()
   dPP = T.playerperformances()
   achievements = sorted(T.achievements)
@@ -20,46 +22,63 @@ def export(T):
   standings = list(enumerate(T.standings(), 1))
   for nr, d in reversed(standings):
     Te = d["team"]
-    nrstr = f'{nr}{nrsuffix.get(nr, "th")}'
-    parts.append(f'{nrstr} place: {Te.name}')
+    nrstr = f'{nr}{nrsuffix.get(nr, "th")} place: '
+    idstr = (f'[{Te.Id}] ' if show_id else "")
+    parts.append(nrstr + idstr + Te.name)
     TP_matchv, TP_standingsv = 0, 0
     TP_match = d_achievements.get("tp_match", {}).get(Te)
     if TP_match:
       TP_matchv = TP_match.prestige(T.season)
-    TP_standings = d_achievements.get("tp_standings").get(Te)
+    TP_standings0 = d_achievements.get("tp_standings", {})
+    TP_standings = TP_standings0.get(Te)
     if TP_standings:
       TP_standingsv = TP_standings.prestige(T.season)
     prestige = TP_matchv + TP_standingsv
-    preststr = f'Prestige Points Earned: {prestige}'
-    dTPAv1 = dPAv1[Te]
-    T0 = prev_tournament[Te]
-    if T0:
-      dPAv0 = T0.playerachievementvalues()
-      dTPAv0 = dPAv0[Te]
-    else:
-      dTPAv0 = 0
-    if dTPAv1 - dTPAv0:
-        sign = ("+" if -1 < dTPAv1 - dTPAv0 else "")
-        preststr += f' (and {sign}{dTPAv1 - dTPAv0} Achiev.)'
-    parts.append(preststr)
-    parts.append("")
+    if T.friendly == "no":
+      preststr = f'Prestige Points Earned: {prestige}'
+      dTPAv1 = dPAv1[Te]
+      T0 = prev_tournament[Te]
+      if T0:
+        dPAv0 = T0.playerachievementvalues()
+        dTPAv0 = dPAv0[Te]
+      else:
+        dTPAv0 = 0
+      if dTPAv1 - dTPAv0:
+          sign = ("+" if -1 < dTPAv1 - dTPAv0 else "")
+          preststr += f' (and {sign}{dTPAv1 - dTPAv0} Achiev.)'
+      parts.append(preststr)
+      parts.append("")
 
   parts.append("")
 
+  cls_StarPlayer = cibblbibbl.player.StarPlayer
+  cls_MercenaryPlayer = cibblbibbl.player.MercenaryPlayer
   prev_clskey = None
   for i, A in enumerate(sorted(
       A for A in T.achievements
       if not A.clskey().startswith("tp")
+      and A["status"] in {"awarded", "proposed"}
   )):
     clskey = A.clskey()
     if clskey != prev_clskey:
       if i:
         parts.append("")
       parts.append(f'=== {A["name"]} ({A.baseprestige}) ===')
-    if clskey.startswith("ta"):
-      s = f'{A.subject.name}'
+    if show_id:
+      s = f'[{A.subject.Id}] '
     else:
-      s = f'{A.subject.name} ({dPP[A.subject]["team"].name})'
+      s = ""
+    if clskey.startswith("ta"):
+      s += f'{A.subject.name}'
+    else:
+      Pl = A.subject
+      s += f'{Pl.name} '
+      if isinstance(Pl, cls_StarPlayer):
+        s += "(Star Player)"
+      elif isinstance(Pl, cls_MercenaryPlayer):
+        s += "(Mercenary)"
+      else:
+        s += f'({dPP[Pl]["team"].name})'
       if clskey in (
           "pa_bewaresupremekiller",
           "pa_targeteliminated",
@@ -86,7 +105,6 @@ def export(T):
       else:
         dpstr = ""
       s += f' (Achievement already earned{dpstr})'
-    #parts.append(statidx, A.prestige(T.season), s)
     parts.append(s)
     prev_clskey = clskey
 

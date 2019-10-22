@@ -20,11 +20,8 @@ class PA_FameKiller(PlayerAchievement):
         continue
       if T.friendly == "yes":
         continue
-      for Pl0, d in T.playerperformances().items():
+      for Pl0, dead in T.deadplayers().items():
         if not isinstance(Pl0, cls.victimcls):
-          continue
-        dead = d.get("dead")
-        if not dead:
           continue
         matchId, half, turn, reason, killerId = dead
         if killerId:

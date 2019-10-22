@@ -14,10 +14,6 @@ class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
 
   rank = 0
 
-  baseprestige = field.config.DDField(key="prestige",
-    get_f_typecast = int,
-    set_f_typecast = lambda x: math.floor(float(x)),
-  )
   config = field.config.CachedConfig()
   defaultconfig = field.config.CachedConfig()
   group = field.inst.group_by_self_group_key
@@ -37,6 +33,7 @@ class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
     return (cls.clskey(), tournament, subject)
 
   def __init__(self, tournament, subject):
+    self._prev, self._nexts = None, frozenset()
     assert tournament is self.tournament
     self.tournament.achievements.add(self)
     assert subject is self.subject
@@ -118,6 +115,16 @@ class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
     return self._KEY
 
   @property
+  def baseprestige(self):
+    return self["prestige"]
+  @baseprestige.setter
+  def baseprestige(self, value):
+    self["prestige"] = math.floor(float(value))
+  @baseprestige.deleter
+  def baseprestige(self):
+    del self["prestige"]
+
+  @property
   def configfilepath(self):
     p = (
       cibblbibbl.data.path
@@ -135,6 +142,14 @@ class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
   @property
   def defaultconfigfilepath(self):
     return self.defaultconfigfilepath_of_group(self.group_key)
+
+  @property
+  def nexts(self):
+    return self._nexts
+
+  @property
+  def prev(self):
+    return self._prev
 
   @property
   def sort_key(self):
@@ -171,7 +186,13 @@ class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
     season = season or max(self.group.seasons)
     return self.baseprestige * self.decaymul(season)
 
-  def prestige(self, season=None):
+  def prestige(self, season=None, awarded=False):
+    if awarded:
+      statuses = {"awarded"}
+    else:
+      statuses = {"awarded", "proposed"}
+    if self["status"] not in statuses:
+      return 0
     season = season or max(self.group.seasons)
     stackmuls = self["stackmul"]
     if len(stackmuls) == 1:

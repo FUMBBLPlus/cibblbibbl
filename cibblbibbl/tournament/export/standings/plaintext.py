@@ -4,7 +4,7 @@ import cibblbibbl
 
 
 def export(T, *,
-    show_team_id = False,
+    show_id = False,
 ):
   cto_trans = {-1: "", -112: "???"}  # -112: missing
   hth_trans = {-1: "", 0: "--"}
@@ -23,7 +23,7 @@ def export(T, *,
       ("CAD", "i", "r", 3,),
       ("CTO", "i", "r", 3,),
   ]
-  if not show_team_id:
+  if not show_id:
     del params[1]
   table = texttable.Texttable()
   table.set_cols_dtype([t[1] for t in params])
@@ -57,7 +57,7 @@ def export(T, *,
         r["casdiff"],
         cto_trans.get(r["cto"], r["cto"]),
     ]
-    if not show_team_id:
+    if not show_id:
       del row[1]
     rows.append(row)
   rows.insert(0, [t[0] for t in params])

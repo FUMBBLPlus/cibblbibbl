@@ -22,8 +22,10 @@ class PA_BewareSupremeKiller(PlayerAchievement):
       for Pl0, dead in T.deadplayers().items():
         for A0 in Pl0.achievements:
           if A0.clskey() == "pa_superstarplayer":
-            break  # TODO: only awarded ones
+            break
         else:
+          continue
+        if A0["status"] != "awarded":
           continue
         matchId, half, turn, reason, killerId = dead
         if killerId:

@@ -250,6 +250,20 @@ class RaisedDeadPlayer(BasePlayer):
     return self.Id.split("_")[0].split("-")[1]
 
   @property
+  def prevdeadmatchId(self):
+    matchId = self.config.get("prevdeadmatchId")
+    if matchId:
+      return matchId
+    if isinstance(self.prev, RaisedDeadPlayer):
+      return self.prev.prevdeadmatchId
+  prevdeadmatchId = prevdeadmatchId.setter(
+      field.config.setter("prevdeadmatchId")
+  )
+  prevdeadmatchId = prevdeadmatchId.deleter(
+      field.config.deleter("prevdeadmatchId")
+  )
+
+  @property
   def sort_key(self):
     nextIds = self._nextIds
     if nextIds:

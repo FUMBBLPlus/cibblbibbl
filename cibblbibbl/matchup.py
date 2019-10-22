@@ -73,8 +73,10 @@ class BaseMatchup(metaclass=cibblbibbl.helper.InstanceRepeater):
         Pl._typechar = d1["type"]
         if isinstance(Pl, RaisedDeadPlayer):
           if self.match:
-            if not Pl.prevdeadmatchId:
-              Pl.prevdeadmatchId = self.match.Id
+            players = {Pl,} | Pl.nexts
+            for Pl1 in players:
+              if not Pl1.prevdeadmatchId:
+                Pl1.prevdeadmatchId = self.match.Id
             if not Pl.prevreason:
               Re = self.match.replay
               with Re:
