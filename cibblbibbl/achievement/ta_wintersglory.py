@@ -2,6 +2,7 @@ import collections
 import cibblbibbl
 import itertools
 
+from . import exporttools
 from .mastercls import TeamAchievement
 
 
@@ -33,6 +34,12 @@ class TA_WintersGlory(TeamAchievement):
         if A["status"] == "proposed":
           A["status"] = "proposed"  # explicit
         yield A
+
+  def export_plaintext(self, show_Ids=False):
+    s0 = exporttools.idpart(self, show_Ids)
+    s1 = str(self.subject)
+    s2 = exporttools.alreadyearned(self)
+    return s0 + s1 + s2
 
 
 cls = TA_WintersGlory

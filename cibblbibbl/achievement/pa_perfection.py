@@ -1,11 +1,21 @@
 import collections
 import cibblbibbl
 
+from .. import field
 from .mastercls import PlayerAchievement
+from .pa_aerodynamicaim import PA_AerodynamicAim
 
 class PA_Perfection(PlayerAchievement):
 
   rank = 10
+  sortrank = 1020
+
+  match = field.instrep.keyigetterproperty(3)
+
+  argsnorm = PA_AerodynamicAim.argsnorm
+  configfileargstrs = PA_AerodynamicAim.configfileargstrs
+  export_plaintext = PA_AerodynamicAim.export_plaintext
+  sort_key = PA_AerodynamicAim.sort_key
 
   @classmethod
   def agent01(cls, group_key):
@@ -23,16 +33,10 @@ class PA_Perfection(PlayerAchievement):
           d = Mu.performance(Pl)
           larson = all(d.get(k, 0) for k in larsonkeys)
           if larson:
-            A = cls(T, Pl)
+            A = cls(T, Pl, Mu.match)
             if A["status"] == "proposed":
               A["prestige"] = value
-              A["matchup"] = list(Mu.keys)
-              Te = Mu.team_of_player(Pl)
-              if Te:
-                A["team"] = str(Te.Id)
               A["status"] = "proposed"  # explicit
-              if Mu.excluded == "yes":
-                A["matchup_excluded"] = "yes"
             yield A
 
 

@@ -1,16 +1,25 @@
 import collections
 import cibblbibbl
 
+from .. import field
+from . import exporttools
 from .mastercls import TeamAchievement
+from .pa_aerodynamicaim import PA_AerodynamicAim
 
 class TA_CrushingVictory(TeamAchievement):
 
   rank = 10
   sortrank = 30
 
+  match = field.instrep.keyigetterproperty(3)
+
+  configfileargstrs = PA_AerodynamicAim.configfileargstrs
+  sort_key = PA_AerodynamicAim.sort_key
+
   @classmethod
   def agent01(cls, group_key):
     C = cls.defaultconfig_of_group(group_key)._data
+    value = C["value"]
     G = cibblbibbl.group.Group(group_key)
     for T in G.tournaments.values():
       if T.abstract:
@@ -19,8 +28,9 @@ class TA_CrushingVictory(TeamAchievement):
         continue
       if T.friendly == "yes":
         continue
-      prestiges = collections.defaultdict(lambda: 0)
+      prestiges = collections.defaultdict(list)
       for Mu in T.matchups:
+        Ma = Mu.match
         if Mu.abstract:
           continue
         if Mu.excluded == "yes":
@@ -34,15 +44,24 @@ class TA_CrushingVictory(TeamAchievement):
           oppotds = Mu.performance(oppoTe).get("td", 0)
           if C["oppomaxtds"] < oppotds:
             continue
-          prestiges[Te] += C["value"]
-      for Te, prestige in prestiges.items():
-        if not prestige:
-          continue
-        A = cls(T, Te)
-        if A["status"] == "proposed":
-          A["prestige"] = prestige
-          A["status"] = "proposed"  # explicit; easier to edit
-        yield A
+          A = cls(T, Te, Ma)
+          if A["status"] == "proposed":
+            A["prestige"] = value
+            A["status"] = "proposed"  # explicit; easier to edit
+          yield A
 
+  @classmethod
+  def argsnorm(cls, args):
+    args = list(args)
+    args[0] = cibblbibbl.team.Team(int(args[0]))
+    args[1] = cibblbibbl.match.Match(args[1])
+    return args
+
+  def export_plaintext(self, show_Ids=False):
+    s0 = exporttools.idpart(self, show_Ids)
+    s1 = str(self.subject)
+    s2 = f' in match #{self.match.Id}'
+    s3 = exporttools.alreadyearned(self)
+    return s0 + s1 + s2 + s3
 
 cls = TA_CrushingVictory

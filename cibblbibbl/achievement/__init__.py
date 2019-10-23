@@ -15,7 +15,7 @@ from . import *
 Achievement = mastercls.Achievement
 
 
-def collect(group_key):
+def collect(group_key, rank=None):
   return {
       a
       for cls in sorted(
@@ -23,14 +23,15 @@ def collect(group_key):
           key = lambda c: c.rank
       )
       for a in cls.collect(group_key)
+      if (True if rank is None else (a.rank == rank))
   }
 
 
-def collectall():
+def collectall(rank=None):
   return {
       a
       for key in cibblbibbl.group.Group.__members__
-      for a in collect(key[0])
+      for a in collect(key[0], rank=rank)
   }
 
 

@@ -2,6 +2,7 @@ import collections
 import cibblbibbl
 import itertools
 
+from . import exporttools
 from .mastercls import TeamAchievement
 
 
@@ -33,8 +34,16 @@ class TP_Standings(TeamAchievement):
           A = cls(T, Te)
           if A["status"] == "proposed":
             A["prestige"] = prestige
+            A["nr"] = nr
             A["status"] = "proposed"  # explicit
           yield A
+
+  def export_plaintext(self, show_Ids=False):
+    s0 = f'{self["nr"]:>2}. '
+    s1 = exporttools.idpart(self, show_Ids)
+    s2 = str(self.subject)
+    s3 = f' ({self.prestige(self.season)} Prestige Points)'
+    return s0 + s1 + s2 + s3
 
 
 cls = TP_Standings

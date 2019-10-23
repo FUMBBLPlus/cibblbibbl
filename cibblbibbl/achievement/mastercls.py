@@ -29,13 +29,14 @@ class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
   year_nr = field.common.DiggedAttr("tournament", "year_nr")
 
   @classmethod
-  def _get_key(cls, tournament, subject):
-    return (cls.clskey(), tournament, subject)
+  def _get_key(cls, tournament, *args):
+    return (cls.clskey(), tournament) + tuple(args)
 
-  def __init__(self, tournament, subject):
+  def __init__(self, tournament, *args):
     self._prev, self._nexts = None, frozenset()
     assert tournament is self.tournament
     self.tournament.achievements.add(self)
+    subject = args[0]
     assert subject is self.subject
     self.subject.achievements.add(self)
 
@@ -64,6 +65,15 @@ class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
 
   def __setitem__(self, key, value):
     return self.config.__setitem__(key, value)
+
+  def __str__(self):
+    return f'{self["name"]}: {self.export_plaintext()}'
+
+  def get(self, key, default=None):
+    try:
+      return self[key]
+    except KeyError:
+      return default
 
   __lt__ = field.ordering.PropTupCompar("sort_key")
   __le__ = field.ordering.PropTupCompar("sort_key")
@@ -125,6 +135,10 @@ class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
     del self["prestige"]
 
   @property
+  def configfileargstrs(self):
+    return [str(k) for k in self.key[3:]]
+
+  @property
   def configfilepath(self):
     p = (
       cibblbibbl.data.path
@@ -136,7 +150,16 @@ class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
       p /= f'{self.tournament.Id:0>8}'
     else:
       p /= f'{self.tournament.Id}'
-    p /= f'{str(self.subject.Id):0>8}.json'
+    stemparts = []
+    if (
+        isinstance(self.subject.Id, int)
+        or self.subject.Id.isdecimal()
+    ):
+      stemparts.append(f'{self.subject.Id:0>8}')
+    else:
+      stemparts.append(f'{self.subject.Id}')
+    stemparts.extend(self.configfileargstrs)
+    p /= f'{"~".join(stemparts)}.json'
     return p
 
   @property
@@ -195,10 +218,12 @@ class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
       return 0
     season = season or max(self.group.seasons)
     stackmuls = self["stackmul"]
-    if len(stackmuls) == 1:
-      i = 0
+    try:
+      i_stackidx = self.stackidx(season)
+    except ValueError:
+      return 0
     else:
-      i = min(self.stackidx(season), len(stackmuls) - 1)
+      i = min(i_stackidx, len(stackmuls) - 1)
     v = self.decayval(season) * stackmuls[i]
     return math.floor(v)
 
@@ -209,11 +234,14 @@ class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
       A
       for A in self.subject.achievements
       if A.stack_sort_key == stack_sort_key
+      and A.group is self.group
       and A.tournament.season <= season
     ]
-    L.sort(reverse=True, key=lambda A: (
-        A.decayval(season),
-        A.tournament,
+    L.sort(key=lambda A: (
+        -A.decayval(season),
+        A.tournament.group_key,
+        -A.tournament.sortId,
+        A.sort_key,
     ))
     return L
 
@@ -223,20 +251,22 @@ class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
 
 
 class TeamAchievement(Achievement):
-  subject_factory = cibblbibbl.team.Team
   subject_typename = "Team"
 
   @classmethod
-  def subjectIdcast(cls, subjectId):
-    return int(subjectId)
+  def argsnorm(cls, args):
+    args = list(args)
+    args[0] = cibblbibbl.team.Team(int(args[0]))
+    return args
 
 
 
 class PlayerAchievement(Achievement):
-  subject_factory = cibblbibbl.player.player
   subject_typename = "Player"
   agent99 = classmethod(agent.iterprevs)
 
   @classmethod
-  def subjectIdcast(cls, subjectId):
-    return str(subjectId)
+  def argsnorm(cls, args):
+    args = list(args)
+    args[0] = cibblbibbl.player.player(args[0])
+    return args

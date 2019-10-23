@@ -48,8 +48,8 @@ class Group(metaclass=cibblbibbl.helper.InstanceRepeater):
   def season_names(self):
     return tuple(self.config["seasons"])
 
-  def register_achievements(self):
-    cibblbibbl.achievement.collect(self.key)
+  def register_achievements(self, rank=None):
+    cibblbibbl.achievement.collect(self.key, rank=rank)
 
   def register_matchups(self):
     exc_teams = self.excluded_teams

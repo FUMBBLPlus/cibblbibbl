@@ -3,10 +3,52 @@ import collections
 import cibblbibbl
 
 
+
+def _diedstr(dRPP, killerId, reason):
+  reasontrans = {"chainsaw": "sawed", "bomb": "bombed"}
+  if killerId:
+    killer = cibblbibbl.player.player(killerId)
+    oppoTe = dRPP[killer]["team"]
+    return (
+        f', {reasontrans.get(reason, reason)} '
+        f'by {killer.name} ({_teamstr(killer, oppoTe)})'
+    )
+  else:
+    return f', died by {reason}'
+
+
+def _playersseq(T, source_playersseq):
+  StarPlayer = cibblbibbl.player.StarPlayer
+  players = []
+  for Pl in sorted(source_playersseq, key=lambda Pl: Pl.name):
+    if Pl.achievements:
+      prestige = sum(
+          A.prestige(T.season) for A in Pl.achievements
+      )
+      if prestige or isinstance(Pl, StarPlayer):
+        players.append([Pl, prestige])
+    elif isinstance(Pl, StarPlayer):
+      players.append([Pl, 0])
+  return players
+
+
+def _teamstr(player, team):
+  if isinstance(player, cibblbibbl.player.StarPlayer):
+    return "Star Player"
+  elif isinstance(player, cibblbibbl.player.MercenaryPlayer):
+    return "Mercenary"
+  else:
+    return team
+
+
 def export(T, *,
-    show_id = False,
+    show_Ids = False,
 ):
+  cls_StarPlayer = cibblbibbl.player.StarPlayer
+  cls_RaisedDeadPlayer = cibblbibbl.player.RaisedDeadPlayer
+  dTAv1 = T.teamachievementvalues(False, False)
   dPAv1 = T.playerachievementvalues()
+  dRPP = T.rawplayerperformances()
   dPP = T.playerperformances()
   achievements = sorted(T.achievements)
   d_achievements = collections.defaultdict(dict)
@@ -23,19 +65,18 @@ def export(T, *,
   for nr, d in reversed(standings):
     Te = d["team"]
     nrstr = f'{nr}{nrsuffix.get(nr, "th")} place: '
-    idstr = (f'[{Te.Id}] ' if show_id else "")
+    idstr = (f'[{Te.Id}] ' if show_Ids else "")
     parts.append(nrstr + idstr + Te.name)
-    TP_matchv, TP_standingsv = 0, 0
-    TP_match = d_achievements.get("tp_match", {}).get(Te)
-    if TP_match:
-      TP_matchv = TP_match.prestige(T.season)
-    TP_standings0 = d_achievements.get("tp_standings", {})
-    TP_standings = TP_standings0.get(Te)
-    if TP_standings:
-      TP_standingsv = TP_standings.prestige(T.season)
-    prestige = TP_matchv + TP_standingsv
+    tp_keys = ("tp_admin", "tp_match", "tp_standings")
+    dtp = {k: 0 for k in tp_keys}
+    for k in dtp:
+      A = d_achievements.get(k, {}).get(Te)
+      if A:
+        dtp[k] = A.prestige(T.season)
+    prestige = sum(dtp.values())
     if T.friendly == "no":
       preststr = f'Prestige Points Earned: {prestige}'
+      dTTAv1 = dTAv1[Te]
       dTPAv1 = dPAv1[Te]
       T0 = prev_tournament[Te]
       if T0:
@@ -43,69 +84,88 @@ def export(T, *,
         dTPAv0 = dPAv0[Te]
       else:
         dTPAv0 = 0
-      if dTPAv1 - dTPAv0:
-          sign = ("+" if -1 < dTPAv1 - dTPAv0 else "")
-          preststr += f' (and {sign}{dTPAv1 - dTPAv0} Achiev.)'
+      achiev = dTTAv1 + dTPAv1 - dTPAv0
+      if achiev:
+          sign = ("+" if -1 < achiev else "")
+          preststr += f' (and {sign}{achiev} Achiev.)'
       parts.append(preststr)
       parts.append("")
 
   parts.append("")
 
-  cls_StarPlayer = cibblbibbl.player.StarPlayer
-  cls_MercenaryPlayer = cibblbibbl.player.MercenaryPlayer
   prev_clskey = None
   for i, A in enumerate(sorted(
       A for A in T.achievements
       if not A.clskey().startswith("tp")
       and A["status"] in {"awarded", "proposed"}
+      and not isinstance(A.subject, cls_RaisedDeadPlayer)
   )):
     clskey = A.clskey()
     if clskey != prev_clskey:
       if i:
         parts.append("")
       parts.append(f'=== {A["name"]} ({A.baseprestige}) ===')
-    if show_id:
-      s = f'[{A.subject.Id}] '
-    else:
+      prev_clskey = clskey
+    parts.append(A.export_plaintext(show_Ids=show_Ids))
+
+
+  players = _playersseq(T, T.deadplayers())
+  if players:
+    parts.append("")
+    parts.append("*** Famous and Died ***")
+    for Pl, prestige in players:
+      d = dPP[Pl]
+      matchId, half, turn, reason, killerId = d["dead"]
+      Ma = cibblbibbl.match.Match(matchId)
+      teams = Ma.teams
+      Te = d["team"]
       s = ""
-    if clskey.startswith("ta"):
-      s += f'{A.subject.name}'
-    else:
-      Pl = A.subject
-      s += f'{Pl.name} '
-      if isinstance(Pl, cls_StarPlayer):
-        s += "(Star Player)"
-      elif isinstance(Pl, cls_MercenaryPlayer):
-        s += "(Mercenary)"
-      else:
-        s += f'({dPP[Pl]["team"].name})'
-      if clskey in (
-          "pa_bewaresupremekiller",
-          "pa_targeteliminated",
-      ):
-        victim = cibblbibbl.player.player(A["victimId"])
-        s += f' ({A["reason"]} {victim.name})'
-    try:
-      categs = A["categs"]
-    except KeyError:
-      pass
-    else:
-      s += f' ({", ".join(sorted(categs))})'
-    stack = A.stack(T.season)
-    if 1 < len(stack):
-      statidx = A.stackidx()
-      p0 = sum(
-          A1.prestige(T.season.prev)
-          for A1 in stack if A1 is not A
-      )
-      p1 = sum(A1.prestige(T.season) for A1 in stack)
-      dp = p1 - p0
-      if dp:
-        dpstr = f' {("+" if -1 < dp else "")}{dp}'
-      else:
-        dpstr = ""
-      s += f' (Achievement already earned{dpstr})'
-    parts.append(s)
-    prev_clskey = clskey
+      if show_Ids:
+        s += f'[{Pl.Id}] '
+      s += f'{Pl.name} ({_teamstr(Pl, Te)})'
+      if prestige:
+        s += f' ({prestige} Achiev.)'
+      s += _diedstr(dRPP, killerId, reason)
+      s += f' in match #{matchId}'
+      parts.append(s)
+
+  transferred = T.transferredplayers()
+  players = _playersseq(T, transferred)
+  if players:
+    parts.append("")
+    parts.append("*** Transferred ***")
+    for Pl, prestige in players:
+      matchId, half, turn, reason, killerId = transferred[Pl]
+      Ma = cibblbibbl.match.Match(matchId)
+      teams = Ma.teams
+      Te = dRPP[Pl]["team"]
+      s = ""
+      if show_Ids:
+        s += f'[{Pl.Id}] '
+      s += f'{Pl.name} ({_teamstr(Pl, Te)})'
+      if prestige:
+        s += f' ({prestige} Achiev.)'
+      s += _diedstr(dRPP, killerId, reason)
+      nextsparts = []
+      for Pl1 in Pl.nexts:
+          if isinstance(Pl1, cls_RaisedDeadPlayer):
+              Pl1 = Pl1.next
+          nextTe = dRPP[Pl1]["team"]
+          nextsparts.append(f'to {nextTe} as {Pl1}')
+      s += f', joined {" and ".join(nextsparts)}'
+      parts.append(s)
+
+  players = _playersseq(T, T.retiredplayers())
+  if players:
+    parts.append("")
+    parts.append("*** Famous Retired ***")
+    for Pl, prestige in players:
+      d = dPP[Pl]
+      Te = d["team"]
+      s = ""
+      if show_Ids:
+        s += f'[{Pl.Id}] '
+      s += f'{Pl.name} ({Te.name}) (-{prestige} Achiev.)'
+      parts.append(s)
 
   return "\n".join(parts)

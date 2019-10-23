@@ -412,6 +412,8 @@ class Tournament(BaseTournament):
         d[Te] = None
     return d
 
+
+
   def playerachievements(self):
     filter_f = lambda Pl: Pl.permanent
     d = {}
@@ -545,6 +547,19 @@ class Tournament(BaseTournament):
 
     return d
 
+  def retiredplayers(self, last=False, RPP=None):
+    RaisedDeadPlayer = cibblbibbl.player.RaisedDeadPlayer
+    StarPlayer = cibblbibbl.player.StarPlayer
+    RPP = RPP or self.rawplayerperformances()
+    S = {
+        Pl for Pl, d in RPP.items()
+        if not isinstance(Pl, (RaisedDeadPlayer, StarPlayer))
+        and d.get("retired")
+    }
+    if not last:
+      S = {Pl for Pl in S if not RPP[Pl].get("retiredlast")}
+    return S
+
   def standings(self):
     tpkeys = (
         "cas", "casdiff",
@@ -636,7 +651,43 @@ class Tournament(BaseTournament):
         # close defaultdict so it can raise KeyError exceptions
     return [S[teamId] for teamId in order if teamId in S]
 
+  def teamachievements(self):
+    d = {Te: set() for Te in self.teams}
+    for A in self.achievements:
+      if A.subject_typename != "Team":
+        continue
+      Te = A.subject
+      d[Te].add(A)
+    return d
 
+  def teamachievementvalues(self,
+      with_match = True,
+      with_standings = True,
+  ):
+    d = {}
+    season = self.season
+    excluded_clskeys = set()
+    if not with_match:
+      excluded_clskeys.add("tp_match")
+    if not with_standings:
+      excluded_clskeys.add("tp_standings")
+    for Te, As in self.teamachievements().items():
+      As = {A for A in As if A.clskey() not in excluded_clskeys}
+      if As:
+        d[Te] = sum(A.prestige(season) for A in As)
+      else:
+        d[Te] = 0
+    return d
+
+  def transferredplayers(self, *, RPP=None):
+    RaisedDeadPlayer = cibblbibbl.player.RaisedDeadPlayer
+    StarPlayer = cibblbibbl.player.StarPlayer
+    RPP = RPP or self.rawplayerperformances()
+    return {
+        Pl: d["dead"] for Pl, d in RPP.items()
+        if d.get("dead")
+        and Pl.nexts
+    }
 
 
 def init(group_key, Id):

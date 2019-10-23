@@ -19,9 +19,13 @@ def iterexisting(cls, group_key):
     if tournamentId.isdecimal():
       tournamentId = tournamentId.lstrip("0")
     tournament = G.tournaments[tournamentId]
-    subjectId = cls.subjectIdcast(p.stem)
-    subject = cls.subject_factory(subjectId)
-    A = cls(tournament, subject)
+    args = p.stem.split("~")
+    args = [
+        (a.lstrip("0") if a.isdecimal() else a)
+        for a in args
+    ]
+    args = cls.argsnorm(args)
+    A = cls(tournament, *args)
     yield A
 
 def iterprevs(cls, group_key):
@@ -43,11 +47,14 @@ def iterprevs(cls, group_key):
       T0 = A0.tournament
       prevsubject = A0.subject
       subject = Pl
-      A = cls(T1, subject)
+      args = A0.key[3:]
+      A = cls(T1, subject, *args)
       if not A.config:
         A.config = copy.deepcopy(A0.config._data)
         v = A0.baseprestige * prevachievmul
         A.baseprestige = math.floor(v)
-        A._prev = A0
-        A0._nexts = A0._nexts | {A,}
+        A.config["prev_tournamentId"] = T0.Id
+        A.config["prev_subjectId"] = prevsubject.Id
+      A._prev = A0
+      A0._nexts = A0._nexts | {A,}
       yield A

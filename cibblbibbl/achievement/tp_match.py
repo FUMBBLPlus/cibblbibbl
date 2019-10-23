@@ -1,6 +1,7 @@
 import collections
 import cibblbibbl
 
+from . import exporttools
 from .mastercls import TeamAchievement
 
 class TP_Match(TeamAchievement):
@@ -31,6 +32,12 @@ class TP_Match(TeamAchievement):
           A["prestige"] = prestige
           A["status"] = "proposed"  # explicit; easier to edit
         yield A
+
+  def export_plaintext(self, show_Ids=False):
+    s0 = exporttools.idpart(self, show_Ids)
+    s1 = str(self.subject)
+    s2 = f' ({self.prestige(self.season)} Prestige Points)'
+    return s0 + s1 + s2
 
 
 cls = TP_Match

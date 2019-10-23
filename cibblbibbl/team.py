@@ -32,6 +32,9 @@ class Team(metaclass=cibblbibbl.helper.InstanceRepeater):
     self.achievements = set()
     self.tournaments = sortedcontainers.SortedSet()
 
+  def __str__(self):
+    return self.name
+
   @property
   def coach_name(self):
     s = self.apiget["coach"]["name"]

@@ -4,6 +4,7 @@ import cibblbibbl
 from .mastercls import PlayerAchievement
 
 from .. import field
+from . import exporttools
 
 
 class PA_BP_Mother(PlayerAchievement):
@@ -48,14 +49,17 @@ class PA_BP_Mother(PlayerAchievement):
       for Pl, categories in bestplayers.items():
         Te = PP[Pl]["team"]
         if not name:
-          if isinstance(Pl, cls_StarPlayer):
-            cls_c = PA_BPR_StarPlayersGuild
-            CC = cls_c.defaultconfig_of_group(group_key)._data
-          elif isinstance(Pl, cls_MercenaryPlayer):
-            cls_c = PA_BPR_MercenaryGuild
-            CC = cls_c.defaultconfig_of_group(group_key)._data
-          else:
-            region = G.regions[Te.roster_name]
+          region = T.config.get("region")
+          if not region:
+            if isinstance(Pl, cls_StarPlayer):
+              cls_c = PA_BPR_StarPlayersGuild
+              CC = cls_c.defaultconfig_of_group(group_key)._data
+            elif isinstance(Pl, cls_MercenaryPlayer):
+              cls_c = PA_BPR_MercenaryGuild
+              CC = cls_c.defaultconfig_of_group(group_key)._data
+            else:
+              region = G.regions[Te.roster_name]
+          if region:
             cls_c, CC = chldren_by_region[region]
         value = CC["value"]
         A_categories = set(cls_c.default_categories)
@@ -99,6 +103,13 @@ class PA_BP_Child(PlayerAchievement):
     super().__init_subclass__(**kwargs)
     PA_BP_Mother.children[cls.clskey()] = cls
 
+  def export_plaintext(self, show_Ids=False):
+    s0 = exporttools.idpart(self, show_Ids)
+    team = exporttools.team(self)
+    s1 = f'{self.subject} ({team})'
+    s2 = f' ({", ".join(sorted(self["categs"]))})'
+    s3 = exporttools.alreadyearned(self)
+    return s0 + s1 + s2 + s3
 
 
 class PA_BP_Youngbloods(PA_BP_Child): pass
