@@ -33,12 +33,12 @@ class Group(metaclass=cibblbibbl.helper.InstanceRepeater):
     self.tournaments = {}
     self.teams = set()
     self.players = set()
-    if register_tournaments:
-      self.register_tournaments()
-    if register_matchups:
-      self.register_matchups()
-    if register_achievements:
-      self.register_achievements()
+    #if register_tournaments:
+    #  self.register_tournaments()
+    #if register_matchups:
+    #  self.register_matchups()
+    #if register_achievements:
+    #  self.register_achievements()
 
   @property
   def configfilepath(self):

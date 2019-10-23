@@ -1,3 +1,5 @@
+from slugify import slugify
+
 import pyfumbbl
 
 from . import field
@@ -172,7 +174,7 @@ class MercenaryPlayer(BasePlayer):
 
   @property
   def team(self):
-    return
+    return "Mercenary"
 
   @property
   def typechar(self):
@@ -301,7 +303,7 @@ class RaisedDeadPlayer(BasePlayer):
 
 class StarPlayer(BasePlayer):
   config = field.config.CachedConfig()
-  getname = field.common.DiggedAttr("position", "name")
+  #getname = field.common.DiggedAttr("position", "name")
   permanent = field.common.Constant(False)
   prevsppmul = field.config.DDField(default=0)
   status = field.config.DDField(default="Active")
@@ -311,20 +313,20 @@ class StarPlayer(BasePlayer):
     return (
         cibblbibbl.data.path
         / "starplayer"
-        / f'{self.Id}.json'
+        / f'{slugify(self.Id[5:])}.json'  # exclude STAR- prefix
     )
 
-  @property
-  def positionId(self):
-    return self.Id.split("-")[1]
+  #@property
+  #def positionId(self):
+  #  return self.Id.split("-")[1]
 
   @property
   def sort_key(self):
-    return (100, int(self.positionId))
+    return (100, self.Id)
 
   @property
   def team(self):
-    return
+    return "Star Player"
 
   @property
   def typechar(self):

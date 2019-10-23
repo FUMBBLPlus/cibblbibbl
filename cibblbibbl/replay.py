@@ -13,7 +13,9 @@ class Replay(metaclass=cibblbibbl.helper.InstanceRepeater):
 
   config = field.config.CachedConfig()
   playerIdnorm = field.config.DDField(
-      default=lambda i, d: i.calculate_playerIdnorm()
+      default=lambda i, d: i.calculate_playerIdnorm(),
+      default_set_delete = False,
+      delete_set_default = False,
   )
 
   def __init__(self, replayId: int, match=None):
@@ -254,11 +256,9 @@ class Replay(metaclass=cibblbibbl.helper.InstanceRepeater):
           if playerType in ("Regular", "Big Guy", "Irregular"):
             continue
           elif playerType == "Star":
-            normplayerId = f'STAR-{positionId}'
+            normplayerId = f'STAR-{playerName}'
           elif playerType == "Mercenary":
-            hashv = hash((finished, playerId))
-            randomnrstr = f'{hashv & 0xFFF:0>4}'
-            normplayerId = f'MERC-{positionId}-{randomnrstr}'
+            normplayerId = f'MERC-{self.Id}-{playerId}'
           elif playerType == "RaisedFromDead":
             baseId = f'RAISED-{positionId}'
             aliveplayerId = playerId.split("R")[0]
