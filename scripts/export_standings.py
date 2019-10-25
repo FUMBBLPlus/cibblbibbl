@@ -3,6 +3,7 @@ import cibblbibbl
 
 if __name__ == "__main__":
   G = cibblbibbl.CIBBL
+  G.init()
   show_id = True
   Ts = sorted(G.tournaments.values())
   m_exp = cibblbibbl.tournament.export.standings.plaintext
@@ -32,7 +33,7 @@ if __name__ == "__main__":
     s2 = f'Standings of {T.name}{s1}\n\n{s0}'
     texts.append(s2)
   p = cibblbibbl.data.path
-  p /= f'{T.group_key}/tournament/standings.txt'
+  p /= f'{G.key}/tournament/standings.txt'
   text = "\n\n\n\n".join(texts)
   with p.open("w") as f:
       f.write(text)

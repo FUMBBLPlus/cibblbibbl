@@ -22,23 +22,17 @@ class Group(metaclass=cibblbibbl.helper.InstanceRepeater):
   regions = field.config.DDField()
   replays = field.insts.matches_replays
 
-  def __init__(self, key: str, *,
-      register_tournaments = True,
-      register_matchups = True,
-      register_players = True,
-      register_achievements = True,
-  ):
+  def __init__(self, key: str):
     self.years = set()
     self.seasons = set()
     self.tournaments = {}
     self.teams = set()
     self.players = set()
-    #if register_tournaments:
-    #  self.register_tournaments()
-    #if register_matchups:
-    #  self.register_matchups()
-    #if register_achievements:
-    #  self.register_achievements()
+
+  def init(self):
+    self.register_tournaments()
+    self.register_matchups()
+    self.register_achievements()
 
   @property
   def configfilepath(self):
