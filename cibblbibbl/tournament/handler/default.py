@@ -566,9 +566,10 @@ class Tournament(BaseTournament):
         T = Te.prev_tournament(self)
         if T:
           for Pl, d in T.playerperformances().items():
-            if d.get("retiredlast"):
-              D[Pl] = copy.deepcopy(d)
-              D[Pl]["tournament"] = T
+            if d["team"] is Te:
+              if d.get("retiredlast"):
+                D[Pl] = copy.deepcopy(d)
+                D[Pl]["tournament"] = T
     return D
 
   def standings(self):

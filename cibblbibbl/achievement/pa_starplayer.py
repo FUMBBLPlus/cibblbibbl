@@ -2,6 +2,7 @@ import collections
 import cibblbibbl
 
 from .. import field
+from . import agent
 from . import exporttools
 from .mastercls import PlayerAchievement
 from .pa_aerodynamicaim import PA_AerodynamicAim
@@ -35,16 +36,33 @@ class PA_StarPlayer(PlayerAchievement):
           postspp = prespp + d.get("spp", 0)
           if prespp < trigspp and trigspp <= postspp:
             A = cls(T, Pl, Mu.match)
-            if A["status"] == "proposed":
-              A["prestige"] = value
-              A["status"] = "proposed"  # explicit
+            if "proposed" in A["status"]:
+              if T.friendly == "yes":
+                A["status"] = "postpone proposed"
+                A["prestige"] = 0
+              else:
+                A["status"] = "proposed"  # explicit
+                A["prestige"] = value
             yield A
+
+  agent50 = classmethod(agent.iterpostponed)
 
   def export_plaintext(self, show_Ids=False):
     s0 = exporttools.idpart(self, show_Ids)
     team = exporttools.team(self)
     s1 = f'{self.subject} ({team})'
     return s0 + s1
+
+  def nexttournament(self):
+    Re = self.match.replay
+    with Re:
+      normplayerIds = Re.normplayerIds
+    for Te, playerIds in normplayerIds.items():
+      if self.subject.Id in playerIds:
+        break
+    else:
+      raise Exception(f'not found next tournament: {self}')
+    return Te.next_tournament(self.tournament)
 
 
 cls = PA_StarPlayer

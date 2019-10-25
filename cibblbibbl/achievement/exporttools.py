@@ -1,13 +1,21 @@
 import cibblbibbl
 
 
-reasontrans = {"chainsaw": "sawed", "bomb": "bombed"}
+reasontrans = {
+    "bomb": "bombed",
+    "chainsaw": "sawed",
+    "dodgeFail": "tackled",
+}
 
 
 def alreadyearned(A, season=None):
   season = season or A.season
-  stack = A.stack(season)
-  if 1 < len(stack) and A.stackidx(season):
+  As = sorted(
+      A1 for A1 in A.subject.achievements
+      if type(A1) is type(A)
+  )
+  i = As.index(A)
+  if 0 < i:
     return " (Achievement already earned)"
   else:
     return ""

@@ -28,6 +28,28 @@ def iterexisting(cls, group_key):
     A = cls(tournament, *args)
     yield A
 
+
+def iterpostponed(cls, group_key):
+  C = cls.defaultconfig_of_group(group_key)._data
+  value = C["value"]
+  G = cibblbibbl.group.Group(group_key)
+  As = {
+      A for A in G.achievements
+      if type(A) is cls
+      and A["status"] in {"postpone proposed", "postponed"}
+  }
+  for A0 in As:
+    T0 = A0.tournament
+    T1 = A0.nexttournament()
+    if T1:
+      A1 = cls(T1, *A0.args)
+      if "proposed" in A1["status"]:
+        A1["status"] = "proposed"  # explicit
+        A1["prestige"] = value
+        A1["prev_tournamentId"] = T0.Id
+    yield A1
+
+
 def iterprevs(cls, group_key):
   G = cibblbibbl.group.Group(group_key)
   players = sorted(Pl for Pl in G.players if Pl.prev)

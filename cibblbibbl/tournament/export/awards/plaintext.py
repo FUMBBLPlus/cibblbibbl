@@ -5,7 +5,11 @@ import cibblbibbl
 
 
 def _diedstr(dRPP, killerId, reason):
-  reasontrans = {"chainsaw": "sawed", "bomb": "bombed"}
+  reasontrans = {
+      "bomb": "bombed",
+      "chainsaw": "sawed",
+      "dodgeFail": "tackled",
+  }
   if killerId:
     killer = cibblbibbl.player.player(killerId)
     oppoTe = dRPP[killer]["team"]
@@ -133,7 +137,7 @@ def export(T, *,
   players = _playersseq(T, transferred)
   if players:
     parts.append("")
-    parts.append("*** Transferred ***")
+    parts.append("*** Famous and Transferred ***")
     for Pl, prestige in players:
       matchId, half, turn, reason, killerId = transferred[Pl]
       Ma = cibblbibbl.match.Match(matchId)
@@ -159,7 +163,7 @@ def export(T, *,
   players = _playersseq(T, retiredplayers)
   if players:
     parts.append("")
-    parts.append("*** Famous Retired ***")
+    parts.append("*** Famous and Retired ***")
     for Pl, prestige in players:
       d = retiredplayers[Pl]
       Te = d["team"]

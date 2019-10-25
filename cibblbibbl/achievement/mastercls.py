@@ -125,6 +125,10 @@ class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
     return self._KEY
 
   @property
+  def args(self):
+    return list(self.key[2:])
+
+  @property
   def baseprestige(self):
     return self["prestige"]
   @baseprestige.setter
