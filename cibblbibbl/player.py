@@ -156,12 +156,17 @@ class MercenaryPlayer(BasePlayer):
 
   @property
   def getname(self):
-    nr = self.Id.split("-")[2]
-    return f'Mercenary {self.position.name} #{nr}'
-
-  @property
-  def name(self):
-    return self.getname
+    replayId, playerId = self.Id[5:].split("-")
+    Re = cibblbibbl.replay.Replay(int(replayId))
+    Te = cibblbibbl.team.Team(int(playerId.split("M")[0]))
+    with Re as Re:
+      D = Re.normteamdata[Te]
+    for d in D["playerArray"]:
+      if d["playerId"] == playerId:
+        break
+    else:
+      raise Exception(f'not found: {self.Id}')
+    return d["playerName"]
 
   @property
   def positionId(self):
@@ -169,7 +174,8 @@ class MercenaryPlayer(BasePlayer):
 
   @property
   def sort_key(self):
-    idvals = tuple(int(x) for x in self.Id.split("-")[1:])
+    Id = self.Id[5:].replace("M", "-")
+    idvals = tuple(int(x) for x in Id.split("-"))
     return (1000,) + idvals
 
   @property

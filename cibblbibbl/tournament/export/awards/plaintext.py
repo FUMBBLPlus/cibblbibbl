@@ -46,7 +46,7 @@ def export(T, *,
 ):
   cls_StarPlayer = cibblbibbl.player.StarPlayer
   cls_RaisedDeadPlayer = cibblbibbl.player.RaisedDeadPlayer
-  dTAv1 = T.teamachievementvalues(False, False)
+  dTAv1 = T.teamachievementvalues(False, False, False)
   dPAv1 = T.playerachievementvalues()
   dRPP = T.rawplayerperformances()
   dPP = T.playerperformances()
@@ -155,12 +155,13 @@ def export(T, *,
       s += f', joined {" and ".join(nextsparts)}'
       parts.append(s)
 
-  players = _playersseq(T, T.retiredplayers())
+  retiredplayers = T.retiredplayers(dPP=dPP)
+  players = _playersseq(T, retiredplayers)
   if players:
     parts.append("")
     parts.append("*** Famous Retired ***")
     for Pl, prestige in players:
-      d = dPP[Pl]
+      d = retiredplayers[Pl]
       Te = d["team"]
       s = ""
       if show_Ids:

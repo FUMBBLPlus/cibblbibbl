@@ -115,26 +115,21 @@ class Team(metaclass=cibblbibbl.helper.InstanceRepeater):
   def next_tournament(self, tournament, anygroup=False):
     G = tournament.group
     i = self.tournaments.index(tournament)
-    while True:
-      if i == len(self.tournaments) - 1:
-        return
-      else:
-        T = self.tournaments[i + 1]
-        if not anygroup or T.group is G:
-          return T
-        i += 1
+    I = len(self.tournaments) - 1
+    while i < I:
+      T = self.tournaments[i + 1]
+      if not anygroup or T.group is G:
+        return T
+      i += 1
 
   def prev_tournament(self, tournament, anygroup=False):
     G = tournament.group
     i = self.tournaments.index(tournament)
-    while True:
-      if i == 0:
-        return
-      else:
-        T = self.tournaments[i - 1]
-        if not anygroup or T.group is G:
-          return T
-        i -= 1
+    while 0 < i:
+      T = self.tournaments[i - 1]
+      if not anygroup or T.group is G:
+        return T
+      i -= 1
 
 
   def search_player(self, name, in_pastplayers=True):

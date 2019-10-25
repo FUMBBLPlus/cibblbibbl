@@ -547,18 +547,29 @@ class Tournament(BaseTournament):
 
     return d
 
-  def retiredplayers(self, last=False, RPP=None):
+  def retiredplayers(self,
+      last=False,
+      carrylast=True,
+      dPP=None,
+  ):
     RaisedDeadPlayer = cibblbibbl.player.RaisedDeadPlayer
     StarPlayer = cibblbibbl.player.StarPlayer
-    RPP = RPP or self.rawplayerperformances()
-    S = {
-        Pl for Pl, d in RPP.items()
-        if not isinstance(Pl, (RaisedDeadPlayer, StarPlayer))
-        and d.get("retired")
-    }
-    if not last:
-      S = {Pl for Pl in S if not RPP[Pl].get("retiredlast")}
-    return S
+    dPP = dPP or self.playerperformances()
+    D = {}
+    for Pl, d in dPP.items():
+      if d.get("retired"):
+        if last or not d.get("retiredlast"):
+          D[Pl] = copy.deepcopy(d)
+          D[Pl]["tournament"] = self
+    if carrylast:
+      for Te in self.teams:
+        T = Te.prev_tournament(self)
+        if T:
+          for Pl, d in T.playerperformances().items():
+            if d.get("retiredlast"):
+              D[Pl] = copy.deepcopy(d)
+              D[Pl]["tournament"] = T
+    return D
 
   def standings(self):
     tpkeys = (
@@ -661,12 +672,15 @@ class Tournament(BaseTournament):
     return d
 
   def teamachievementvalues(self,
+      with_admin = True,
       with_match = True,
       with_standings = True,
   ):
     d = {}
     season = self.season
     excluded_clskeys = set()
+    if not with_admin:
+      excluded_clskeys.add("tp_admin")
     if not with_match:
       excluded_clskeys.add("tp_match")
     if not with_standings:
