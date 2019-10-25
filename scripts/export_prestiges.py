@@ -3,6 +3,7 @@ import cibblbibbl
 
 if __name__ == "__main__":
   G = cibblbibbl.CIBBL
+  G.init()
   show_id = True
   Ts = sorted(G.tournaments.values())
   m_exp = cibblbibbl.tournament.export.prestiges.plaintext

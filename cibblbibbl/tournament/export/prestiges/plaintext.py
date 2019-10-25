@@ -6,6 +6,7 @@ import cibblbibbl
 def export(T, *,
     show_id = False,
 ):
+  statuses = {"awarded", "proposed"}
   multiline = False
   params = [
       (" #", "a", "r", 2,),
@@ -28,27 +29,30 @@ def export(T, *,
   rows = []
   standings = T.standings()
   for nr, r in enumerate(standings, 1):
-    Te = r["team"]
+    Te = TeofA = r["team"]
     if isinstance(Te, cibblbibbl.team.GroupOfTeams):
       multiline = True
-      key = (T, Te[0])  # all members has same values
+      TeofA = Te[0] # all members has same values
       perf = "\n".join(
           "".join(r for r, matchId in seq)
           for seq in r["perfs"]
       )
     else:
-      key = (T, Te)
       perf = "".join(r for r, matchId in r["perf"])
+    As = {
+        A for A in T.achievements
+        if A["status"] in statuses
+        and A.subject is TeofA
+    }
+    padmcls = cibblbibbl.achievement.tp_admin.cls
     pgamcls = cibblbibbl.achievement.tp_match.cls
-    pgama = pgamcls.getmember(*key)
-    pgam = (pgama["prestige"] if pgama else 0)
     pposcls = cibblbibbl.achievement.tp_standings.cls
-    pposa = pposcls.getmember(*key)
-    ppos = (pposa["prestige"] if pposa else 0)
     pcvcls = cibblbibbl.achievement.ta_crushingvictory.cls
-    pcva = pcvcls.getmember(*key)
-    pcv = (pcva["prestige"] if pcva else 0)
-    ptot = pgam + pcv + ppos
+    padm = sum(A["prestige"] for A in As if type(A) is padmcls)
+    pgam = sum(A["prestige"] for A in As if type(A) is pgamcls)
+    ppos = sum(A["prestige"] for A in As if type(A) is pposcls)
+    pcv = sum(A["prestige"] for A in As if type(A) is pcvcls)
+    ptot = padm + pgam + pcv + ppos
     row = [
         f'{nr}',
         str(Te.Id),
