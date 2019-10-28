@@ -47,6 +47,8 @@ def iterpostponed(cls, group_key):
         A1["status"] = "proposed"  # explicit
         A1["prestige"] = value
         A1["prev_tournamentId"] = T0.Id
+      A1._prev = A0
+      A0._nexts = A0._nexts | {A1,}
     yield A1
 
 
@@ -65,6 +67,8 @@ def iterprevs(cls, group_key):
       if A0.group_key != group_key:
         continue
       if A0.clskey() != cls.clskey():
+        continue
+      if A0["status"] in {"postpone proposed", "postponed"}:
         continue
       T0 = A0.tournament
       prevsubject = A0.subject

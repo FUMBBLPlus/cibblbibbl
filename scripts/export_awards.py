@@ -3,19 +3,21 @@ import cibblbibbl
 
 if __name__ == "__main__":
   G = cibblbibbl.CIBBL
+  G.init()
   show_Ids = True
   Ts = sorted(G.tournaments.values())
-  m_exp0 = cibblbibbl.tournament.export
-  m_exp = m_exp0.playerperformances.plaintext
-  f_exp = m_exp.export
-  texts = []
   for T in Ts:
+    #if T.Id.isdecimal() and int(T.Id) <= 45238:  # for debug
+    #  continue  # for debug
     if not T.ismain:
       continue
-    try:
-      s0 = f_exp(T)
-    except cibblbibbl.tournament.export.NoExport:
+    if T.posonly == "yes":
       continue
+    try:
+      s0 = T.export_awards_plaintext(show_Ids=show_Ids)
+    except:
+      print(f'[{T.Id}] {T.name}')
+      raise
         # TODO: handler matching standings func
     s1 = ""
     if not T.abstract:
@@ -33,11 +35,12 @@ if __name__ == "__main__":
       idstr = ", ".join(str(x) for x in ids)
       stylestr = ", ".join(styles)
       s1 = f' ({idstr} • {stylestr})'
-    s2 = f'Player Performances of {T.name}{s1}\n\n{s0}'
-    texts.append(s2)
-  p = cibblbibbl.data.path
-  p /= f'{G.key}/tournament/playerperformances.txt'
-  text = "\n\n\n\n".join(texts)
-  with p.open("w") as f:
+    text = f'Awards of {T.name}{s1}\n\n{s0}'
+    f_filename = cibblbibbl.field.filepath.idfilename.fget
+    filename = f_filename(T, ".txt")
+    p = cibblbibbl.data.path
+    p /= f'{G.key}/tournament/awards/{filename}'
+    with p.open("w") as f:
       f.write(text)
-  print(text)
+    print(text)
+    print("\n" * 3)

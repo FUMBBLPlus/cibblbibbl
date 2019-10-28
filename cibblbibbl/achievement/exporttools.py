@@ -46,5 +46,16 @@ def team(A, Pl=None):
     return "Star Player"
   elif isinstance(Pl, cibblbibbl.player.MercenaryPlayer):
     return "Mercenary"
-  dRPP = A.tournament.rawplayerperformances()
-  return dRPP[Pl]["team"]
+  elif Pl. team:
+    return Pl.team
+  rootA = A
+  exc = None
+  while rootA is not None:
+    dRPP = rootA.tournament.rawplayerperformances()
+    try:
+      return dRPP[Pl]["team"]
+    except Exceptipon as exc_:
+      exc = exc_
+      rootA = A.prev
+  raise exc
+

@@ -1,24 +1,19 @@
 import cibblbibbl
 
 missingkiller_map = {
-    ("ballAndChain", False): True,
-    ("ballAndChain", True): False,
-    ("blocked", True): False,
-    ("bomb", False): True,
-    ("chainsaw", False): True,
-    ("chainsaw", True): False,
-    ("crowdPushed", False): True,
-    ("dodgeFail", False): False,
-    ("eaten", False): True,
-    ("fireball", False): False,
-    ("fouled", True): False,
-    ("gfiFail", False): False,
-    ("hitByRock", False): False,
-    ("landingFail", False): False,
-    ("leapFail", False): False,
-    ("lightning", False): False,
-    ("secretWeaponBan", False): True,
-    ("stabbed", True): False,
+    "ballAndChain": True,
+    "bomb": True,
+    "chainsaw": True,
+    "crowdPushed": True,
+    "dodgeFail": False, # historically awarded
+    "eaten": True,
+    "fireball": False,
+    "gfiFail": False,
+    "hitByRock": False,
+    "landingFail": False,
+    "leapFail": False,
+    "lightning": False,
+    "secretWeaponBan": True,
   }
 
 def missingkiller():
@@ -29,9 +24,10 @@ def missingkiller():
       for t in Mu.iterdead():
         teamId, playerId, dpp = t
         dead = dpp["dead"]
-        half, turn, reason, killerId = dead
-        key = (reason, bool(killerId))
-        if not missingkiller_map[key]:
+        half, turn, reason, killerId = dead._data
+        if bool(killerId):
+          continue
+        if not missingkiller_map[reason]:
           continue
         matchId = Mu.match.Id
         replayId = Mu.match.replayId

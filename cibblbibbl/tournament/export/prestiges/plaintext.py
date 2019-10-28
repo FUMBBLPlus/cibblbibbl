@@ -4,7 +4,7 @@ import cibblbibbl
 
 
 def export(T, *,
-    show_id = False,
+    show_Ids = False,
 ):
   statuses = {"awarded", "proposed"}
   multiline = False
@@ -20,7 +20,7 @@ def export(T, *,
       ("POS", "t", "r", 3,),
       (" P ", "i", "r", 3,),
   ]
-  if not show_id:
+  if not show_Ids:
     del params[1]
   table = texttable.Texttable()
   table.set_cols_dtype([t[1] for t in params])
@@ -65,7 +65,7 @@ def export(T, *,
         (str(ppos) if ppos else ""),
         (str(ptot) if ptot else ""),
     ]
-    if not show_id:
+    if not show_Ids:
       del row[1]
     rows.append(row)
   rows.insert(0, [t[0] for t in params])

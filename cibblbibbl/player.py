@@ -100,8 +100,12 @@ class BasePlayer(metaclass=cibblbibbl.helper.InstanceRepeater):
       teamId = self.config.get("team")
       if teamId is not None:
         self._team = cibblbibbl.team.Team(int(teamId))
+      elif (
+          self.prev and isinstance(self.prev, RaisedDeadPlayer)
+      ):
+        return self.prev.team
       else:
-        self._team = None
+        raise ValueError(f'no team: {self!r}')
     return self._team
   @team.setter
   def team(self, value):

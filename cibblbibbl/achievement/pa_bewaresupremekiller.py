@@ -27,11 +27,13 @@ class PA_BewareSupremeKiller(PlayerAchievement):
         continue
       for Pl0, dead in T.deadplayers().items():
         for A0 in Pl0.achievements:
+          #if A0["status"] != "awarded":
+          #  continue
+          if T <= A0.tournament:
+            continue
           if A0.clskey() == "pa_superstarplayer":
             break
         else:
-          continue
-        if A0["status"] != "awarded":
           continue
         matchId, half, turn, reason, killerId = dead
         if killerId:
@@ -80,15 +82,18 @@ class PA_BewareSupremeKiller(PlayerAchievement):
 
 
   def export_plaintext(self, show_Ids=False):
+    rootA = self
+    while rootA.prev is not None:
+      rootA = rootA.prev
     s0 = exporttools.idpart(self, show_Ids)
     team = exporttools.team(self)
     s1 = f'{self.subject} ({team})'
     reason = self.config["reason"]
     s2 = f' {exporttools.reasontrans.get(reason, reason)}'
-    victimteam = exporttools.team(self, Pl=self.victim)
+    victimteam = exporttools.team(rootA, Pl=self.victim)
     s3 = f' {self.victim} ({victimteam})'
     s4 = f' in match #{self.match.Id}'
-    oppoteam = exporttools.oppoteam(self, team_=team)
+    oppoteam = exporttools.oppoteam(rootA, team_=team)
     s5 = f' vs. {oppoteam}'
     s6 = exporttools.alreadyearned(self)
     return s0 + s1 + s2 + s3 + s4 + s5 + s6

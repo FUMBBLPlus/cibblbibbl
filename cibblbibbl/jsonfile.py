@@ -143,6 +143,10 @@ class JSONFile(JSONFileRoot):
   def filepath(self, value):
     self._filepath = pathlib.Path(value) # ensure Path instance
 
+  def delete(self):
+    super().delete()
+    self.filepath.unlink()
+
   def may_changed(self, inst, old_data):
     return super().may_changed(inst, old_data)
 
@@ -180,7 +184,6 @@ class JSONFile(JSONFileRoot):
         tf.write(s)
         tp = p.parent / tf.name
       tp.replace(p)
-
 
 
 class JSONFileContainer(JSONFileBase):

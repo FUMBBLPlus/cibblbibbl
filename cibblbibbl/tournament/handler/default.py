@@ -382,6 +382,10 @@ class Tournament(BaseTournament):
         and not Pl.nexts
     }
 
+  def export_awards_plaintext(self, show_Ids = False):
+    f = cibblbibbl.tournament.export.awards.plaintext.export
+    return f(self, show_Ids=show_Ids)
+
   def extraplayerperformances(self, join=False):
     dPP = self.playerperformances()
     return performance.extraperformances(dPP, join=join)
@@ -399,6 +403,19 @@ class Tournament(BaseTournament):
         d[Te] = None
     return d
 
+  def lastaliveplayers(self, team):
+    Ma = self.lastteammatches()[team]
+    if not Ma:
+      return set()
+    else:
+      with Ma.replay as Re:
+        d = Re.aliveplayers
+      Pls = d[team]
+      return {
+        Pl for Pl in Pls
+        if Pl.permanent
+      }
+
   def lastteammatches(self):
     d = {}
     for ds in self.standings():
@@ -412,18 +429,10 @@ class Tournament(BaseTournament):
         d[Te] = None
     return d
 
-
-
   def playerachievements(self):
-    filter_f = lambda Pl: Pl.permanent
     d = {}
-    lastteammatches = self.lastteammatches()
-    for Te, lastMa in lastteammatches.items():
-      if not lastMa:
-        d[Te] =  set()
-        continue
-      with lastMa.replay as Re:
-        lastPls = set(filter(filter_f, Re.aliveplayers[Te]))
+    for Te in self.teams:
+      lastPls = self.lastaliveplayers(Te)
       lastAs = {
         A
         for Pl in lastPls

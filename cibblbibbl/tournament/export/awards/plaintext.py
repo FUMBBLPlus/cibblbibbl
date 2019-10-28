@@ -5,20 +5,26 @@ import cibblbibbl
 
 
 def _diedstr(dRPP, killerId, reason):
-  reasontrans = {
+  kreasontrans = {
       "bomb": "bombed",
       "chainsaw": "sawed",
       "dodgeFail": "tackled",
+  }
+  nreasontrans = {
+      "bomb": "bombed",
+      "chainsaw": "sawed",
+      "dodgeFail": "tackled",
+      "gfiFail": "tripped",
   }
   if killerId:
     killer = cibblbibbl.player.player(killerId)
     oppoTe = dRPP[killer]["team"]
     return (
-        f', {reasontrans.get(reason, reason)} '
+        f', {kreasontrans.get(reason, reason)} '
         f'by {killer.name} ({_teamstr(killer, oppoTe)})'
     )
   else:
-    return f', died by {reason}'
+    return f', {nreasontrans.get(reason, reason)}'
 
 
 def _playersseq(T, source_playersseq):
@@ -154,7 +160,10 @@ def export(T, *,
       for Pl1 in Pl.nexts:
           if isinstance(Pl1, cls_RaisedDeadPlayer):
               Pl1 = Pl1.next
-          nextTe = dRPP[Pl1]["team"]
+          try:
+            nextTe = dRPP[Pl1]["team"]
+          except KeyError:
+            nextTe = Pl1.team
           nextsparts.append(f'to {nextTe} as {Pl1}')
       s += f', joined {" and ".join(nextsparts)}'
       parts.append(s)

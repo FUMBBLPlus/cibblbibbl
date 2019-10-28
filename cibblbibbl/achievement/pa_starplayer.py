@@ -54,15 +54,19 @@ class PA_StarPlayer(PlayerAchievement):
     return s0 + s1
 
   def nexttournament(self):
+    nexttournamentId = self.config.get("nexttournamentId")
+    if nexttournamentId:
+      return self.group.tournament[nexttournamentId]
     Re = self.match.replay
     with Re:
       normplayerIds = Re.normplayerIds
     for Te, playerIds in normplayerIds.items():
       if self.subject.Id in playerIds:
-        break
+        return Te.next_tournament(self.tournament)
     else:
-      raise Exception(f'not found next tournament: {self}')
-    return Te.next_tournament(self.tournament)
+      msg = f'not found next tournament: {self.key}'
+      raise Exception(msg)
+
 
 
 cls = PA_StarPlayer

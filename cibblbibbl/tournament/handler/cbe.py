@@ -103,6 +103,29 @@ class CBETournament(default.AbstractTournament):
   def deadplayers(self):
     return {}
 
+  def export_awards_plaintext(self, show_Ids = False):
+    nrsuffix = {1: "st", 2: "nd", 3: "rd"}
+    TP_Standings = cibblbibbl.achievement.tp_standings.cls
+    standings = self.standings()
+    partner_groups = self.partner_groups
+    parts = []
+    gen = reversed(list(enumerate(standings, 1)))
+    for i, (nr, d) in enumerate(gen):
+      if i:
+        parts.append("")
+      groupnr = partner_groups.index(d["team"]) + 1
+      nrstr = f'{nr}{nrsuffix.get(nr, "th")} place: '
+      if show_Ids:
+        teams = [f'[{Te.Id}] {Te}' for Te in d["team"]]
+      else:
+        teams = [str(Te) for Te in d["team"]]
+      teamstr = " and ".join(teams)
+      groupstr = f' (Partners #{groupnr})'
+      parts.append(nrstr + teamstr + groupstr)
+      prestige = TP_Standings(self, d["team"][0])["prestige"]
+      parts.append(f'Prestige Points Earned: {prestige}')
+    return "\n".join(parts)
+
   def extraplayerperformances(self, join=False):
     return {}
 

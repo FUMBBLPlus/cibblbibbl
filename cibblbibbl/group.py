@@ -30,8 +30,11 @@ class Group(metaclass=cibblbibbl.helper.InstanceRepeater):
     self.players = set()
 
   def init(self):
+    #print("register_tournaments")
     self.register_tournaments()
+    #print("register_matchups")
     self.register_matchups()
+    #print("register_achievements")
     self.register_achievements()
 
   @property

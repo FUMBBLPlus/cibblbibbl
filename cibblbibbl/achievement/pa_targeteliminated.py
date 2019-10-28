@@ -32,11 +32,13 @@ class PA_TargetEliminated(PlayerAchievement):
         continue
       for Pl0, dead in T.deadplayers().items():
         for A0 in Pl0.achievements:
+          #if A0["status"] != "awarded":
+          #  continue
+          if T <= A0.tournament:
+            continue
           if 10 <= A0.baseprestige:
             break
         else:
-          continue
-        if A0["status"] != "awarded":
           continue
         matchId, half, turn, reason, killerId = dead
         if killerId:
