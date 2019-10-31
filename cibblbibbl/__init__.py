@@ -6,6 +6,7 @@ from . import data
 
 
 from . import helper
+from . import bbcode
 
 
 from . import coach

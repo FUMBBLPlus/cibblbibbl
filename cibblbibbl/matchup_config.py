@@ -238,7 +238,10 @@ class MatchupConfigMaker:
         d = self.d["team"][str(Te.Id)]
         d["score"] = score
     else:
-      winnerteamId = str(self.SR["result"]["winner"])
+      R = self.SR.get("result")
+      if not R:
+        return
+      winnerteamId = str(R["winner"])
       for teamId, d in self.d["team"].items():
         if teamId == winnerteamId:
           d["score"] = 2
@@ -278,7 +281,10 @@ class MatchupConfigMaker:
         else:
           d["r"] = "L"
     else:
-      winnerteamId = str(self.SR["result"]["winner"])
+      R = self.SR.get("result")
+      if not R:
+        return
+      winnerteamId = str(R["winner"])
       for teamId, d in self.d["team"].items():
         if teamId == winnerteamId:
           d["r"] = "B"
@@ -299,4 +305,6 @@ class MatchupConfigMaker:
     for teamId, d in self.d["team"].items():
       for k in ("pts", "prestige"):
         dT = getattr(T, f'r{k}')
-        d[k] = dT.get(d["r"], 0)
+        r = d.get("r")
+        if r is not None:
+          d[k] = dT.get(r, 0)

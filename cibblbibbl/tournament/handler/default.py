@@ -232,13 +232,16 @@ class Tournament(BaseTournament):
       "cache/api-tournament-schedule",
   )
   name = field.config.DDField(
-      default=lambda inst, desc: inst.apiget(desc.key)
+      default=lambda inst, desc: inst.apiget[desc.key],
+      default_set_delete = False,
+      delete_set_default = True,
   )
 
   def __init__(self, group_key, Id):
     super().__init__(group_key, Id)
     self._matchups = ...
     self._season = ...
+    self.name = self.name  # ensure it in the config
 
   def _iter_matchups(self):
     for d in self.apischedule:

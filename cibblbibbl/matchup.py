@@ -265,4 +265,10 @@ class Matchup(BaseMatchup):
 
 
 def sort_by_modified(matchups):
-  return sorted(matchups, key=lambda M: M.modified)
+  return sorted(
+    matchups,
+    key=lambda M: (
+        (M.modified or M.created),
+        M._KEY,
+    )
+  )

@@ -55,7 +55,7 @@ class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
       pass
 
   def __delitem__(self, key):
-    return self.config.__delitem__(key, value)
+    return self.config.__delitem__(key)
 
   def __getitem__(self, key):
     try:
