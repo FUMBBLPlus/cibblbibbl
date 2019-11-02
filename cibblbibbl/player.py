@@ -58,8 +58,7 @@ class BasePlayer(metaclass=cibblbibbl.helper.InstanceRepeater):
     clsname = self.__class__.__name__
     return f'{clsname}({self.Id!r})'
 
-  def __str__(self):
-    return self.name
+  __str__ = field.inst.id_and_name_str
 
   __eq__ = field.ordering.eq_when_is
   __lt__ = field.ordering.PropTupCompar("sort_key")

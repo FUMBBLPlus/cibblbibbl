@@ -21,6 +21,8 @@ class PA_BewareSupremeKiller(PlayerAchievement):
     value = C["value"]
     G = cibblbibbl.group.Group(group_key)
     for T in G.tournaments.values():
+      if T.awarded == "yes":
+        continue  # collected by the iterexisting agent
       if T.posonly == "yes":
         continue
       if T.friendly == "yes":

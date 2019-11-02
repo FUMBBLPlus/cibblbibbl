@@ -39,6 +39,7 @@ class BaseTournament(
 ):
 
   above = field.config.TournamentField()
+  awarded = field.config.yesnofield("awarded", default="no")
   bestplayersname = field.config.DDField(default=None)
   config = field.config.CachedConfig()
   configfilename = field.filepath.idfilename
@@ -98,6 +99,8 @@ class BaseTournament(
   __gt__ = field.ordering.PropTupCompar(*propnames)
   __ge__ = field.ordering.PropTupCompar(*propnames)
   del propnames
+
+  __str__ = field.inst.id_and_name_str
 
   @property
   def configfilepath(self):
@@ -609,7 +612,9 @@ class Tournament(BaseTournament):
           Te = cibblbibbl.team.Team(int(teamId))
         else:
           Te = self.get_team(teamId)
-        r = TP["r"]
+        r = TP.get("r")
+        if r is None:
+          continue  # no result yet
         matchId = (Mu.match.Id if Mu.match else None)
         perf = r, matchId
         d = S[teamId]

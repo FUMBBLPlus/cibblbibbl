@@ -32,6 +32,8 @@ class PA_BP_Mother(PlayerAchievement):
         chldren_by_region[region] = (cls_c, CC)
     G = cibblbibbl.group.Group(group_key)
     for T in G.tournaments.values():
+      if T.awarded == "yes":
+        continue  # collected by the iterexisting agent
       if T.posonly == "yes":
         continue
       cls_c, CC = None, None

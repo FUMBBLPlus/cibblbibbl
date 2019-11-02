@@ -16,6 +16,8 @@ class TA_WintersGlory(TeamAchievement):
     C = cls.defaultconfig_of_group(group_key)._data
     G = cibblbibbl.group.Group(group_key)
     for T in G.tournaments.values():
+      if T.awarded == "yes":
+        continue  # collected by the iterexisting agent
       if T.season.name != "Winter":
         continue
       if T.posonly == "yes":

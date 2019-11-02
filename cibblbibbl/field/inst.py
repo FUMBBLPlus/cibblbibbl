@@ -32,3 +32,7 @@ def year_of_self_tournament(self):
 @property
 def year_nr_of_self_tournament(self):
   return self.tournament.year_nr
+
+
+def id_and_name_str(self):
+  return f'[{self.Id}] {self.name}'

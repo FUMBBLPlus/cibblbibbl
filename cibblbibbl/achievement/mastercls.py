@@ -67,7 +67,11 @@ class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
     return self.config.__setitem__(key, value)
 
   def __str__(self):
-    return f'{self["name"]}: {self.export_plaintext()}'
+    return (
+        f'{self["name"]}('
+        f'{self.tournament}, '
+        f'{", ".join(str(a) for a in self.args)})'
+    )
 
   def get(self, key, default=None):
     try:
@@ -195,6 +199,18 @@ class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
         self.clskey(),
         self.subject,
     )
+
+  def active(self, tournament=None):
+    if tournament is None:
+      tournament = sorted(self.group.tournaments.values())[-1]
+    if tournament <= self.tournament:
+      return False
+    end_tournamentId = self.get("end_tournamentId")
+    if end_tournamentId:
+      end_tournament = self.group.tournaments[end_tournamentId]
+      if end_tournament < tournament:
+        return False
+    return True
 
   def decaymul(self, season=None):
     season = season or max(self.group.seasons)

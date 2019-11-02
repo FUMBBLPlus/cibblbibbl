@@ -22,6 +22,8 @@ class TA_CrushingVictory(TeamAchievement):
     value = C["value"]
     G = cibblbibbl.group.Group(group_key)
     for T in G.tournaments.values():
+      if T.awarded == "yes":
+        continue  # collected by the iterexisting agent
       if T.abstract:
         continue
       if T.posonly == "yes":

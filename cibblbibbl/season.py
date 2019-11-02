@@ -71,16 +71,31 @@ class Season(
         teams &= S.teams
     return teams
 
-  def lastaliveplayers(self):
+  def lastaliveplayers(self, allteams=False):
     d = {}
-    for Te in set(self.teams):
-      lastT = Te.tournaments[-1]
-      d[Te] = lastT.lastaliveplayers(Te)
+    if allteams:
+      teams = set(self.group.teams)
+    else:
+      teams = set(self.teams)
+    for Te in teams:
+      tournaments = [
+          T for T in Te.tournaments if T.season <= self
+      ]
+      i = -1
+      while tournaments:
+        lastT = tournaments[-1]
+        try:
+          d[Te] = lastT.lastaliveplayers(Te)
+        except KeyError:
+          tournaments = tournaments[:-1]
+        else:
+          break
     return d
 
-  def achievementsofteams(self):
+  def achievementsofteams(self, allteams=False):
     d = collections.defaultdict(set)
-    for Te, Pls in self.lastaliveplayers().items():
+    d_lap = self.lastaliveplayers(allteams=allteams)
+    for Te, Pls in d_lap.items():
       d[Te] |= Te.achievements
       for Pl in Pls:
         d[Te] |= Pl.achievements
@@ -89,36 +104,40 @@ class Season(
   def gold_partner_teams(self):
     return self.consecutive_teams(16)
 
-  def prestigesofteams(self):
+  def prestigesofteams(self, allteams=False):
+    ignore = {
+        S for S in self.group.seasons if S.name == "Winter"
+    }
     d = {}
-    for Te, As in self.achievementsofteams().items():
+    d_aot = self.achievementsofteams(allteams=allteams)
+    for Te, As in d_aot.items():
       d2 = collections.defaultdict(lambda: 0)
+      prestige = 0
       for A in As:
+        value = A.prestige(season=self)
+        prestige += value
         if A.subject_typename == "Team":
           T = A.tournament
           while T.above:
             T = T.above
           if T.friendly == "yes":
             continue
-          d2[T.season] += A.prestige()
-      prestige = sum(A.prestige() for A in As)
-      ties = [d2[Se] for Se in sorted(d2, reverse=True)]
-      while True:
-        try:
-          x = ties.pop()
-        except IndexError:
-          break
-        if x:
-          ties.append(x)
-          break
-      ties += [0] * (6 - len(ties))
-      d[Te] = (prestige, tuple(ties))
+          if T.season <= self:
+            d2[T.season] += value
+      seasons = sorted(d2, reverse=True)
+      ties = [d2[Se] for Se in seasons]
+      if seasons:
+        nonwintersince = self.since(seasons[0], ignore=ignore)
+        ties = [0] * nonwintersince + ties
+            # zeroes ahead if old
+      ties += [0] * (6 - len(ties)) # ensure minlength (6)
+      d[Te] = (prestige, tuple(ties[:6]))
     return d
 
   def silver_partner_teams(self):
     return self.consecutive_teams(8) - self.gold_partner_teams()
 
-  def since(self, season):
+  def since(self, season, ignore=None):
     """
     Returns how many seasons has been passed since the given
     season including itself. The result is positive if the
@@ -127,27 +146,28 @@ class Season(
     c = 0
     if season._KEY[1:] < self._KEY[1:]:
       while season is not self:
+        if ignore is None or season not in ignore:
+          c += 1
         season = season.next
-        c += 1
     elif self._KEY[1:] < season._KEY[1:]:
       while season is not self:
+        if ignore is None or season not in ignore:
+          c -= 1
         season = season.prev
-        c -= 1
     return c
 
-  def standings_without_partnership(self):
-    L = []
-    d = self.prestigesofteams()
-    for Te in sorted(d, key=d.get, reverse=True):
-        if d[Te][1] == (0,) * 6:
-            continue
-        L.append(list(d[Te])+ [Te,])
+  def standings_without_partnership(self, allteams=False):
+    d = self.prestigesofteams(allteams=allteams)
+    L = [
+        list(d[Te])+ [Te,]
+        for Te in sorted(d, key=d.get, reverse=True)
+    ]
     return L
 
-  def standings_with_partnership(self):
+  def standings_with_partnership(self, allteams=False):
     g = self.gold_partner_teams()
     s = self.silver_partner_teams()
-    L = self.standings_without_partnership()
+    L = self.standings_without_partnership(allteams=allteams)
     for LL in L:
       if LL[2] in g:
         LL[0] += 50
