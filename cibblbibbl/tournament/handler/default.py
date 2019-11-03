@@ -242,13 +242,31 @@ class AbstractTournament(BaseTournament):
 
 class Tournament(BaseTournament):
 
+  def _apiget_force_update_func(self, o):
+    self.prev_cached_status = o["status"]
+    if o["status"] != "Completed":
+      return True
+    else:
+      return False
+
+  def _apischedule_force_update_func(self, o):
+    if self.apiget["status"] != "Completed":
+      return True
+    elif self.prev_cached_status != "Completed":
+      # defined by the previous o.status call
+      return True
+    else:
+      return False
+
   abstract = field.common.Constant(False)
   apiget = field.fumbblapi.CachedFUMBBLAPIGetField(
-      pyfumbbl.tournament.get, "cache/api-tournament"
+      pyfumbbl.tournament.get, "cache/api-tournament",
+      force_update_func = _apiget_force_update_func,
   )
   apischedule = field.fumbblapi.CachedFUMBBLAPIGetField(
       pyfumbbl.tournament.schedule,
       "cache/api-tournament-schedule",
+      force_update_func = _apischedule_force_update_func,
   )
   name = field.config.DDField(
       default=lambda inst, desc: inst.apiget[desc.key],

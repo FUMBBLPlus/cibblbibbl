@@ -233,7 +233,7 @@ class Replay(metaclass=cibblbibbl.helper.InstanceRepeater):
     p = cibblbibbl.data.path / dir_path / filename
     jf = cibblbibbl.data.jsonfile(p)
     if download or not p.is_file() or not p.stat().st_size:
-      jf.dump_kwargs = cibblbibbl.settings.dump_kwargs
+      jf.dump_kwargs = dict(field.config.dump_kwargs)
       print(f'Downloading REPLAY {self.Id}...')
       jf.data = fumbblreplay.get_replay_data(
           self.match.replayId

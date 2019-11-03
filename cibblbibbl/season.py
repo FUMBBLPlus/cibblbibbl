@@ -44,25 +44,18 @@ class Season(
       prev = sorted(self.year.prev.seasons)[-1]
     return prev
 
-  def consecutive_teams(self, past_seasons):
-    fromS = self.group.config.get("partnership_introduced")
-    if not fromS:
-      return set()
-    if [self.year_nr, self.nr] < fromS:
-      return set()
-    S = self
-    seasons = set()
-    for _ in range(past_seasons):
-      if not S:
-        return set()
-      seasons.add(S)
-      S = S.prev
-    teams = set(self.group.teams)
-    for S in seasons:
-        if S.nr == 1:  # skip winter TODO: more sophisticated
-            continue
-        teams &= S.teams()
-    return teams
+  def continuous_activity(self):
+    d = {Te: 0 for Te in self.teams()}
+    s = self
+    for Te in s.teams(True):
+      d[Te] += 1
+    while s.prev:
+      s = s.prev
+      for Te in s.teams(True):
+        if Te in d and d[Te]:
+          d[Te] += 1
+    return d
+
 
   def lastaliveplayers(self, allteams=False):
     d = {}
@@ -95,7 +88,13 @@ class Season(
     return d
 
   def gold_partner_teams(self):
-    return self.consecutive_teams(16)
+    fromS = self.group.config.get("partnership_introduced")
+    if not fromS:
+      return set()
+    return {
+        Te for Te, a in self.continuous_activity().items()
+        if (16 <= a)
+    }
 
   def prestigesofteams(self, allteams=False):
     ignore = {
@@ -128,7 +127,13 @@ class Season(
     return d
 
   def silver_partner_teams(self):
-    return self.consecutive_teams(8) - self.gold_partner_teams()
+    fromS = self.group.config.get("partnership_introduced")
+    if not fromS:
+      return set()
+    return {
+        Te for Te, a in self.continuous_activity().items()
+        if (8 <= a < 16)
+    }
 
   def since(self, season, ignore=None):
     """
