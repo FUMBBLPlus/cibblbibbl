@@ -44,13 +44,6 @@ class Season(
       prev = sorted(self.year.prev.seasons)[-1]
     return prev
 
-  @property
-  def teams(self):
-    return {
-        Te for T in self.tournaments.values()
-        for Te in T.teams
-    }
-
   def consecutive_teams(self, past_seasons):
     fromS = self.group.config.get("partnership_introduced")
     if not fromS:
@@ -68,7 +61,7 @@ class Season(
     for S in seasons:
         if S.nr == 1:  # skip winter TODO: more sophisticated
             continue
-        teams &= S.teams
+        teams &= S.teams()
     return teams
 
   def lastaliveplayers(self, allteams=False):
@@ -76,7 +69,7 @@ class Season(
     if allteams:
       teams = set(self.group.teams)
     else:
-      teams = set(self.teams)
+      teams = set(self.teams())
     for Te in teams:
       tournaments = [
           T for T in Te.tournaments if T.season <= self
@@ -174,6 +167,15 @@ class Season(
       elif LL[2] in s:
         LL[0] += 25
     return sorted(L, reverse=True)
+
+  def teams(self, with_match=False, friendly_all=True):
+    return {
+        Te for T in self.tournaments.values()
+        for Te in T.teams(
+            with_match = with_match,
+            friendly_all = friendly_all,
+        )
+    }
 
   def until(self, season):
     """

@@ -208,7 +208,7 @@ class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
     end_tournamentId = self.get("end_tournamentId")
     if end_tournamentId:
       end_tournament = self.group.tournaments[end_tournamentId]
-      if end_tournament < tournament:
+      if end_tournament <= tournament:
         return False
     return True
 

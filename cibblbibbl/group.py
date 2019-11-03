@@ -86,5 +86,5 @@ class Group(metaclass=cibblbibbl.helper.InstanceRepeater):
       T = handler_.init(self.key, Id)
       T.register()
     for T in self.tournaments.values():
-      for Te in T.teams:
+      for Te in T.teams():
         Te.tournaments.add(T)

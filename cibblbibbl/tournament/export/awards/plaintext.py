@@ -65,7 +65,7 @@ def export(T, *,
   for A in achievements:
     d_achievements[A.clskey()][A.subject] = A
   prev_tournament = {}
-  for Te in T.teams:
+  for Te in T.teams():
     prev_tournament[Te] = Te.prev_tournament(T)
 
   parts = []

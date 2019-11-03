@@ -77,12 +77,12 @@ class TP_GiverTaker_Child(TeamAchievement):
 
 
 class TP_Giver(TP_GiverTaker_Child):
-  sortrank = 40
+  sortrank = 60
 
 
 
 class TP_Taker(TP_GiverTaker_Child):
-  sortrank = 50
+  sortrank = 61
 
 
 cls = TP_GiverTaker_Mother

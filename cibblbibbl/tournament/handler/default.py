@@ -185,15 +185,6 @@ class BaseTournament(
   status = status.setter(field.config.setter("status"))
   status = status.deleter(field.config.deleter("status"))
 
-  @property
-  def teams(self):
-    return {
-        Te
-        for Mu in self.matchups
-        for Te in Mu.teams
-        if Mu.excluded == "no"
-    } - self.excluded_teams
-
   def filepath(self, key):
     p = cibblbibbl.data.path
     fname = self.configfilename
@@ -217,6 +208,31 @@ class BaseTournament(
     self.group.years.add(self.year)
     self.group.seasons.add(self.season)
     self.year.seasons.add(self.season)
+
+  def teams(self, with_match=False, friendly_all=True):
+    teamIds = self.config.get("teamIds")
+    if teamIds:
+      if (
+          not with_match
+          or (friendly_all and self.friendly == "yes")
+      ):
+        return {
+            cibblbibbl.team.Team(int(teamId))
+            for teamId in teamIds
+        }
+    S = set()
+    for Mu in self.matchups:
+      if Mu.excluded == "yes":
+        continue
+      if with_match:
+        if Mu.match:
+          S |= Mu.teams
+        elif self.friendly == "yes" and friendly_all:
+          S |= Mu.teams
+      else:
+        S |= Mu.teams
+    S -= self.excluded_teams
+    return S
 
 
 class AbstractTournament(BaseTournament):
@@ -437,7 +453,7 @@ class Tournament(BaseTournament):
 
   def playerachievements(self):
     d = {}
-    for Te in self.teams:
+    for Te in self.teams():
       lastPls = self.lastaliveplayers(Te)
       lastAs = {
         A
@@ -577,7 +593,7 @@ class Tournament(BaseTournament):
           D[Pl] = copy.deepcopy(d)
           D[Pl]["tournament"] = self
     if carrylast:
-      for Te in self.teams:
+      for Te in self.teams():
         T = Te.prev_tournament(self)
         if T:
           for Pl, d in T.playerperformances().items():
@@ -681,7 +697,7 @@ class Tournament(BaseTournament):
     return [S[teamId] for teamId in order if teamId in S]
 
   def teamachievements(self):
-    d = {Te: set() for Te in self.teams}
+    d = {Te: set() for Te in self.teams()}
     for A in self.achievements:
       if A.subject_typename != "Team":
         continue
