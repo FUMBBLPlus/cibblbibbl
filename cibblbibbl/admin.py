@@ -20,6 +20,7 @@ def missingkiller():
   n = 1
   for G in cibblbibbl.group.Group.__members__.values():
     print(f'********** {G.key.upper()} **********')
+    G.init()
     for Mu in G.matchups:
       for t in Mu.iterdead():
         teamId, playerId, dpp = t
@@ -42,3 +43,7 @@ def missingkiller():
             f'H{half}T{turn} {reason}'
         )
         n += 1
+
+
+if __name__ == "__main__":
+  missingkiller()

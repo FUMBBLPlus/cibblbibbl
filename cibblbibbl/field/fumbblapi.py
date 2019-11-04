@@ -37,34 +37,18 @@ class CachedFUMBBLAPIGetField(base.CustomKeyDescriptorBase):
     elif self.dir_path:
       o = self.cache.get(instance, ...)
       if o is ...:
-        filename = f'{self.id_func(instance):0>8}.json'
-        p = cibblbibbl.data.path / self.dir_path / filename
-        jf = cibblbibbl.data.jsonfile(p)
+        jf = self.jf(instance)
+        p = jf.filepath
         if not p.is_file() or not p.stat().st_size:
-          jf.dump_kwargs = dict(self.dump_kwargs)
-          o = self.api_func(
-            *self.api_args_func(instance),
-            **self.kwargs,
-          )
-          jf.data = o
-          jf.save()
+          o = self.update(instance, jf)
         else:
           o = jf._data
           if self.force_update_func:
             if self.force_update_func(instance, o):
-              jf.dump_kwargs = dict(self.dump_kwargs)
-              o = self.api_func(
-                *self.api_args_func(instance),
-                **self.kwargs,
-              )
-              jf.data = o
-              jf.save()
+              o = self.update(instance, jf)
         self.cache[instance] = o
     else:
-      o = self.api_func(
-        *self.api_args_func(instance),
-        **self.kwargs,
-      )
+      o = self.update(instance)
     return o
 
   def __delete__(self, instance):
@@ -72,3 +56,22 @@ class CachedFUMBBLAPIGetField(base.CustomKeyDescriptorBase):
       filename = f'{self.id_func(instance):0>8}.json'
       p = cibblbibbl.data.path / self.dir_path / filename
       p.unlink()  # delete file
+
+  def jf(self, instance):
+    if self.dir_path:
+      filename = f'{self.id_func(instance):0>8}.json'
+      p = cibblbibbl.data.path / self.dir_path / filename
+      jf = cibblbibbl.data.jsonfile(p)
+      return jf
+
+  def update(self, instance, jf=None):
+    #print(f'{type(instance)}  {instance._KEY} {self.api_func}')
+    o = self.api_func(
+      *self.api_args_func(instance),
+      **self.kwargs,
+    )
+    if jf:
+      jf.dump_kwargs = dict(self.dump_kwargs)
+      jf.data = o
+      jf.save()
+    return o

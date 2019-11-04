@@ -156,7 +156,17 @@ class AbstractMatchup(BaseMatchup):
 
 class Matchup(BaseMatchup):
 
+  def force_update_func(self, old_data):
+    result = (
+        self.tournament.status != "Completed"
+        and not old_data.get("matchId")
+    )
+    return result
+
   abstract = field.common.Constant(False)
+  config = field.config.CachedConfig(
+      force_update_func = force_update_func
+  )
   configdir = field.config.MatchupsDirectory()
   created = field.matchup.ScheduleRecordTimeFieldGetter()
   highlightedteam = field.matchup.sr_highlightedteam_getter

@@ -6,9 +6,10 @@ import cibblbibbl
 def export(T, *,
     show_Ids = False,
 ):
-  cto_trans = {-1: "", -112: "???"}  # -112: missing
+  cto_trans = {-1: "", -112: "???", -999: ""}
+      # -112: missing; -999: no performance
   hth_trans = {-1: "", 0: "--"}
-  nr_cto_trans = {-112: "?"}  # -112: missing
+  nr_trans = {None: "--"}
   multiline = False
   params = [
       (" #", "a", "r", 2,),
@@ -31,7 +32,15 @@ def export(T, *,
   table.set_cols_width([t[3] for t in params])
   rows = []
   standings = T.standings()
-  for nr, r in enumerate(standings, 1):
+  prev_nr = ...
+  for r in standings:
+    nr = r["nr"]
+    if nr is None:
+      nrstr = "--"
+    elif nr == prev_nr:
+      nrstr = ""
+    else:
+      nrstr = str(nr)
     Te = r["team"]
     if isinstance(Te, cibblbibbl.team.GroupOfTeams):
       multiline = True
@@ -45,21 +54,22 @@ def export(T, *,
     if 100 <= pts:
       pts = f'W{pts-100}'
     row = [
-        nr_cto_trans.get(r["cto"], f'{nr}'),
+        nrstr,
         str(Te.Id),
         Te.name,
         Te.roster_name,
         Te.coach_name,
         perf,
-        pts,
+        (pts if perf else ""),
         hth_trans.get(r["hth"], r["hth"]),
-        r["tddiff"],
-        r["casdiff"],
+        (r["tddiff"] if perf else ""),
+        (r["casdiff"] if perf else ""),
         cto_trans.get(r["cto"], r["cto"]),
     ]
     if not show_Ids:
       del row[1]
     rows.append(row)
+    prev_nr = nr
   rows.insert(0, [t[0] for t in params])
   table.add_rows(rows)
   table.set_deco(

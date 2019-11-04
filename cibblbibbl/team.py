@@ -84,7 +84,7 @@ class Team(metaclass=cibblbibbl.helper.InstanceRepeater):
   def matchups(self, group_key):
     return tuple(self._matchups.get(group_key, []))
 
-  def next_match(self, match):
+  def next_match(self, match, *, _second_run=False):
     matchId = int(match.Id if hasattr(match, "Id") else match)
     gen = iter(self.apimatches)
     prev_d = None
@@ -94,7 +94,14 @@ class Team(metaclass=cibblbibbl.helper.InstanceRepeater):
       else:
         prev_d = d
     else:
-      raise ValueError(f'match #{match} not found')
+      if _second_run:
+        raise ValueError(f'match #{match} not found')
+      else:
+        descriptor = self.__class__.apimatches
+        jf = descriptor.jf(self)
+        o = descriptor.update(self, jf)
+        descriptor.cache[self] = o
+        return self.next_match(match, _second_run=True)
     if prev_d:
       return cibblbibbl.match.Match(int(prev_d["id"]))
 

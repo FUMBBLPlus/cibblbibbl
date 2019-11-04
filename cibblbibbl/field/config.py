@@ -31,16 +31,28 @@ yesnomap = {
 
 class CachedConfig(base.CustomKeyDescriptorBase):
 
+  def __init__(self, *, force_update_func=None, key=None):
+    super().__init__(key=key)
+    self.force_update_func = force_update_func
+    self.jsonfile_cache = {}
+
   def __get__(self, instance, owner):
     if instance is None:
       return self
     attrname = f'_{self.key}'
+    jf = self.jsonfile(instance)
+    calcattrname = f'calculate_{self.key}'
     if not hasattr(instance, attrname):
-      jf = self.jsonfile(instance)
-      calcattrname = f'calculate_{self.key}'
       if not jf.data and hasattr(instance, calcattrname):
         d = getattr(instance, calcattrname)()
         jf.data.update(d)
+      setattr(instance, attrname, jf.data)
+    elif (
+        self.force_update_func
+        and self.force_update_func(instance, jf.data)
+    ):
+      d = getattr(instance, calcattrname)()
+      jf.data = d
       setattr(instance, attrname, jf.data)
     return getattr(instance, attrname)
 
@@ -56,13 +68,17 @@ class CachedConfig(base.CustomKeyDescriptorBase):
     del instance.__dict__[attrname]
 
   def jsonfile(self, instance):
-    filepath = getattr(instance, f'{self.key}filepath')
-    jf = jsonfile(
-        filepath,
-        default_data = {},
-        autosave = True,
-        dump_kwargs = dict(dump_kwargs),
-    )
+    if instance in self.jsonfile_cache:
+      jf = self.jsonfile_cache[instance]
+    else:
+      filepath = getattr(instance, f'{self.key}filepath')
+      jf = jsonfile(
+          filepath,
+          default_data = {},
+          autosave = True,
+          dump_kwargs = dict(dump_kwargs),
+      )
+      self.jsonfile_cache[instance] = jf
     return jf
 
 

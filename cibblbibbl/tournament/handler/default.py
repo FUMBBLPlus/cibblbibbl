@@ -209,29 +209,37 @@ class BaseTournament(
     self.group.seasons.add(self.season)
     self.year.seasons.add(self.season)
 
-  def teams(self, with_match=False, friendly_all=True):
+  def teams(self,
+      with_match=False,
+      friendly_all=True,
+      uncompleted_all=True,
+  ):
+    S = set()
     teamIds = self.config.get("teamIds")
     if teamIds:
       if (
           not with_match
           or (friendly_all and self.friendly == "yes")
+          or (uncompleted_all and self.status != "Completed")
       ):
-        return {
+        S |= {
             cibblbibbl.team.Team(int(teamId))
             for teamId in teamIds
         }
-    S = set()
     for Mu in self.matchups:
       if Mu.excluded == "yes":
         continue
       if with_match:
         if Mu.match:
           S |= Mu.teams
-        elif self.friendly == "yes" and friendly_all:
+        elif friendly_all and self.friendly == "yes":
+          S |= Mu.teams
+        elif uncompleted_all and self.status != "Completed":
           S |= Mu.teams
       else:
         S |= Mu.teams
     S -= self.excluded_teams
+    S -= self.group.excluded_teams
     return S
 
 
@@ -633,6 +641,8 @@ class Tournament(BaseTournament):
     template["hth"] = -1
     template["perf"] = []
     S = collections.defaultdict(lambda: copy.deepcopy(template))
+    for Te in self.teams(True):
+      S[str(Te.Id)].update({"team": Te})
     Ccto = self.config.get("cto", {})
     Chth = self.config.get("hth", {})
     Co = self.config.get("order")
@@ -662,7 +672,8 @@ class Tournament(BaseTournament):
         HTH_results.append(HTH_result)
     bypts = collections.defaultdict(list)
     for teamId, d in S.items():
-      bypts[d["pts"]].append(teamId)
+      if d["perf"]:
+        bypts[d["pts"]].append(teamId)
     for pts, teamIds in bypts.items():
       if 1 < len(teamIds):
         pts_HTH_results = [{teamId: 0} for teamId in teamIds]
@@ -688,31 +699,65 @@ class Tournament(BaseTournament):
     bytie = collections.defaultdict(list)
     keys = ("pts", "hth", "scorediff", "casdiff", "cto")
     for teamId, d in S.items():
-      bytie[tuple(d[k] for k in keys)].append(teamId)
-    for k, teamIds in bytie.items():
-      if 1 < len(teamIds):
-        cto_val = -112  # indicate missing
-        for teamId in teamIds:
+      key = tuple(d[k] for k in keys) + ((not d["perf"]),)
+      bytie[key].append(teamId)
+    if self.status == "Completed":
+      for k, teamIds in bytie.items():
+        if 1 < len(teamIds):
+          cto_val = -112  # indicate missing
+          for teamId in teamIds:
+            S[teamId]["cto"] = cto_val
+            Ccto = self.config.setdefault("cto", {})
+                # this ensures that I write to the config file
+            Ccto[teamId] = cto_val
+        if not S[teamId]["perf"]:
+          cto_val = -999  # indicate no performance
           S[teamId]["cto"] = cto_val
-          Ccto = self.config.setdefault("cto", {})
-              # this ensures that I write to the config file
-          Ccto[teamId] = cto_val
+      cto_val = -999  # indicate no performance
+      for teamId, d in S.items():
+        if not d["perf"]:
+          d["cto"] = cto_val
+    else:
+      try:
+        del self.config["cto"]
+      except KeyError:
+        pass
     # determine order
     if Co is None:
       order = sorted(S, key=(
           lambda teamId: (
+              (not S[teamId]["perf"]),
               -S[teamId]["pts"],
               +S[teamId]["hth"],
               -S[teamId]["tddiff"],
               -S[teamId]["casdiff"],
-              -S[teamId]["cto"]
+              -S[teamId]["cto"],
+              S[teamId]["team"].name,
           )
       ))
     else:
       order = [str(teamId) for teamId in Co]
     S.default_factory = None
         # close defaultdict so it can raise KeyError exceptions
-    return [S[teamId] for teamId in order if teamId in S]
+    L = [S[teamId] for teamId in order if teamId in S]
+    prev_sortkey = None
+    prev_nr = None
+    for nr, d in enumerate(L, 1):
+      if not d["perf"]:
+        d["nr"] = None  # no performance
+      else:
+        sortkey = (
+            d["pts"],
+            d["hth"],
+            d["tddiff"],
+            d["casdiff"],
+            d["cto"],
+        )
+        if sortkey == prev_sortkey:
+          d["nr"] = prev_nr
+        else:
+          d["nr"] = prev_nr = nr
+    return L
 
   def teamachievements(self):
     d = {Te: set() for Te in self.teams()}
