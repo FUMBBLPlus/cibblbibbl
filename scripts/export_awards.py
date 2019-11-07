@@ -2,13 +2,30 @@
 import cibblbibbl
 
 if __name__ == "__main__":
+  import sys
+  if len(sys.argv) == 1:
+    targ = None
+  else:
+    targ = sys.argv[1]
+    starg = targ.split("-")
   G = cibblbibbl.CIBBL
   G.init()
   show_Ids = True
-  Ts = sorted(G.tournaments.values())
-  for T in Ts:
-    #if T.Id.isdecimal() and int(T.Id) <= 45238:  # for debug
-    #  continue  # for debug
+  if targ is None:
+    Ts1 = Ts = sorted(G.tournaments.values())
+  elif targ.upper() == "STR":
+    Ts = sorted(G.tournaments.values())
+    Ts1 = [T for T in Ts if not T.Id.isdecimal()]
+  elif len(starg) == 2:
+    r = range(int(starg[0]), int(starg[1])+1)
+    Ts = sorted(G.tournaments.values())
+    Ts1 = [
+        T for T in Ts
+        if T.Id.isdecimal() and (int(T.Id) in r)
+    ]
+  else:
+    Ts1 = [G.tournaments[targ],]
+  for T in Ts1:
     if not T.ismain:
       continue
     if T.posonly == "yes":

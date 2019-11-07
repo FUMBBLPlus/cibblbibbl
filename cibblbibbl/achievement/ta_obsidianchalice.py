@@ -10,7 +10,10 @@ class TA_ObsidianChalice(TeamAchievement):
   rank = 10
   sortrank = 10
 
-  export_plaintext = TP_Match.export_plaintext
+  def export_plaintext(self, show_Ids=False):
+    s0 = exporttools.idpart(self, show_Ids)
+    s1 = self.subject.name
+    return s0 + s1
 
 
 cls = TA_ObsidianChalice

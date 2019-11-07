@@ -28,7 +28,15 @@ def export(T, *,
   table.set_cols_width([t[3] for t in params])
   rows = []
   standings = T.standings()
-  for nr, r in enumerate(standings, 1):
+  prev_nr = ...
+  for r in standings:
+    nr = r["nr"]
+    if nr is None:
+      nrstr = "--"
+    elif nr == prev_nr:
+      nrstr = ""
+    else:
+      nrstr = str(nr)
     Te = TeofA = r["team"]
     if isinstance(Te, cibblbibbl.team.GroupOfTeams):
       multiline = True
@@ -54,7 +62,7 @@ def export(T, *,
     pcv = sum(A["prestige"] for A in As if type(A) is pcvcls)
     ptot = padm + pgam + pcv + ppos
     row = [
-        f'{nr}',
+        nrstr,
         str(Te.Id),
         Te.name,
         Te.roster_name,
@@ -68,6 +76,7 @@ def export(T, *,
     if not show_Ids:
       del row[1]
     rows.append(row)
+    prev_nr = nr
   rows.insert(0, [t[0] for t in params])
   table.add_rows(rows)
   table.set_deco(

@@ -39,7 +39,7 @@ class TA_WintersGlory(TeamAchievement):
 
   def export_plaintext(self, show_Ids=False):
     s0 = exporttools.idpart(self, show_Ids)
-    s1 = str(self.subject)
+    s1 = self.subject.name
     s2 = exporttools.alreadyearned(self)
     return s0 + s1 + s2
 

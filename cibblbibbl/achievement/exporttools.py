@@ -46,7 +46,7 @@ def team(A, Pl=None):
     return "Star Player"
   elif isinstance(Pl, cibblbibbl.player.MercenaryPlayer):
     return "Mercenary"
-  elif Pl. team:
+  elif Pl.team:
     return Pl.team
   rootA = A
   exc = None
@@ -59,3 +59,7 @@ def team(A, Pl=None):
       rootA = A.prev
   raise exc
 
+
+def teamofmatch(A, Pl=None):
+  Pl = Pl or A.subject
+  return A.match.matchup.team_of_player(Pl)

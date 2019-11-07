@@ -65,10 +65,15 @@ class PA_AerodynamicAim(PlayerAchievement):
     Ma = self.match
     s0 = exporttools.idpart(self, show_Ids)
     team = exporttools.team(self)
-    s1 = f'{self.subject} ({team})'
+    teamofmatch = exporttools.teamofmatch(self)
+    if hasattr(team, "name"):
+      teamname = team.name
+    else:
+      teamname = team
+    s1 = f'{self.subject.name} ({teamname})'
     s2 = f' in match #{self.match.Id}'
-    oppoteam = exporttools.oppoteam(self, team_=team)
-    s3 = f' vs. {oppoteam}'
+    oppoteam = exporttools.oppoteam(self, team_=teamofmatch)
+    s3 = f' vs. {oppoteam.name}'
     s4 = exporttools.alreadyearned(self)
     return s0 + s1 + s2 + s3 + s4
 

@@ -31,8 +31,8 @@ class HighestR5Tournament(default.Tournament):
             if not TP.get("r"):
               break  # not yet played
             elif TP["r"] == "W":
-              if TP["pts"] < 100:
-                TP["pts"] += 100
+              if TP["pts"] < 1000000:
+                TP["pts"] += 1000000
               break
           else:
             continue

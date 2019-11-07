@@ -43,7 +43,7 @@ class TP_Standings(TeamAchievement):
   def export_plaintext(self, show_Ids=False):
     s0 = f'{self["nr"]:>2}. '
     s1 = exporttools.idpart(self, show_Ids)
-    s2 = str(self.subject)
+    s2 = self.subject.name
     s3 = f' ({self.prestige(self.season)} Prestige Points)'
     return s0 + s1 + s2 + s3
 

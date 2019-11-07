@@ -37,7 +37,7 @@ class TP_Match(TeamAchievement):
 
   def export_plaintext(self, show_Ids=False):
     s0 = exporttools.idpart(self, show_Ids)
-    s1 = str(self.subject)
+    s1 = self.subject.name
     s2 = f' ({self.prestige(self.season)} Prestige Points)'
     return s0 + s1 + s2
 

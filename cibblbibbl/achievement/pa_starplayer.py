@@ -52,7 +52,11 @@ class PA_StarPlayer(PlayerAchievement):
   def export_plaintext(self, show_Ids=False):
     s0 = exporttools.idpart(self, show_Ids)
     team = exporttools.team(self)
-    s1 = f'{self.subject} ({team})'
+    if hasattr(team, "name"):
+      teamname = team.name
+    else:
+      teamname = team
+    s1 = f'{self.subject.name} ({teamname})'
     return s0 + s1
 
   def nexttournament(self):

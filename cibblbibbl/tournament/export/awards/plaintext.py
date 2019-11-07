@@ -48,7 +48,7 @@ def _teamstr(player, team):
   elif isinstance(player, cibblbibbl.player.MercenaryPlayer):
     return "Mercenary"
   else:
-    return team
+    return team.name
 
 
 def export(T, *,
@@ -71,8 +71,10 @@ def export(T, *,
   parts = []
 
   nrsuffix = {1: "st", 2: "nd", 3: "rd"}
-  standings = list(enumerate(T.standings(), 1))
-  for nr, d in reversed(standings):
+  for d in reversed(T.standings()):
+    nr = d["nr"]
+    if nr is None:
+      continue
     Te = d["team"]
     nrstr = f'{nr}{nrsuffix.get(nr, "th")} place: '
     idstr = (f'[{Te.Id}] ' if show_Ids else "")
@@ -164,7 +166,7 @@ def export(T, *,
             nextTe = dRPP[Pl1]["team"]
           except KeyError:
             nextTe = Pl1.team
-          nextsparts.append(f'to {nextTe} as {Pl1}')
+          nextsparts.append(f'to {nextTe.name} as {Pl1}')
       s += f', joined {" and ".join(nextsparts)}'
       parts.append(s)
 

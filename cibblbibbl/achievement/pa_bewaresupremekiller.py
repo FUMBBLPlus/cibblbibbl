@@ -88,15 +88,27 @@ class PA_BewareSupremeKiller(PlayerAchievement):
     while rootA.prev is not None:
       rootA = rootA.prev
     s0 = exporttools.idpart(self, show_Ids)
+    teamofmatch = exporttools.teamofmatch(self)
     team = exporttools.team(self)
-    s1 = f'{self.subject} ({team})'
+    if hasattr(team, "name"):
+      teamname = team.name
+    else:
+      teamname = team
+    s1 = f'{self.subject.name} ({teamname})'
     reason = self.config["reason"]
     s2 = f' {exporttools.reasontrans.get(reason, reason)}'
     victimteam = exporttools.team(rootA, Pl=self.victim)
-    s3 = f' {self.victim} ({victimteam})'
+    if hasattr(victimteam, "name"):
+      victimteamname = victimteam.name
+    else:
+      victimteamname = victimteam
+    s3 = f' {self.victim.name} ({victimteamname})'
     s4 = f' in match #{self.match.Id}'
-    oppoteam = exporttools.oppoteam(rootA, team_=team)
-    s5 = f' vs. {oppoteam}'
+    oppoteam = exporttools.oppoteam(rootA, team_=teamofmatch)
+    if not (oppoteam is victimteam):
+      s5 = f' vs. {oppoteam.name}'
+    else:
+      s5 = ""
     s6 = exporttools.alreadyearned(self)
     return s0 + s1 + s2 + s3 + s4 + s5 + s6
 

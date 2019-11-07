@@ -51,8 +51,8 @@ def export(T, *,
     else:
       perf = "".join(r for r, matchId in r["perf"])
     pts = r["pts"]
-    if 100 <= pts:
-      pts = f'W{pts-100}'
+    if 1000000 <= pts:
+      pts = f'W{pts-1000000}'
     row = [
         nrstr,
         str(Te.Id),

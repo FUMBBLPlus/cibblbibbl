@@ -454,6 +454,9 @@ class Tournament(BaseTournament):
   def lastaliveplayers(self, team):
     Ma = self.lastteammatches()[team]
     if not Ma:
+      Tprev = team.prev_tournament(self)
+      if Tprev:
+        return Tprev.lastaliveplayers(team)
       return set()
     else:
       with Ma.replay as Re:

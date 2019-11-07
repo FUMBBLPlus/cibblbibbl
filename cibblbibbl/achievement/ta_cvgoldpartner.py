@@ -1,6 +1,7 @@
 import collections
 import cibblbibbl
 
+from . import agent
 from .. import field
 from . import exporttools
 from .mastercls import TeamAchievement
@@ -24,8 +25,8 @@ class TA_CVGoldPartner(TeamAchievement):
         T for T in G.tournaments.values()
         if startT <= T
     ):
-      #if T.awarded == "yes":
-      #  continue  # collected by the iterexisting agent
+      if T.awarded == "yes":
+        continue  # collected by the iterexisting agent
       if T.abstract:
         continue
       if T.posonly == "yes":
@@ -34,22 +35,32 @@ class TA_CVGoldPartner(TeamAchievement):
       for A in list(cls.__members__.values()):
         if not A.active(T):
           continue
-        active_partners[A.subject].add(A)
+        if A["status"] in ("proposed", "awarded"):
+          active_partners[A.subject].add(A)
       if T.season in partners_of_seasons:
         partners = partners_of_seasons[T.season]
       else:
         partners = cls.f_partners(T.season)
         partners_of_seasons[T.season] = partners
-      for Te in (set(active_partners) - partners):
-        for A1 in active_partners[Te]:
+      if T.status == "Completed":
+        for Te in (set(active_partners) - partners):
+          for A1 in active_partners[Te]:
             A1["end_tournamentId"] = T.Id
-      for Te in (partners - set(active_partners)) & T.teams():
+      teams = (partners - set(active_partners)) & T.teams(True)
+      for Te in teams:
         A = cls(T, Te)
         if A["status"] == "proposed":
           A["prestige"] = value
           A["status"] = "proposed"  # explicit; easier to edit
         yield A
 
+  agent50 = classmethod(agent.iterpostponed)
+
+  def nexttournament(self):
+    nexttournamentId = self.config.get("nexttournamentId")
+    if nexttournamentId:
+      return self.group.tournament[nexttournamentId]
+    return self.subject.next_tournament(self.tournament)
 
 
 cls = TA_CVGoldPartner

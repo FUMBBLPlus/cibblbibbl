@@ -36,6 +36,8 @@ class PA_BP_Mother(PlayerAchievement):
         continue  # collected by the iterexisting agent
       if T.posonly == "yes":
         continue
+      if T.status != "Completed":
+        continue
       cls_c, CC = None, None
       name = T.bestplayersname
       if name:
@@ -108,7 +110,11 @@ class PA_BP_Child(PlayerAchievement):
   def export_plaintext(self, show_Ids=False):
     s0 = exporttools.idpart(self, show_Ids)
     team = exporttools.team(self)
-    s1 = f'{self.subject} ({team})'
+    if hasattr(team, "name"):
+      teamname = team.name
+    else:
+      teamname = team
+    s1 = f'{self.subject.name} ({teamname})'
     s2 = f' ({", ".join(sorted(self["categs"]))})'
     s3 = exporttools.alreadyearned(self)
     return s0 + s1 + s2 + s3
