@@ -16,7 +16,7 @@ class TA_CVSilverPartner(TeamAchievement):
   f_partners = lambda S: S.silver_partner_teams()
 
   agent01 = classmethod(TA_CVGoldPartner.agent01.__func__)
-  agent50 = classmethod(agent.iterpostponed)
+  #agent50 = classmethod(agent.iterpostponed)
 
   nexttournament = TA_CVGoldPartner.nexttournament
 

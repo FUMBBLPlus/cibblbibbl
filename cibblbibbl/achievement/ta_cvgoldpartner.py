@@ -54,7 +54,7 @@ class TA_CVGoldPartner(TeamAchievement):
           A["status"] = "proposed"  # explicit; easier to edit
         yield A
 
-  agent50 = classmethod(agent.iterpostponed)
+  #agent50 = classmethod(agent.iterpostponed)
 
   def nexttournament(self):
     nexttournamentId = self.config.get("nexttournamentId")

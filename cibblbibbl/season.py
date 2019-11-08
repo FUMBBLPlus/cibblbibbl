@@ -45,17 +45,23 @@ class Season(
     return prev
 
   def continuous_activity(self):
-    d = {Te: 0 for Te in self.teams()}
+    broken = set()
+    d = {Te: 0 for Te in self.teams()}  # All teams with 0
+    this_teams = set(d)
     s = self
-    for Te in s.teams(True):
+    for Te in s.teams(True):  # Played with 1
       d[Te] += 1
     while s.prev:
       s = s.prev
-      for Te in s.teams(True):
-        if Te in d and d[Te]:
+      teams = s.teams(True)
+      for Te in this_teams:
+        if Te in broken:
+          continue
+        if Te in teams:
           d[Te] += 1
+        else:
+          broken.add(Te)
     return d
-
 
   def lastaliveplayers(self, allteams=False):
     d = {}
@@ -173,12 +179,17 @@ class Season(
         LL[0] += 25
     return sorted(L, reverse=True)
 
-  def teams(self, with_match=False, friendly_all=True):
+  def teams(self,
+      with_match=False,
+      friendly_all=True,
+      uncompleted_all=True,
+  ):
     return {
         Te for T in self.tournaments.values()
         for Te in T.teams(
             with_match = with_match,
             friendly_all = friendly_all,
+            uncompleted_all = uncompleted_all,
         )
     }
 
