@@ -15,14 +15,14 @@ from . import *
 Achievement = mastercls.Achievement
 
 
-def collect(group_key, rank=None):
+def collect(group, rank=None):
   return {
       a
       for cls in sorted(
           Achievement.registry.values(),
           key = lambda c: c.rank
       )
-      for a in cls.collect(group_key)
+      for a in cls.collect(group)
       if (True if rank is None else (a.rank == rank))
   }
 
@@ -30,8 +30,8 @@ def collect(group_key, rank=None):
 def collectall(rank=None):
   return {
       a
-      for key in cibblbibbl.group.Group.__members__
-      for a in collect(key[0], rank=rank)
+      for group in cibblbibbl.group.Group.__members__.values()
+      for a in collect(group, rank=rank)
   }
 
 

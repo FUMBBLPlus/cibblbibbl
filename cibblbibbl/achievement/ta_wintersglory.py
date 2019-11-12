@@ -12,10 +12,9 @@ class TA_WintersGlory(TeamAchievement):
   sortrank = 20
 
   @classmethod
-  def agent01(cls, group_key):
-    C = cls.defaultconfig_of_group(group_key)._data
-    G = cibblbibbl.group.Group(group_key)
-    for T in G.tournaments.values():
+  def agent01(cls, group):
+    C = cls.defaultconfig_of_group(group)._data
+    for T in group.tournaments.values():
       if T.awarded == "yes":
         continue  # collected by the iterexisting agent
       if T.season.name != "Winter":

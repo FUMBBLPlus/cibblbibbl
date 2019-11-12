@@ -251,6 +251,27 @@ YearNrField = lambda: (DDField(
 ))
 
 
+def defcfgfp(categorystr):
+  def defaultconfigfilepath_of_group(cls, group):
+    return (
+      cibblbibbl.data.path
+      / group.key
+      / categorystr
+      / f'{cls.clskey()}.json'
+    )
+  return classmethod(defaultconfigfilepath_of_group)
+
+@classmethod
+def defcfg(cls, group):
+  jf = jsonfile(
+      cls.defaultconfigfilepath_of_group(group),
+      default_data = {},
+      autosave = True,
+      dump_kwargs = dict(dump_kwargs),
+  )
+  return jf.data
+
+
 @property
 def promptconfig(self):
   jf = jsonfile(

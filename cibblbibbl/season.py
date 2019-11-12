@@ -160,24 +160,13 @@ class Season(
         season = season.prev
     return c
 
-  def standings_without_partnership(self, allteams=False):
+  def prestigestandings(self, allteams=False):
     d = self.prestigesofteams(allteams=allteams)
     L = [
         list(d[Te])+ [Te,]
         for Te in sorted(d, key=d.get, reverse=True)
     ]
     return L
-
-  def standings_with_partnership(self, allteams=False):
-    g = self.gold_partner_teams()
-    s = self.silver_partner_teams()
-    L = self.standings_without_partnership(allteams=allteams)
-    for LL in L:
-      if LL[2] in g:
-        LL[0] += 50
-      elif LL[2] in s:
-        LL[0] += 25
-    return sorted(L, reverse=True)
 
   def teams(self,
       with_match=False,

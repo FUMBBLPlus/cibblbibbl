@@ -17,11 +17,10 @@ class TA_CrushingVictory(TeamAchievement):
   sort_key = PA_AerodynamicAim.sort_key
 
   @classmethod
-  def agent01(cls, group_key):
-    C = cls.defaultconfig_of_group(group_key)._data
+  def agent01(cls, group):
+    C = cls.defaultconfig_of_group(group)._data
     value = C["value"]
-    G = cibblbibbl.group.Group(group_key)
-    for T in G.tournaments.values():
+    for T in group.tournaments.values():
       if T.awarded == "yes":
         continue  # collected by the iterexisting agent
       if T.abstract:

@@ -10,9 +10,8 @@ class TP_Match(TeamAchievement):
   sortrank = 10
 
   @classmethod
-  def agent01(cls, group_key):
-    G = cibblbibbl.group.Group(group_key)
-    for T in G.tournaments.values():
+  def agent01(cls, group):
+    for T in group.tournaments.values():
       if T.awarded == "yes":
         continue  # collected by the iterexisting agent
       if T.posonly == "yes":

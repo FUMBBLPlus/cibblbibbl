@@ -15,14 +15,13 @@ class TA_CVGoldPartner(TeamAchievement):
   f_partners = lambda S: S.gold_partner_teams()
 
   @classmethod
-  def agent01(cls, group_key):
-    C = cls.defaultconfig_of_group(group_key)._data
+  def agent01(cls, group):
+    C = cls.defaultconfig_of_group(group)._data
     value = C["value"]
-    G = cibblbibbl.group.Group(group_key)
-    startT = G.tournaments[C["start_tournamentId"]]
+    startT = group.tournaments[C["start_tournamentId"]]
     partners_of_seasons = {}
     for T in sorted(
-        T for T in G.tournaments.values()
+        T for T in group.tournaments.values()
         if startT <= T
     ):
       if T.awarded == "yes":

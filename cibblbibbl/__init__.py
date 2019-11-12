@@ -4,7 +4,6 @@ __version__ = "0.0.1"
 from . import field
 from . import data
 
-
 from . import helper
 from . import bbcode
 
@@ -31,3 +30,8 @@ CIBBL = group.Group("cibbl")
 
 
 from . import admin
+
+
+# magic modules
+from . import session as _session
+session = _session.fumbbl_session

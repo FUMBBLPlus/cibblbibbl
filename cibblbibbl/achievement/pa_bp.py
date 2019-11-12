@@ -14,24 +14,23 @@ class PA_BP_Mother(PlayerAchievement):
   rank = 10
 
   @classmethod
-  def agent00(cls, group_key):
+  def agent00(cls, group):
     for cls1 in cls.children.values():
-      yield from cls1.agent00(group_key)
+      yield from cls1.agent00(group)
 
   @classmethod
-  def agent01(cls, group_key):
+  def agent01(cls, group):
     cls_StarPlayer = cibblbibbl.player.StarPlayer
     cls_MercenaryPlayer = cibblbibbl.player.MercenaryPlayer
     chldren_by_name = {}
     chldren_by_region = {}
     for cls_c in cls.children.values():
-      CC = cls_c.defaultconfig_of_group(group_key)._data
+      CC = cls_c.defaultconfig_of_group(group)._data
       chldren_by_name[CC["name"]] = (cls_c, CC)
       region = CC.get("region")
       if region:
         chldren_by_region[region] = (cls_c, CC)
-    G = cibblbibbl.group.Group(group_key)
-    for T in G.tournaments.values():
+    for T in group.tournaments.values():
       if T.awarded == "yes":
         continue  # collected by the iterexisting agent
       if T.posonly == "yes":
@@ -57,10 +56,10 @@ class PA_BP_Mother(PlayerAchievement):
           if not region:
             if isinstance(Pl, cls_StarPlayer):
               cls_c = PA_BPR_StarPlayersGuild
-              CC = cls_c.defaultconfig_of_group(group_key)._data
+              CC = cls_c.defaultconfig_of_group(group)._data
             elif isinstance(Pl, cls_MercenaryPlayer):
               cls_c = PA_BPR_MercenaryGuild
-              CC = cls_c.defaultconfig_of_group(group_key)._data
+              CC = cls_c.defaultconfig_of_group(group)._data
             else:
               region = G.regions[Te.roster_name]
           if region:
@@ -79,9 +78,9 @@ class PA_BP_Mother(PlayerAchievement):
         yield A
 
   @classmethod
-  def agent99(cls, group_key):
+  def agent99(cls, group):
     for cls1 in cls.children.values():
-      yield from cls1.agent99(group_key)
+      yield from cls1.agent99(group)
 
 
 

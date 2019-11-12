@@ -6,11 +6,10 @@ import cibblbibbl
 from .. import field
 
 
-def iterexisting(cls, group_key):
-  G = cibblbibbl.group.Group(group_key)
+def iterexisting(cls, group):
   directory = (
     cibblbibbl.data.path
-    / group_key
+    / group.key
     / "achievement"
     / f'{cls.__name__.lower()}'
   )
@@ -18,7 +17,7 @@ def iterexisting(cls, group_key):
     tournamentId = p.parent.name
     if tournamentId.isdecimal():
       tournamentId = tournamentId.lstrip("0")
-    tournament = G.tournaments[tournamentId]
+    tournament = group.tournaments[tournamentId]
     args = p.stem.split("~")
     args = [
         (a.lstrip("0") if a.isdecimal() else a)
@@ -29,12 +28,11 @@ def iterexisting(cls, group_key):
     yield A
 
 
-def iterpostponed(cls, group_key):
-  C = cls.defaultconfig_of_group(group_key)._data
+def iterpostponed(cls, group):
+  C = cls.defaultconfig_of_group(group)._data
   value = C["value"]
-  G = cibblbibbl.group.Group(group_key)
   As = {
-      A for A in G.achievements
+      A for A in group.achievements
       if type(A) is cls
       and A["status"] in {"postpone proposed", "postponed"}
   }
@@ -52,9 +50,8 @@ def iterpostponed(cls, group_key):
     yield A1
 
 
-def iterprevs(cls, group_key):
-  G = cibblbibbl.group.Group(group_key)
-  players = sorted(Pl for Pl in G.players if Pl.prev)
+def iterprevs(cls, group):
+  players = sorted(Pl for Pl in group.players if Pl.prev)
   for Pl in players:
     prevPl = Pl.prev
     Ma = cibblbibbl.match.Match(int(Pl.prevdeadmatchId))
@@ -64,7 +61,7 @@ def iterprevs(cls, group_key):
     T1 = Mu.tournament
     prevachievmul = Pl.prevachievmul
     for A0 in prevPl.achievements:
-      if A0.group_key != group_key:
+      if A0.group != group:
         continue
       if A0.clskey() != cls.clskey():
         continue

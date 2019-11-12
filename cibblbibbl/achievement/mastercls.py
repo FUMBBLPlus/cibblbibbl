@@ -12,12 +12,20 @@ from . import agent
 
 class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
 
-  rank = 0
-
+  __ge__ = field.ordering.PropTupCompar("sort_key")
+  __gt__ = field.ordering.PropTupCompar("sort_key")
+  __le__ = field.ordering.PropTupCompar("sort_key")
+  __lt__ = field.ordering.PropTupCompar("sort_key")
+  agent00 = classmethod(agent.iterexisting)
   config = field.config.CachedConfig()
   defaultconfig = field.config.CachedConfig()
+  defaultconfig_of_group = field.config.defcfg
+  defaultconfigfilepath_of_group = field.config.defcfgfp(
+      "achievement"
+  )
   group = field.inst.group_by_self_group_key
   group_key = field.common.DiggedAttr("tournament", "group_key")
+  rank = 0
   registry = {}
   season = field.common.DiggedAttr("tournament", "season")
   season_nr = field.common.DiggedAttr("tournament", "season_nr")
@@ -79,46 +87,20 @@ class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
     except KeyError:
       return default
 
-  __lt__ = field.ordering.PropTupCompar("sort_key")
-  __le__ = field.ordering.PropTupCompar("sort_key")
-  __gt__ = field.ordering.PropTupCompar("sort_key")
-  __ge__ = field.ordering.PropTupCompar("sort_key")
-
-  agent00 = classmethod(agent.iterexisting)
-
   @classmethod
   def clskey(cls):
     return cls.__name__.lower()
 
   @classmethod
-  def collect(cls, group_key):
+  def collect(cls, group):
     agents = tuple(sorted((
         a for a in dir(cls) if a.startswith("agent")
     ), key=lambda a: int(a[-2:])))
     return {
         A
         for a in agents
-        for A in getattr(cls, a)(group_key)
+        for A in getattr(cls, a)(group)
     }
-
-  @classmethod
-  def defaultconfigfilepath_of_group(cls, group_key):
-    return (
-      cibblbibbl.data.path
-      / group_key
-      / "achievement"
-      / f'{cls.clskey()}.json'
-    )
-
-  @classmethod
-  def defaultconfig_of_group(cls, group_key):
-    jf = jsonfile(
-        cls.defaultconfigfilepath_of_group(group_key),
-        default_data = {},
-        autosave = True,
-        dump_kwargs = dict(field.config.dump_kwargs),
-    )
-    return jf.data
 
   @classmethod
   def getmember(cls, tournament, subject):
@@ -172,7 +154,7 @@ class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
 
   @property
   def defaultconfigfilepath(self):
-    return self.defaultconfigfilepath_of_group(self.group_key)
+    return self.defaultconfigfilepath_of_group(self.group)
 
   @property
   def nexts(self):

@@ -17,11 +17,10 @@ class TP_GiverTaker_Mother(TeamAchievement):
   agent00 = PA_BP_Mother.agent00
 
   @classmethod
-  def agent10(cls, group_key):
-    G = cibblbibbl.group.Group(group_key)
+  def agent10(cls, group):
     OCA = cibblbibbl.achievement.ta_obsidianchalice.cls
     PCA = cibblbibbl.achievement.ta_pearlchalice.cls
-    for T in G.tournaments.values():
+    for T in group.tournaments.values():
       #if T.awarded == "yes":
       #  continue  # collected by the iterexisting agent
       if T.abstract:

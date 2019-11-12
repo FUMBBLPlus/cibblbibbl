@@ -3,35 +3,25 @@ from ..jsonfile import jsonfile
 import cibblbibbl
 
 from .. import field
+from ..achievement.mastercls import Achievement
 
 
 class Page(metaclass=cibblbibbl.helper.InstanceRepeater):
 
+  __delitem__ = Achievement.__delitem__
+  __getitem__ = Achievement.__getitem__
+  __setitem__ = Achievement.__setitem__
+  clskey = classmethod(Achievement.clskey.__func__)
+  collect = classmethod(Achievement.collect.__func__)
   config = field.config.CachedConfig()
+  defaultconfig = field.config.CachedConfig()
+  defaultconfig_of_group = field.config.defcfg
+  defaultconfigfilepath_of_group = field.config.defcfgfp("page")
+  get = Achievement.get
   group = field.instrep.keyigetterproperty(0)
 
   def __init__(self, group, *args):
     pass
-
-  def __delitem__(self, key):
-    return self.config.__delitem__(key)
-
-  def __getitem__(self, key):
-    return self.config.__getitem__(key)
-
-  def __setitem__(self, key, value):
-    return self.config.__setitem__(key, value)
-
-  @classmethod
-  def collect(cls, group):
-    agents = tuple(sorted((
-        a for a in dir(cls) if a.startswith("agent")
-    ), key=lambda a: int(a[-2:])))
-    return {
-        P
-        for a in agents
-        for P in getattr(cls, a)(group)
-    }
 
   @property
   def args(self):
@@ -43,13 +33,12 @@ class Page(metaclass=cibblbibbl.helper.InstanceRepeater):
       cibblbibbl.data.path
       / self.group.key
       / "page"
-      / self.category
+      /  f'{self.clskey()}'
       / f'{"-".join(str(a) for a in self.args)}.json'
     )
     return p
 
-  def get(self, key, default=None):
-    try:
-      return self[key]
-    except KeyError:
-      return default
+  @classmethod
+  def bbcodetemplatefilepath_of_group(cls, group):
+    defcfgfp = cls.defaultconfigfilepath_of_group(group)
+    return defcfgfp.parent / f'{defcfgfp.stem}.bbcode'

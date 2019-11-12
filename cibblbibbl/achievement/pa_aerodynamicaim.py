@@ -13,13 +13,12 @@ class PA_AerodynamicAim(PlayerAchievement):
   match = field.instrep.keyigetterproperty(3)
 
   @classmethod
-  def agent01(cls, group_key):
-    C = cls.defaultconfig_of_group(group_key)._data
+  def agent01(cls, group):
+    C = cls.defaultconfig_of_group(group)._data
     value = C["value"]
     perfkey = C["perfkey"]
     perfvaltarget = C["perfvaltarget"]
-    G = cibblbibbl.group.Group(group_key)
-    for T in G.tournaments.values():
+    for T in group.tournaments.values():
       if T.awarded == "yes":
         continue  # collected by the iterexisting agent
       if T.posonly == "yes":
@@ -51,7 +50,7 @@ class PA_AerodynamicAim(PlayerAchievement):
   @property
   def sort_key(self):
     return (
-        self.group_key,
+        self.group,
         self.tournament,
         self.sortrank,
         self["name"],
