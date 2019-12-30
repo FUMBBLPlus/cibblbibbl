@@ -20,7 +20,8 @@ class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
   config = field.config.CachedConfig()
   defaultconfig = field.config.CachedConfig()
   defaultconfig_of_group = field.config.defcfg
-  defaultconfigfilepath_of_group = field.config.defcfgfp(
+  defaultconfigfilepath = field.config.defcfgfp
+  defaultconfigfilepath_of_group = field.config.defcfgfpofg(
       "achievement"
   )
   group = field.inst.group_by_self_group_key
@@ -51,6 +52,12 @@ class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
   def __init_subclass__(cls, **kwargs):
     super().__init_subclass__(**kwargs)
     Achievement.registry[cls.clskey()] = cls
+
+  def __contains__(self, item):
+    return (
+        self.config.__contains__(item) or
+        self.defaultconfig.__contains__(item)
+    )
 
   def __del__(self):
     try:
@@ -151,10 +158,6 @@ class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
     stemparts.extend(self.configfileargstrs)
     p /= f'{"~".join(stemparts)}.json'
     return p
-
-  @property
-  def defaultconfigfilepath(self):
-    return self.defaultconfigfilepath_of_group(self.group)
 
   @property
   def nexts(self):

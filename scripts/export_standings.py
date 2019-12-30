@@ -5,7 +5,7 @@ if __name__ == "__main__":
   G = cibblbibbl.CIBBL
   G.init()
   show_Ids = True
-  Ts = sorted(group.tournaments.values())
+  Ts = sorted(G.tournaments.values())
   m_exp = cibblbibbl.tournament.export.standings.plaintext
   f_exp = m_exp.export
   texts = []

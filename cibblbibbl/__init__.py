@@ -28,7 +28,11 @@ from . import achievement
 _init_existing_players = frozenset(player.iterexisting())
 CIBBL = group.Group("cibbl")
 
+# publishment
+from . import page
+from . import pagetitle
 
+# administration
 from . import admin
 
 

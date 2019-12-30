@@ -251,7 +251,12 @@ YearNrField = lambda: (DDField(
 ))
 
 
-def defcfgfp(categorystr):
+@property
+def defcfgfp(self):
+  return self.defaultconfigfilepath_of_group(self.group)
+
+
+def defcfgfpofg(categorystr):
   def defaultconfigfilepath_of_group(cls, group):
     return (
       cibblbibbl.data.path

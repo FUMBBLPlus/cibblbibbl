@@ -96,7 +96,7 @@ class Team(metaclass=cibblbibbl.helper.InstanceRepeater):
     else:
       if _second_run:
         raise ValueError(f'match #{match} not found')
-      else:
+      else:  # update cache
         descriptor = self.__class__.apimatches
         jf = descriptor.jf(self)
         o = descriptor.update(self, jf)
@@ -138,7 +138,10 @@ class Team(metaclass=cibblbibbl.helper.InstanceRepeater):
       i -= 1
 
 
-  def search_player(self, name, in_pastplayers=True):
+  def search_player(self, name,
+      in_pastplayers = True,
+      _second_run = False,
+  ):
     S = set()
     d = self.legacyapiget
     if in_pastplayers:
@@ -149,6 +152,15 @@ class Team(metaclass=cibblbibbl.helper.InstanceRepeater):
       if p["name"] == name:
         playerId = str(p["id"])
         S.add(cibblbibbl.player.player(playerId, name=name))
+    if not _second_run and not S:  # update and research
+      descriptor = self.__class__.legacyapiget
+      jf = descriptor.jf(self)
+      o = descriptor.update(self, jf)
+      descriptor.cache[self] = o
+      return self.search_player(name,
+          in_pastplayers = in_pastplayers,
+          _second_run = True,
+      )
     return S
 
 

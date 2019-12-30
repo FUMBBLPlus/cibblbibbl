@@ -4,7 +4,7 @@ import cibblbibbl
 if __name__ == "__main__":
   G = cibblbibbl.CIBBL
   show_Ids = True
-  Ts = sorted(group.tournaments.values())
+  Ts = sorted(G.tournaments.values())
   m_exp0 = cibblbibbl.tournament.export
   m_exp = m_exp0.playerperformances.plaintext
   f_exp = m_exp.export

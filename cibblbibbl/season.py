@@ -94,13 +94,22 @@ class Season(
     return d
 
   def gold_partner_teams(self):
-    fromS = self.group.config.get("partnership_introduced")
-    if not fromS:
+    if not self.haspartnership():
       return set()
     return {
         Te for Te, a in self.continuous_activity().items()
         if (16 <= a)
     }
+
+  def haspartnership(self):
+    fromSkey = self.group.config.get("partnership_introduced")
+    if fromSkey:
+      fromS = Season(self.group_key, *fromSkey)
+      if self < fromS:
+        return False
+    else:
+      return False
+    return True
 
   def prestigesofteams(self, allteams=False):
     ignore = {
@@ -133,8 +142,7 @@ class Season(
     return d
 
   def silver_partner_teams(self):
-    fromS = self.group.config.get("partnership_introduced")
-    if not fromS:
+    if not self.haspartnership():
       return set()
     return {
         Te for Te, a in self.continuous_activity().items()
@@ -162,11 +170,36 @@ class Season(
 
   def prestigestandings(self, allteams=False):
     d = self.prestigesofteams(allteams=allteams)
-    L = [
+    L0 = [
         list(d[Te])+ [Te,]
-        for Te in sorted(d, key=d.get, reverse=True)
+        for Te in sorted(d, key=lambda Te: (
+          -d[Te][0],
+          tuple(-v for v in d[Te][1]),
+          Te.name,
+        ))
     ]
-    return L
+    prev = None
+    prev_nr = None
+    L1 = []
+    for nr, (pr, tprs, Te) in enumerate(L0, 1):
+        newprev = (pr, tprs)
+        if prev == newprev:
+            nr = prev_nr
+        else:
+            prev = newprev
+            prev_nr = nr
+        L1.append([nr, pr, tprs, Te])
+    return L1
+
+  def status(self):
+    statuses = {T.status for T in self.tournaments.values()}
+    if len(statuses) == 1:
+      return next(iter(statuses))
+    statuses -= {"Completed",}
+    if len(statuses) == 1:
+      return next(iter(statuses))
+    else:
+      return ", ".join(sorted(statuses))
 
   def teams(self,
       with_match=False,

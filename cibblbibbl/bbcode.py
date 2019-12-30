@@ -33,14 +33,11 @@ def img(href):
 def left(text):
   return f'{str(text)}'
 
-
 def monospace(text):
   return font(text, "monospace")
 
-
 def right(text):
   return f'[block=right]{str(text)}[/block]'
-
 
 def size(content, size=10):
   return f'[size={size}]{content}[/size]'
@@ -52,7 +49,6 @@ def sub(text):
       f'{str(text)}'
       "[/block][/block][/size]"
   )
-
 
 def table(
     rows,
@@ -112,16 +108,10 @@ def table(
     yield f'[/table]'
   return f'\\{N}'.join(subgen())
 
-
-
-
 def url(url, name=None):
   if name is None:
     return f'[url]{url}[/url]'
   return f'[url={url}]{name}[/url]'
-
-
-
 
 def otag(name, style=None):
   if style:
@@ -131,7 +121,6 @@ def otag(name, style=None):
 
 def ctag(name):
   return f'[/{name}]'
-
 
 def dict2style(d):
   parts = []
@@ -144,7 +133,6 @@ def dict2style(d):
   s = " ".join(parts)
   return s
 
-
 def style2dict(style):
   d = {}
   for s in style.split(" "):
@@ -152,3 +140,38 @@ def style2dict(style):
     k, _, v = [s2.strip() for s2 in s.partition("=")]
     d[k] = v
   return d
+
+
+
+def coach(coach_name):
+  return url(f'/~{coach_name}', coach_name)
+
+def match(Mu, name):
+  return url(f'/p/match?id={Mu.Id}', name)
+
+def notepage(P, name, owner="SzieberthAdam"):
+  return url(f'/note/{owner}/{P.notelink()}', name)
+
+def team(Te):
+  return url(f'/p/team?team_id={Te.Id}', Te.name)
+
+
+
+def move(moveval):
+  if moveval and isinstance(moveval, str):
+    return size(moveval, 8)
+  elif not moveval:
+    return ""
+  elif 0 < moveval:
+    return f'↑{size(moveval, 8)}'
+  elif moveval < 0:
+    return f'↓{size(abs(moveval), 8)}'
+
+
+def tooltip(tooltipId, content):
+  return f'[block=tooltip id={tooltipId}]{content}[/block]'
+
+def tooltiped(tooltipId, content):
+  return f'[block tooltip={tooltipId}]{content}[/block]'
+
+
