@@ -16,4 +16,3 @@ if __name__ == "__main__":
       cibblbibbl.settings[key] = abspath.as_posix()
       sys.exit()
   print(usage)
-

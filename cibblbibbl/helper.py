@@ -10,6 +10,9 @@ IGNORE = "\xad"
 NOTYPECAST = lambda v: v
 
 
+def _compare(attrname, this, other):
+  return getattr(this._KEY, attrname)(other._KEY)
+
 class InstanceRepeater(type):
 
   def __new__(meta, name, bases, dict_):
@@ -36,7 +39,7 @@ class InstanceRepeater(type):
       if k not in keys:
         dict_[k] = (
             lambda self, other, k=k:
-            getattr(self._KEY, k)(other._KEY)
+            _compare(k, self, other)
         )
     if "__hash__" not in keys:
       dict_["__hash__"] = (

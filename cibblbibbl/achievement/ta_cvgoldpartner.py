@@ -55,6 +55,9 @@ class TA_CVGoldPartner(TeamAchievement):
 
   #agent50 = classmethod(agent.iterpostponed)
 
+  def export_plaintext(self, show_Ids=False):
+    return
+
   def nexttournament(self):
     nexttournamentId = self.config.get("nexttournamentId")
     if nexttournamentId:

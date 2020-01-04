@@ -50,7 +50,7 @@ class PA_AerodynamicAim(PlayerAchievement):
   @property
   def sort_key(self):
     return (
-        self.group,
+        self.group_key,
         self.tournament,
         self.sortrank,
         self["name"],

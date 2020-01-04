@@ -57,7 +57,7 @@ if __name__ == "__main__":
     filename = f_filename(T, ".txt")
     p = cibblbibbl.data.path
     p /= f'{G.key}/tournament/awards/{filename}'
-    with p.open("w") as f:
+    with p.open("w", encoding="utf8") as f:
       f.write(text)
     print(text)
     print("\n" * 3)

@@ -61,7 +61,7 @@ class PA_BP_Mother(PlayerAchievement):
               cls_c = PA_BPR_MercenaryGuild
               CC = cls_c.defaultconfig_of_group(group)._data
             else:
-              region = G.regions[Te.roster_name]
+              region = G.rosterregion[Te.roster_name]
           if region:
             cls_c, CC = chldren_by_region[region]
         value = CC["value"]

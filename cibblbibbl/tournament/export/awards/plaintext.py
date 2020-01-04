@@ -112,13 +112,16 @@ def export(T, *,
       and A["status"] in {"awarded", "proposed"}
       and not isinstance(A.subject, cls_RaisedDeadPlayer)
   )):
+    part = A.export_plaintext(show_Ids=show_Ids)
+    if part is None:
+      continue
     clskey = A.clskey()
     if clskey != prev_clskey:
       if i:
         parts.append("")
       parts.append(f'=== {A["name"]} ({A.baseprestige}) ===')
       prev_clskey = clskey
-    parts.append(A.export_plaintext(show_Ids=show_Ids))
+    parts.append(part)
 
 
   players = _playersseq(T, T.deadplayers())

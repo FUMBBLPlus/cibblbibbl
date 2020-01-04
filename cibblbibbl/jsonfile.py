@@ -180,6 +180,7 @@ class JSONFile(JSONFileRoot):
           'w',
           dir = p.parent,
           delete = False,
+          encoding="utf8",
       ) as tf:
         tf.write(s)
         tp = p.parent / tf.name

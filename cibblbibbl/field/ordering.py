@@ -10,17 +10,19 @@ class PropTupCompar(base.CustomKeyDescriptorBase):
     super().__init__(key=key)
     self.propnames = propnames
 
+  def _comparer(self, instance, other):
+    t0 = tuple(getattr(instance, na) for na in self.propnames)
+    a = getattr(t0, self.key)
+    t1 = tuple(getattr(other, na) for na in self.propnames)
+    r = a(t1,)
+    return r
+
   def __get__(self, instance, owner):
     if instance is None:
       return self
     return (
-      lambda other:
-      getattr(
-        tuple(getattr(instance, na) for na in self.propnames),
-        self.key
-      )(
-        tuple(getattr(other, na) for na in self.propnames),
-      )
+        lambda other, instance=instance:
+        self._comparer(instance, other)
     )
 
 
