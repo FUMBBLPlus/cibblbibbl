@@ -46,7 +46,7 @@ class PA_TargetEliminated(PlayerAchievement):
           Pl = cibblbibbl.player.player(killerId)
           Ma = cibblbibbl.match.Match(matchId)
           A = cls(T, Pl, Ma, half, turn, Pl0)
-          if A["status"] == "proposed":
+          if A.get("status", "proposed") == "proposed":
             A["prestige"] = value
             A["status"] = "proposed"  # explicit
             A["reason"] = reason

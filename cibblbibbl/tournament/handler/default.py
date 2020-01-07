@@ -72,6 +72,7 @@ class BaseTournament(
       "!posonly", default="no"
   )
   ppos = field.config.DDField()
+  code = field.config.DDField(default=None)
   replays = field.insts.matches_replays
   rprestige = field.config.DDField(
       default=dict, set_f_typecast=dict
@@ -105,6 +106,18 @@ class BaseTournament(
   @property
   def configfilepath(self):
     return self.filepath("config")
+
+  @property
+  def longname(self):
+    C = self.config
+    G = self.group
+    codedata = G.code[self.code]
+    name = f'{G.name}'
+    name += f' – Y{self.year.nr}, {self.season.name}'
+    name += f' – {codedata["longname"]}'
+    if C.get("suffix") and C.get("suffixpublish", True):
+      name += f' {C["suffix"]}'
+    return name
 
   @property
   def next(self):
@@ -171,6 +184,18 @@ class BaseTournament(
         raise ValueError(f'season not found: {season!r}')
     self.config["season"] = season.name
   season = season.deleter(field.config.deleter("season"))
+
+  @property
+  def shortname(self):
+    C = self.config
+    G = self.group
+    codedata = G.code[self.code]
+    name = f'{G.name}'
+    name += f' – Y{self.year.nr}, {self.season.name}'
+    name += f' – {codedata["shortname"]}'
+    if C.get("suffix"):
+      name += f' {C["suffix"]}'
+    return name
 
   @property
   def status(self):
@@ -709,13 +734,12 @@ class Tournament(BaseTournament):
         if 1 < len(teamIds):
           cto_val = -112  # indicate missing
           for teamId in teamIds:
+            if not S[teamId]["perf"]:
+              continue
             S[teamId]["cto"] = cto_val
             Ccto = self.config.setdefault("cto", {})
                 # this ensures that I write to the config file
             Ccto[teamId] = cto_val
-        if not S[teamId]["perf"]:
-          cto_val = -999  # indicate no performance
-          S[teamId]["cto"] = cto_val
       cto_val = -999  # indicate no performance
       for teamId, d in S.items():
         if not d["perf"]:

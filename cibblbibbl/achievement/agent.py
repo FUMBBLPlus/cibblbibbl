@@ -34,7 +34,7 @@ def iterpostponed(cls, group):
   As = {
       A for A in group.achievements
       if type(A) is cls
-      and A["status"] in {"postpone proposed", "postponed"}
+      and A.get("status", "proposed") in {"postpone proposed", "postponed"}
   }
   for A0 in As:
     T0 = A0.tournament

@@ -32,7 +32,7 @@ class TA_WintersGlory(TeamAchievement):
           break
         Te = d["team"]
         A = cls(T, Te)
-        if A["status"] == "proposed":
+        if A.get("status", "proposed") == "proposed":
           A["status"] = "proposed"  # explicit
         yield A
 

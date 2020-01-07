@@ -31,7 +31,7 @@ class PA_AerodynamicAim(PlayerAchievement):
           tvalue = d.get(perfkey, 0)
           if perfvaltarget <= tvalue:
             A = cls(T, Pl, Mu.match)
-            if A["status"] == "proposed":
+            if A.get("status", "proposed") == "proposed":
               A["prestige"] = value
               A["status"] = "proposed"  # explicit
             yield A

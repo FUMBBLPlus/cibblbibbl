@@ -37,7 +37,7 @@ class PA_StarPlayer(PlayerAchievement):
           postspp = prespp + d.get("spp", 0)
           if prespp < trigspp and trigspp <= postspp:
             A = cls(T, Pl, Mu.match)
-            if "proposed" in A["status"]:
+            if "proposed" in A.get("status", "proposed"):
               if T.friendly == "yes":
                 A["status"] = "postpone proposed"
                 A["prestige"] = 0

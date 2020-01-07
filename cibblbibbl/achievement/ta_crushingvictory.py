@@ -46,7 +46,7 @@ class TA_CrushingVictory(TeamAchievement):
           if C["oppomaxtds"] < oppotds:
             continue
           A = cls(T, Te, Ma)
-          if A["status"] == "proposed":
+          if A.get("status", "proposed") == "proposed":
             A["prestige"] = value
             A["status"] = "proposed"  # explicit; easier to edit
           yield A

@@ -34,7 +34,7 @@ class TA_CVGoldPartner(TeamAchievement):
       for A in list(cls.__members__.values()):
         if not A.active(T):
           continue
-        if A["status"] in ("proposed", "awarded"):
+        if A.get("status", "proposed") in ("proposed", "awarded"):
           active_partners[A.subject].add(A)
       if T.season in partners_of_seasons:
         partners = partners_of_seasons[T.season]
@@ -48,7 +48,7 @@ class TA_CVGoldPartner(TeamAchievement):
       teams = (partners - set(active_partners)) & T.teams(True)
       for Te in teams:
         A = cls(T, Te)
-        if A["status"] == "proposed":
+        if A.get("status", "proposed") == "proposed":
           A["prestige"] = value
           A["status"] = "proposed"  # explicit; easier to edit
         yield A

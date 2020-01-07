@@ -35,7 +35,7 @@ class PA_Perfection(PlayerAchievement):
           larson = all(d.get(k, 0) for k in larsonkeys)
           if larson:
             A = cls(T, Pl, Mu.match)
-            if A["status"] == "proposed":
+            if A.get("status", "proposed") == "proposed":
               A["prestige"] = value
               A["status"] = "proposed"  # explicit
             yield A

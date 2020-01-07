@@ -62,7 +62,7 @@ class TP_GiverTaker_Mother(TeamAchievement):
               value = -50
             else:
               continue
-            if A["status"] == "proposed":
+            if A.get("status", "proposed") == "proposed":
               A["prestige"] = value
               A["status"] = "proposed"  # explicit
             yield A

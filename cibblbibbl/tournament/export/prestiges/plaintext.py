@@ -49,7 +49,7 @@ def export(T, *,
       perf = "".join(r for r, matchId in r["perf"])
     As = {
         A for A in T.achievements
-        if A["status"] in statuses
+        if A.get("status", "proposed") in statuses
         and A.subject is TeofA
     }
     padmcls = cibblbibbl.achievement.tp_admin.cls

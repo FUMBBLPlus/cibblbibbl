@@ -10,6 +10,7 @@ import cibblbibbl
 class Group(metaclass=cibblbibbl.helper.InstanceRepeater):
 
   achievements = field.insts.self_tournament_achievements
+  code = field.config.DDField()
   config = field.config.CachedConfig()
   excluded_teamIds = field.config.DDField(
       key="excluded_teams", default=lambda i, d: set()
@@ -19,7 +20,8 @@ class Group(metaclass=cibblbibbl.helper.InstanceRepeater):
   key = field.instrep.keyigetterproperty(0)
   matches = field.insts.matchups_matches
   matchups = field.insts.self_tournaments_matchups
-  rosterregion = field.config.DDField()
+  name = field.config.DDField()
+  rostercode = field.config.DDField()
   replays = field.insts.matches_replays
 
   def __init__(self, key: str):
@@ -34,6 +36,8 @@ class Group(metaclass=cibblbibbl.helper.InstanceRepeater):
     self.register_tournaments()
     #print("register_matchups")
     self.register_matchups()
+    #print("cleanup_achievements")
+    self.cleanup_achievements()
     #print("register_achievements")
     self.register_achievements()
 
@@ -44,6 +48,9 @@ class Group(metaclass=cibblbibbl.helper.InstanceRepeater):
   @property
   def season_names(self):
     return tuple(self.config["seasons"])
+
+  def cleanup_achievements(self):
+    cibblbibbl.achievement.cleanup(self)
 
   def register_achievements(self, rank=None):
     cibblbibbl.achievement.collect(self, rank=rank)

@@ -124,8 +124,11 @@ class JSONFile(JSONFileRoot):
     elif autosave:
       self.save()
 
-  def __str__(self):
+  def __repr__(self):
     return f"{self.__class__.__name__}('{self.filepath}')"
+
+  def __str__(self):
+    return self.__repr__()
 
   @property
   def autosave(self):
@@ -145,7 +148,10 @@ class JSONFile(JSONFileRoot):
 
   def delete(self):
     super().delete()
-    self.filepath.unlink()
+    try:
+      self.filepath.unlink()
+    except FileNotFoundError:
+      pass  # super().delete() deleted the file
 
   def may_changed(self, inst, old_data):
     return super().may_changed(inst, old_data)

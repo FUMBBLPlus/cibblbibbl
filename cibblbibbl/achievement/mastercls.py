@@ -2,8 +2,6 @@ import collections
 import copy
 import math
 
-from ..jsonfile import jsonfile
-
 import cibblbibbl
 
 from .. import field

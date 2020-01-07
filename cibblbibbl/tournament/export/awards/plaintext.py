@@ -109,7 +109,7 @@ def export(T, *,
   for i, A in enumerate(sorted(
       A for A in T.achievements
       if not A.clskey().startswith("tp")
-      and A["status"] in {"awarded", "proposed"}
+      and A.get("status", "proposed") in {"awarded", "proposed"}
       and not isinstance(A.subject, cls_RaisedDeadPlayer)
   )):
     part = A.export_plaintext(show_Ids=show_Ids)

@@ -33,7 +33,7 @@ class TP_Standings(TeamAchievement):
           teams = (Te,)
         for Te in teams:
           A = cls(T, Te)
-          if A["status"] == "proposed":
+          if A.get("status", "proposed") == "proposed":
             A["prestige"] = prestige
             A["nr"] = nr
             A["status"] = "proposed"  # explicit

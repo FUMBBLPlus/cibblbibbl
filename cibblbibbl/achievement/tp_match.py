@@ -29,7 +29,7 @@ class TP_Match(TeamAchievement):
         if not prestige:
           continue
         A = cls(T, Te)
-        if A["status"] == "proposed":
+        if A.get("status", "proposed") == "proposed":
           A["prestige"] = prestige
           A["status"] = "proposed"  # explicit; easier to edit
         yield A
