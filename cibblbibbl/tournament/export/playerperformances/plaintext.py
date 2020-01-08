@@ -10,7 +10,7 @@ columntrans = {
     "Completions": "Cp",
     "Fouls": "Fo",
     "Interceptions": "It",
-    "SPP": "★P",
+    "SPP": "SPP",
     "Touchdowns": "Td",
     "Blocking Scorer": "BS",
     "Blocking Thrower": "BT",
@@ -44,7 +44,7 @@ def export(T, order = None):
   ]
   order = order or default_order
   params += [
-      (columntrans[name], "t", "r", 2,)
+      (columntrans[name], "t", "r", len(columntrans[name]),)
       for name in order
   ]
   table = texttable.Texttable()
@@ -74,12 +74,14 @@ def export(T, order = None):
       if 30 < len(name):
         name = f'{name[:28]}..'
     Te = Sj.team
-    if Te:
+    if Te is ...:
+      teamname, roster_name, coach_name = "", "", ""
+    elif Te and not isinstance(Te, str):
       teamname = Te.name
       roster_name = Te.roster_name
       coach_name = Te.coach_name
     else:
-      teamname, roster_name, coach_name = "", "", ""
+      teamname, roster_name, coach_name = Te, "", ""
     d = performances[Sj]
     names = [
         name,

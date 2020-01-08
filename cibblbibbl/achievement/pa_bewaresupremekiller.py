@@ -28,8 +28,8 @@ class PA_BewareSupremeKiller(PlayerAchievement):
         continue
       for Pl0, dead in T.deadplayers().items():
         for A0 in Pl0.achievements:
-          #if A0["status"] != "awarded":
-          #  continue
+          if A0.get("status", "proposed") == "rejected":
+            continue
           if T <= A0.tournament:
             continue
           if A0.clskey() == "pa_superstarplayer":

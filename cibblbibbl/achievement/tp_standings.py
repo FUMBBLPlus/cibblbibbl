@@ -18,8 +18,6 @@ class TP_Standings(TeamAchievement):
         continue  # collected by the iterexisting agent
       if T.posonly == "yes":
         continue
-      if T.status != "Completed":
-        continue
       pposgen = itertools.chain(T.ppos, itertools.repeat(0))
       standings = T.standings()
       for nr, d in enumerate(standings, 1):
