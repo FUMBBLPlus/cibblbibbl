@@ -10,6 +10,7 @@ class TP_Admin(TeamAchievement):
   rank = 10
   sortrank = 10
 
+  export_bbcode = TP_Match.export_bbcode
   export_plaintext = TP_Match.export_plaintext
 
 

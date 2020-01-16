@@ -42,8 +42,8 @@ def cleanup_empty_directories(group):
 
 def cleanup_proposed(group):
   for jf in iter_all_jsonfiles(group):
-    status = jf.data.get("status")
-    if status == "proposed":
+    status = jf.data.get("status", "proposed")
+    if "proposed" in status:
       jf.delete()
 
 
@@ -77,6 +77,8 @@ def iter_all_jsonfiles(group):
   )
   dump_kwargs = dict(cibblbibbl.field.config.dump_kwargs)
   for filepath in root_directory.glob("**/*.json"):
+    if filepath.parent == root_directory:
+      continue  # not the default config files
     jf = cibblbibbl.data.jsonfile(
         filepath,
         autosave = True,

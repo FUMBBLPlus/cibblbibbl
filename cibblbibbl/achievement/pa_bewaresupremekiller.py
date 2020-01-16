@@ -1,5 +1,6 @@
 import collections
 import cibblbibbl
+from cibblbibbl import bbcode
 
 from .. import field
 from . import exporttools
@@ -81,6 +82,30 @@ class PA_BewareSupremeKiller(PlayerAchievement):
         self.victim.name,
     )
 
+  def export_bbcode(self):
+    rootA = self
+    while rootA.prev is not None:
+      rootA = rootA.prev
+    team = exporttools.team(self)
+    teamofmatch = exporttools.teamofmatch(self)
+    s1 = f'{bbcode.player(self.subject)} ({bbcode.team(team)})'
+    reason = self.config["reason"]
+    victimteam = exporttools.team(rootA, Pl=self.victim)
+    teamofmatch = exporttools.teamofmatch(self)
+    s21 = (
+        f'{bbcode.player(self.victim)}'
+        f' ({bbcode.team(victimteam)})'
+    )
+    s2 = exporttools.reasontrans.get(reason, reason).format(s21)
+    s3 = f' [{bbcode.match(self.match, "match")}]'
+    oppoteam = exporttools.oppoteam(rootA, team_=teamofmatch)
+    if not (oppoteam is victimteam):
+      s4 = f' vs. {bbcode.team(oppoteam)}'
+    else:
+      s4 = ""
+    s5 = exporttools.alreadyearned(self)
+    return s1 + s2 + s3 + s4 + s5
+
 
   def export_plaintext(self, show_Ids=False):
     rootA = self
@@ -95,21 +120,21 @@ class PA_BewareSupremeKiller(PlayerAchievement):
       teamname = team
     s1 = f'{self.subject.name} ({teamname})'
     reason = self.config["reason"]
-    s2 = f' {exporttools.reasontrans.get(reason, reason)}'
     victimteam = exporttools.team(rootA, Pl=self.victim)
     if hasattr(victimteam, "name"):
       victimteamname = victimteam.name
     else:
       victimteamname = victimteam
-    s3 = f' {self.victim.name} ({victimteamname})'
-    s4 = f' in match #{self.match.Id}'
+    s21 = f'{self.victim.name} ({victimteamname})'
+    s2 = exporttools.reasontrans.get(reason, reason).format(s21)
+    s3 = f' in match #{self.match.Id}'
     oppoteam = exporttools.oppoteam(rootA, team_=teamofmatch)
     if not (oppoteam is victimteam):
-      s5 = f' vs. {oppoteam.name}'
+      s4 = f' vs. {oppoteam.name}'
     else:
-      s5 = ""
-    s6 = exporttools.alreadyearned(self)
-    return s0 + s1 + s2 + s3 + s4 + s5 + s6
+      s4 = ""
+    s5 = exporttools.alreadyearned(self)
+    return s0 + s1 + s2 + s3 + s4 + s5
 
 
 cls = PA_BewareSupremeKiller

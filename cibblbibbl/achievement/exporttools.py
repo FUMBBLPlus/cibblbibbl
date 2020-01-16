@@ -2,9 +2,20 @@ import cibblbibbl
 
 
 reasontrans = {
-    "bomb": "bombed",
-    "chainsaw": "sawed",
-    "dodgeFail": "tackled",
+    "ballAndChain": " hit {0} with a ball and chain",
+    "bitten": " has bitten {0}",
+    "blocked": " blocked {0}",
+    "bomb": " hit {0} with a bomb",
+    "chainsaw": " hit {0} with a chainsaw",
+    "crowdPushed": " pushed {0} into the crowd",
+    "dodgeFail": " tackled {0}",
+    "eaten": " ate {0}",
+    "fireball": " hit {0} with a fireball",
+    "fouled": " fouled {0}",
+    "hitByThrownPlayer": " hit {0} with self",
+    "lightning": " hit {0} with a lightning",
+    "piledOn":  " piled upon {0}",
+    "stabbed": " stabbed {0}",
 }
 
 
@@ -54,7 +65,7 @@ def team(A, Pl=None):
     dRPP = rootA.tournament.rawplayerperformances()
     try:
       return dRPP[Pl]["team"]
-    except Exceptipon as exc_:
+    except Exception as exc_:
       exc = exc_
       rootA = A.prev
   raise exc

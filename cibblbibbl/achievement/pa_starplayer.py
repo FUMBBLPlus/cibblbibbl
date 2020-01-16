@@ -1,5 +1,6 @@
 import collections
 import cibblbibbl
+from cibblbibbl import bbcode
 
 from .. import field
 from . import agent
@@ -47,6 +48,11 @@ class PA_StarPlayer(PlayerAchievement):
             yield A
 
   agent50 = classmethod(agent.iterpostponed)
+
+  def export_bbcode(self):
+    team = exporttools.team(self)
+    s1 = f'{bbcode.player(self.subject)} ({bbcode.team(team)})'
+    return s1
 
   def export_plaintext(self, show_Ids=False):
     s0 = exporttools.idpart(self, show_Ids)

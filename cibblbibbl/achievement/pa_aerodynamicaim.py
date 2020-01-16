@@ -1,5 +1,6 @@
 import collections
 import cibblbibbl
+from cibblbibbl import bbcode
 
 from .. import field
 from . import exporttools
@@ -60,8 +61,18 @@ class PA_AerodynamicAim(PlayerAchievement):
     )
 
 
+  def export_bbcode(self):
+    team = exporttools.team(self)
+    teamofmatch = exporttools.teamofmatch(self)
+    s1 = f'{bbcode.player(self.subject)} ({bbcode.team(team)})'
+    s2 = f' in {bbcode.match(self.match, "match")}'
+    oppoteam = exporttools.oppoteam(self, team_=teamofmatch)
+    s3 = f' vs. {bbcode.team(oppoteam)}'
+    s4 = exporttools.alreadyearned(self)
+    return s1 + s2 + s3 + s4
+
+
   def export_plaintext(self, show_Ids=False):
-    Ma = self.match
     s0 = exporttools.idpart(self, show_Ids)
     team = exporttools.team(self)
     teamofmatch = exporttools.teamofmatch(self)

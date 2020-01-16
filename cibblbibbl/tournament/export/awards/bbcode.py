@@ -1,46 +1,9 @@
 import collections
 
 import cibblbibbl
+from cibblbibbl import bbcode
 
-
-kreasontrans = {
-    "ballAndChain": " has been hit by a ball and chain of ",
-    "bitten": " was bitten by ",
-    "blocked": " was blocked by ",
-    "bomb": " has been hit by a bomb throwned by ",
-    "chainsaw": " has been hit by a chainsaw of ",
-    "crowdPushed": " got pushed into the crowd by ",
-    "dodgeFail": " tackled by ",
-    "eaten": " has been eaten by ",
-    "fireball": " has been hit by a fireball of ",
-    "fouled": " was fouled by ",
-    "hitByThrownPlayer": " has been hit by a thrown player: ",
-    "lightning": " has been hit by a lightning bolt of ",
-    "piledOn": " was piled upon by ",
-    "stabbed": " has been stabbed by ",
-}
-
-nreasontrans = {
-    "ballAndChain": " has been hit by a ball and chain",
-    "bitten": " was bitten by a team-mate",
-    "blocked": " was blocked",
-    "bomb": " has been hit by a bomb",
-    "chainsaw": " has been hit by a chainsaw",
-    "crowdPushed": " got pushed into the crowd",
-    "dodgeFail": " failed a dodge",
-    "eaten": " has been eaten",
-    "fireball": " has been hit by a fireball",
-    "fouled": " was fouled",
-    "gfiFail": " failed to go for it",
-    "hitByRock": " has been hit by a rock",
-    "hitByThrownPlayer": " has been hit by a thrown player",
-    "landingFail": " failed to land after being thrown",
-    "leapFail": " failed a leap",
-    "lightning": " has been hit by a lightning bolt",
-    "piledOn": " was piled upon",
-    "stabbed": " has been stabbed",
-}
-
+from .plaintext import kreasontrans, nreasontrans
 
 def _diedstr(dRPP, killerId, reason):
   if killerId:
@@ -48,10 +11,10 @@ def _diedstr(dRPP, killerId, reason):
     oppoTe = dRPP[killer]["team"]
     return (
         f'{kreasontrans.get(reason, reason)}'
-        f'{killer.name} ({_teamstr(killer, oppoTe)})'
+        f'{bbcode.player(killer)} ({_teamstr(killer, oppoTe)})'
     )
   else:
-    return f'{nreasontrans.get(reason, reason)}'
+    return f', {nreasontrans.get(reason, reason)}'
 
 
 def _playersseq(T, source_playersseq):
@@ -75,12 +38,10 @@ def _teamstr(player, team):
   elif isinstance(player, cibblbibbl.player.MercenaryPlayer):
     return "Mercenary"
   else:
-    return team.name
+    return bbcode.team(team)
 
 
-def export(T, *,
-    show_Ids = False,
-):
+def export(T):
   cls_StarPlayer = cibblbibbl.player.StarPlayer
   cls_RaisedDeadPlayer = cibblbibbl.player.RaisedDeadPlayer
   dTAv1 = T.teamachievementvalues(False, False, False)
@@ -104,8 +65,11 @@ def export(T, *,
       continue
     Te = d["team"]
     nrstr = f'{nr}{nrsuffix.get(nr, "th")} place: '
-    idstr = (f'[{Te.Id}] ' if show_Ids else "")
-    parts.append(nrstr + idstr + Te.name)
+    nrstr = bbcode.i(nrstr)
+    part = nrstr + bbcode.team(Te)
+    if nr == 1:
+      part = bbcode.b(part)
+    parts.append(part)
     tp_keys = ("tp_admin", "tp_match", "tp_standings")
     dtp = {k: 0 for k in tp_keys}
     for k in dtp:
@@ -139,64 +103,60 @@ def export(T, *,
       and A.get("status", "proposed") in {"awarded", "proposed"}
       and not isinstance(A.subject, cls_RaisedDeadPlayer)
   )):
-    part = A.export_plaintext(show_Ids=show_Ids)
+    part = A.export_bbcode()
     if part is None:
       continue
     clskey = A.clskey()
     if clskey != prev_clskey:
       if i:
         parts.append("")
-      parts.append(f'=== {A["name"]} ({A.baseprestige}) ===')
+      logo_url = A.get("logo_url")
+      if logo_url:
+        parts.append(bbcode.img(logo_url))
+      parts.append(bbcode.b(bbcode.i(A["name"])))
+      parts.append(bbcode.i(A["description"]))
       prev_clskey = clskey
-    #parts.append(f'– {part}')
-    parts.append(f'{part}') # TODO: temporeary, replace
+    parts.append(f'– {part}')
 
 
   players = _playersseq(T, T.deadplayers())
   if players:
     parts.append("")
-    parts.append("*** Famous and Died ***")
+    parts.append(bbcode.b(bbcode.i("Famous and Died")))
     for Pl, prestige in players:
       d = dPP[Pl]
       matchId, half, turn, reason, killerId = d["dead"]
       Ma = cibblbibbl.match.Match(matchId)
-      teams = Ma.teams
       Te = d["team"]
       s = ""
-      if show_Ids:
-        s += f'[{Pl.Id}] '
       s += f'{Pl.name} ({_teamstr(Pl, Te)})'
       if prestige:
         s += f' ({prestige} Achiev.)'
       s += _diedstr(dRPP, killerId, reason)
-      s += f' in match #{matchId}'
-      #parts.append(f'– {s}')
-      parts.append(f'{s}') # TODO: temporeary, replace
+      s += f' [{bbcode.match(Ma, "match")}]'
+      parts.append(f'– {s}')
 
   transferred = T.transferredplayers()
   players = _playersseq(T, transferred)
   if players:
     parts.append("")
-    parts.append("*** Famous and Transferred ***")
+    parts.append(bbcode.b(bbcode.i("Famous and Transferred")))
     for Pl, prestige in players:
       matchId, half, turn, reason, killerId = transferred[Pl]
       Ma = cibblbibbl.match.Match(matchId)
       teams = Ma.teams
       Te = dRPP[Pl]["team"]
       s = ""
-      if show_Ids:
-        s += f'[{Pl.Id}] '
-      s += f'{Pl.name} ({_teamstr(Pl, Te)})'
+      s += f'{bbcode.player(Pl)} ({_teamstr(Pl, Te)})'
       if prestige:
         s += f' ({prestige} Achiev.)'
       s += _diedstr(dRPP, killerId, reason)
       nextsparts = []
       for Pl1 in Pl.nexts:
-        name = str(Pl1)
         if isinstance(Pl1, cls_RaisedDeadPlayer):
           if Pl1.next is not None:
             Pl1 = Pl1.next
-            name = str(Pl1)
+            name = bbcode.player(Pl1)
           else:
             plparts = str(Pl1).split()
             plparts.insert(1, Pl1.prevreason)
@@ -205,24 +165,23 @@ def export(T, *,
           nextTe = dRPP[Pl1]["team"]
         except KeyError:
           nextTe = Pl1.team
-        nextsparts.append(f'to {nextTe.name} as {name}')
+        nextsparts.append(
+            f'to {bbcode.team(nextTe)}'
+            f' as {name}'
+        )
       s += f', joined {" and ".join(nextsparts)}'
-      #parts.append(f'– {s}')
-      parts.append(f'{s}') # TODO: temporeary, replace
+      parts.append(f'– {s}')
 
   retiredplayers = T.retiredplayers(dPP=dPP)
   players = _playersseq(T, retiredplayers)
   if players:
     parts.append("")
-    parts.append("*** Famous and Retired ***")
+    parts.append(bbcode.b(bbcode.i("Famous and Retired")))
     for Pl, prestige in players:
       d = retiredplayers[Pl]
       Te = d["team"]
-      s = ""
-      if show_Ids:
-        s += f'[{Pl.Id}] '
-      s += f'{Pl.name} ({Te.name}) ({prestige} Achiev.)'
-      #parts.append(f'– {s}')
-      parts.append(f'{s}') # TODO: temporeary, replace
+      s = f'{bbcode.player(Pl)} ({bbcode.team(Te)})'
+      s += f' ({prestige} Achiev.)'
+      parts.append(f'– {s}')
 
   return "\n".join(parts)

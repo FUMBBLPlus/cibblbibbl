@@ -213,11 +213,14 @@ class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
     return self.baseprestige * self.decaymul(season)
 
   def prestige(self, season=None, awarded=False):
+    status = self.get("status", "proposed")
+    while status.startswith("transferred "):
+      status = status[len("transferred "):]
     if awarded:
       statuses = {"awarded"}
     else:
       statuses = {"awarded", "proposed"}
-    if self["status"] not in statuses:
+    if status not in statuses:
       return 0
     season = season or max(self.group.seasons)
     stackmuls = self["stackmul"]

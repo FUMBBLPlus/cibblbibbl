@@ -71,6 +71,7 @@ class TP_GiverTaker_Mother(TeamAchievement):
 
 class TP_GiverTaker_Child(TeamAchievement):
 
+  export_bbcode = TP_Match.export_bbcode
   export_plaintext = TP_Match.export_plaintext
 
 

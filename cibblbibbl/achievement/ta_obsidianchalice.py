@@ -1,5 +1,6 @@
 import collections
 import cibblbibbl
+from cibblbibbl import bbcode
 
 from . import exporttools
 from .mastercls import TeamAchievement
@@ -9,6 +10,10 @@ class TA_ObsidianChalice(TeamAchievement):
     # added manually
   rank = 10
   sortrank = 10
+
+  def export_bbcode(self):
+    s1 = bbcode.team(self.subject)
+    return s1
 
   def export_plaintext(self, show_Ids=False):
     s0 = exporttools.idpart(self, show_Ids)

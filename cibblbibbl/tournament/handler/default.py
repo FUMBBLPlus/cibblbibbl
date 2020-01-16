@@ -324,6 +324,7 @@ class Tournament(BaseTournament):
         team_ids[1],
       )
       yield matchup
+    # admin matchups
     for p in self.matchupsconfigdir.glob("a-*.json"):
       jf = jsonfile(
           p,
@@ -454,6 +455,10 @@ class Tournament(BaseTournament):
         if d.get("dead")
         and not Pl.nexts
     }
+
+  def export_awards_bbcode(self):
+    f = cibblbibbl.tournament.export.awards.bbcode.export
+    return f(self)
 
   def export_awards_plaintext(self, show_Ids = False):
     f = cibblbibbl.tournament.export.awards.plaintext.export
@@ -718,7 +723,8 @@ class Tournament(BaseTournament):
             # I do not want to pass empty dictionaries nor nodes
             # as those were ensured before
             pts_HTH_results.append(r1)
-        pts_HTH = pytourney.tie.hth.calculate(pts_HTH_results)
+        hth_func = pytourney.tie.hth_quilici.calculate # TODO
+        pts_HTH = hth_func(pts_HTH_results)
         for teamId, hth_val in pts_HTH.items():
           S[teamId]["hth"] = Chth.get(teamId, hth_val)
     for teamId, cto_val in Ccto.items():

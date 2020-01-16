@@ -20,6 +20,9 @@ class TA_CVSilverPartner(TeamAchievement):
 
   nexttournament = TA_CVGoldPartner.nexttournament
 
+  def export_bbcode(self):
+    return
+
   def export_plaintext(self, show_Ids=False):
     return
 

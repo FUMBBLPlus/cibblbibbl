@@ -1,5 +1,6 @@
 import collections
 import cibblbibbl
+from cibblbibbl import bbcode
 import itertools
 
 from . import exporttools
@@ -36,6 +37,12 @@ class TP_Standings(TeamAchievement):
             A["nr"] = nr
             A["status"] = "proposed"  # explicit
           yield A
+
+  def export_bbcode(self):
+    s0 = f'{self["nr"]:>2}. '
+    s1 = bbcode.team(self.subject)
+    s2 = f' ({self.prestige(self.season)} Prestige Points)'
+    return s0 + s1 + s2
 
   def export_plaintext(self, show_Ids=False):
     s0 = f'{self["nr"]:>2}. '

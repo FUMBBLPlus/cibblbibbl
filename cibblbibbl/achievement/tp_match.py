@@ -1,5 +1,6 @@
 import collections
 import cibblbibbl
+from cibblbibbl import bbcode
 
 from . import exporttools
 from .mastercls import TeamAchievement
@@ -33,6 +34,11 @@ class TP_Match(TeamAchievement):
           A["prestige"] = prestige
           A["status"] = "proposed"  # explicit; easier to edit
         yield A
+
+  def export_bbcode(self):
+    s1 = bbcode.team(self.subject)
+    s2 = f' ({self.prestige(self.season)} Prestige Points)'
+    return s1 + s2
 
   def export_plaintext(self, show_Ids=False):
     s0 = exporttools.idpart(self, show_Ids)

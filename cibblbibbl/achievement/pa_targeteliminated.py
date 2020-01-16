@@ -17,6 +17,7 @@ class PA_TargetEliminated(PlayerAchievement):
 
   argsnorm = PA_BewareSupremeKiller.argsnorm
   configfileargstrs = PA_BewareSupremeKiller.configfileargstrs
+  export_bbcode = PA_BewareSupremeKiller.export_bbcode
   export_plaintext = PA_BewareSupremeKiller.export_plaintext
   sort_key = PA_BewareSupremeKiller.sort_key
 

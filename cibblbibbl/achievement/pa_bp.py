@@ -1,5 +1,6 @@
 import collections
 import cibblbibbl
+from cibblbibbl import bbcode
 
 from .mastercls import PlayerAchievement
 
@@ -107,6 +108,13 @@ class PA_BP_Child(PlayerAchievement):
   def __init_subclass__(cls, **kwargs):
     super().__init_subclass__(**kwargs)
     PA_BP_Mother.children[cls.clskey()] = cls
+
+  def export_bbcode(self):
+    team = exporttools.team(self)
+    s1 = f'{bbcode.player(self.subject)} ({bbcode.team(team)})'
+    s2 = f' ({", ".join(sorted(self["categs"]))})'
+    s3 = exporttools.alreadyearned(self)
+    return s1 + s2 + s3
 
   def export_plaintext(self, show_Ids=False):
     s0 = exporttools.idpart(self, show_Ids)

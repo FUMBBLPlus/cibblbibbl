@@ -55,6 +55,9 @@ class TA_CVGoldPartner(TeamAchievement):
 
   #agent50 = classmethod(agent.iterpostponed)
 
+  def export_bbcode(self):
+    return
+
   def export_plaintext(self, show_Ids=False):
     return
 

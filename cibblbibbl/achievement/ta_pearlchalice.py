@@ -10,6 +10,7 @@ class TA_PearlChalice(TeamAchievement):
   rank = 10
   sortrank = 10
 
+  export_bbcode = TA_ObsidianChalice.export_bbcode
   export_plaintext = TA_ObsidianChalice.export_plaintext
 
 

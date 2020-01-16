@@ -34,14 +34,17 @@ def iterpostponed(cls, group):
   As = {
       A for A in group.achievements
       if type(A) is cls
-      and A.get("status", "proposed") in {"postpone proposed", "postponed"}
+      and A.get("status", "proposed") in {
+          "postpone proposed",
+          "postponed",
+      }
   }
   for A0 in As:
     T0 = A0.tournament
     T1 = A0.nexttournament()
     if T1:
       A1 = cls(T1, *A0.args)
-      if "proposed" in A1["status"]:
+      if "proposed" in A1.get("status", "proposed"):
         A1["status"] = "proposed"  # explicit
         A1["prestige"] = value
         A1["prev_tournamentId"] = T0.Id
@@ -78,6 +81,8 @@ def iterprevs(cls, group):
         A.baseprestige = math.floor(v)
         A.config["prev_tournamentId"] = T0.Id
         A.config["prev_subjectId"] = prevsubject.Id
+        status = A.get("status", "proposed")
+        A.config["status"] = f'transferred {status}'
       A._prev = A0
       A0._nexts = A0._nexts | {A,}
       yield A

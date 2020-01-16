@@ -146,15 +146,34 @@ def style2dict(style):
 def coach(coach_name):
   return url(f'/~{coach_name}', coach_name)
 
-def match(Mu, name):
-  return url(f'/p/match?id={Mu.Id}', name)
+def match(Ma, name):
+  return url(f'/p/match?id={Ma.Id}', name)
 
 def notepage(P, name, owner="SzieberthAdam"):
   return url(f'/note/{owner}/{P.notelink()}', name)
 
-def team(Te):
-  return url(f'/p/team?team_id={Te.Id}', Te.name)
+def player(Pl):
+  playerId = Pl.Id
+  if playerId.isdecimal():
+    return url(f'/p/player?player_id={Pl.Id}', Pl.name)
+  else:
+    return Pl.name
 
+def team(Te):
+  if isinstance(Te, str):
+    return Te
+  else:
+    return url(f'/p/team?team_id={Te.Id}', Te.name)
+
+def tournament(T, namelength="long"):
+  name = getattr(T, f'{namelength}name')
+  groupId = 10455  # TODO: hardcoded
+  url_ = (
+      "/FUMBBL.php?page=group&op=view&showallrounds=1&at=1"
+      f'&group={groupId}'
+      f'&p=tournaments&show={T.Id}'
+  )
+  return url(url_, name)
 
 
 def move(moveval):
@@ -173,5 +192,3 @@ def tooltip(tooltipId, content):
 
 def tooltiped(tooltipId, content):
   return f'[block tooltip={tooltipId}]{content}[/block]'
-
-

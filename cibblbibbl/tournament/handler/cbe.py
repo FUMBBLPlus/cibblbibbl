@@ -103,6 +103,9 @@ class CBETournament(default.AbstractTournament):
   def deadplayers(self):
     return {}
 
+  def export_awards_bbcode(self):
+    return self.export_awards_plaintext()  # TODO
+
   def export_awards_plaintext(self, show_Ids = False):
     nrsuffix = {1: "st", 2: "nd", 3: "rd"}
     TP_Standings = cibblbibbl.achievement.tp_standings.cls

@@ -1,5 +1,6 @@
 import collections
 import cibblbibbl
+from cibblbibbl import bbcode
 
 from .. import field
 from . import exporttools
@@ -57,6 +58,12 @@ class TA_CrushingVictory(TeamAchievement):
     args[0] = cibblbibbl.team.Team(int(args[0]))
     args[1] = cibblbibbl.match.Match(args[1])
     return args
+
+  def export_bbcode(self):
+    s1 = bbcode.team(self.subject)
+    s2 = f' [{bbcode.match(self.match, "match")}]'
+    s3 = exporttools.alreadyearned(self)
+    return s1 + s2 + s3
 
   def export_plaintext(self, show_Ids=False):
     s0 = exporttools.idpart(self, show_Ids)

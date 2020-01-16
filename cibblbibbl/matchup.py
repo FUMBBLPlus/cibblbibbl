@@ -159,6 +159,7 @@ class Matchup(BaseMatchup):
   def force_update_func(self, old_data):
     result = (
         self.tournament.awarded == "no"
+        and old_data.get("!locked", "no") == "no"
         and not old_data.get("matchId")
     )
     return result

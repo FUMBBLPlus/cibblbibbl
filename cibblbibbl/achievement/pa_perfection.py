@@ -14,6 +14,7 @@ class PA_Perfection(PlayerAchievement):
 
   argsnorm = PA_AerodynamicAim.argsnorm
   configfileargstrs = PA_AerodynamicAim.configfileargstrs
+  export_bbcode = PA_AerodynamicAim.export_bbcode
   export_plaintext = PA_AerodynamicAim.export_plaintext
   sort_key = PA_AerodynamicAim.sort_key
 
