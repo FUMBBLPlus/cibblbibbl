@@ -60,7 +60,8 @@ def _playersseq(T, source_playersseq):
   for Pl in sorted(source_playersseq, key=lambda Pl: Pl.name):
     if Pl.achievements:
       prestige = sum(
-          A.prestige(T.season) for A in Pl.achievements
+          A.prestige(T.season, maxtournament=T)
+          for A in Pl.achievements
       )
       if prestige or isinstance(Pl, StarPlayer):
         players.append([Pl, prestige])
@@ -83,7 +84,7 @@ def export(T, *,
 ):
   cls_StarPlayer = cibblbibbl.player.StarPlayer
   cls_RaisedDeadPlayer = cibblbibbl.player.RaisedDeadPlayer
-  dTAv1 = T.teamachievementvalues(False, False, False)
+  dTAv1 = T.teamachievementvalues(False, False, False, False)
   dPAv1 = T.playerachievementvalues()
   dRPP = T.rawplayerperformances()
   dPP = T.playerperformances()
@@ -111,7 +112,7 @@ def export(T, *,
     for k in dtp:
       A = d_achievements.get(k, {}).get(Te)
       if A:
-        dtp[k] = A.prestige(T.season)
+        dtp[k] = A.prestige(T.season, maxtournament=T)
     prestige = sum(dtp.values())
     if T.friendly == "no":
       preststr = f'Prestige Points Earned: {prestige}'
@@ -148,8 +149,7 @@ def export(T, *,
         parts.append("")
       parts.append(f'=== {A["name"]} ({A.baseprestige}) ===')
       prev_clskey = clskey
-    #parts.append(f'– {part}')
-    parts.append(f'{part}') # TODO: temporeary, replace
+    parts.append(f'{part}')
 
 
   players = _playersseq(T, T.deadplayers())
@@ -170,8 +170,7 @@ def export(T, *,
         s += f' ({prestige} Achiev.)'
       s += _diedstr(dRPP, killerId, reason)
       s += f' in match #{matchId}'
-      #parts.append(f'– {s}')
-      parts.append(f'{s}') # TODO: temporeary, replace
+      parts.append(f'{s}')
 
   transferred = T.transferredplayers()
   players = _playersseq(T, transferred)
@@ -207,8 +206,7 @@ def export(T, *,
           nextTe = Pl1.team
         nextsparts.append(f'to {nextTe.name} as {name}')
       s += f', joined {" and ".join(nextsparts)}'
-      #parts.append(f'– {s}')
-      parts.append(f'{s}') # TODO: temporeary, replace
+      parts.append(f'{s}')
 
   retiredplayers = T.retiredplayers(dPP=dPP)
   players = _playersseq(T, retiredplayers)
@@ -222,7 +220,6 @@ def export(T, *,
       if show_Ids:
         s += f'[{Pl.Id}] '
       s += f'{Pl.name} ({Te.name}) ({prestige} Achiev.)'
-      #parts.append(f'– {s}')
-      parts.append(f'{s}') # TODO: temporeary, replace
+      parts.append(f'{s}')
 
   return "\n".join(parts)

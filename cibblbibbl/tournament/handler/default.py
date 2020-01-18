@@ -528,7 +528,10 @@ class Tournament(BaseTournament):
     season = self.season
     for Te, lastAs in self.playerachievements().items():
       if lastAs:
-        d[Te] = sum(A.prestige(season) for A in lastAs)
+        d[Te] = sum(
+            A.prestige(season, maxtournament=self)
+            for A in lastAs
+        )
       else:
         d[Te] = 0
     return d
@@ -723,8 +726,9 @@ class Tournament(BaseTournament):
             # I do not want to pass empty dictionaries nor nodes
             # as those were ensured before
             pts_HTH_results.append(r1)
-        hth_func = pytourney.tie.hth_quilici.calculate # TODO
-        pts_HTH = hth_func(pts_HTH_results)
+        hth_mname = self.config.get("hth_module", "sweep")
+        hth_module = getattr(pytourney.tie, f'hth_{hth_mname}')
+        pts_HTH = hth_module.calculate(pts_HTH_results)
         for teamId, hth_val in pts_HTH.items():
           S[teamId]["hth"] = Chth.get(teamId, hth_val)
     for teamId, cto_val in Ccto.items():
@@ -805,6 +809,7 @@ class Tournament(BaseTournament):
       with_admin = True,
       with_match = True,
       with_standings = True,
+      with_partnership = True,
   ):
     d = {}
     season = self.season
@@ -815,10 +820,15 @@ class Tournament(BaseTournament):
       excluded_clskeys.add("tp_match")
     if not with_standings:
       excluded_clskeys.add("tp_standings")
+    if not with_partnership:
+      excluded_clskeys.add("ta_cvgoldpartner")
+      excluded_clskeys.add("ta_cvsilverpartner")
     for Te, As in self.teamachievements().items():
       As = {A for A in As if A.clskey() not in excluded_clskeys}
       if As:
-        d[Te] = sum(A.prestige(season) for A in As)
+        d[Te] = sum(
+            A.prestige(season, maxtournament=self) for A in As
+        )
       else:
         d[Te] = 0
     return d

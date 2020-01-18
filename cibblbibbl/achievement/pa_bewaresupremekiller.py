@@ -97,15 +97,15 @@ class PA_BewareSupremeKiller(PlayerAchievement):
         f' ({bbcode.team(victimteam)})'
     )
     s2 = exporttools.reasontrans.get(reason, reason).format(s21)
-    s3 = f' [{bbcode.match(self.match, "match")}]'
     oppoteam = exporttools.oppoteam(rootA, team_=teamofmatch)
     if not (oppoteam is victimteam):
+      s3 = f' in {bbcode.match(self.match, "match")}'
       s4 = f' vs. {bbcode.team(oppoteam)}'
     else:
+      s3 = f' [{bbcode.match(self.match, "match")}]'
       s4 = ""
     s5 = exporttools.alreadyearned(self)
     return s1 + s2 + s3 + s4 + s5
-
 
   def export_plaintext(self, show_Ids=False):
     rootA = self

@@ -27,11 +27,27 @@ def font(text, family):
 def i(text):
   return f'[i]{str(text)}[/i]'
 
+def hr():
+  return "[block=automargin blackborder width=100%][/block]"
+
 def img(href):
   return f'[img]{href}[/img]'
 
 def left(text):
   return f'{str(text)}'
+
+def list_(items, itemnr=None):
+  if not items:
+    return ""
+  if itemnr:
+    assert itemnr in "aAiI1"
+    otag = f'[list={itemnr}]'
+    ctag = "[/list]"
+  else:
+    otag = "[ulist]"
+    ctag = "[/ulist]"
+  itemstr = (f'[li]').join([""] + list(items))
+  return f'{otag}{itemstr}{N}{ctag}'
 
 def monospace(text):
   return font(text, "monospace")
@@ -106,7 +122,7 @@ def table(
         )
       yield indent + f'[/tr]'
     yield f'[/table]'
-  return f'\\{N}'.join(subgen())
+  return "".join(subgen())
 
 def url(url, name=None):
   if name is None:

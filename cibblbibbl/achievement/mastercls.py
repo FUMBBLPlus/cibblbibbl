@@ -212,7 +212,11 @@ class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
     season = season or max(self.group.seasons)
     return self.baseprestige * self.decaymul(season)
 
-  def prestige(self, season=None, awarded=False):
+  def prestige(self,
+      season=None,
+      awarded=False,
+      maxtournament=None,
+  ):
     status = self.get("status", "proposed")
     while status.startswith("transferred "):
       status = status[len("transferred "):]
@@ -225,7 +229,9 @@ class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
     season = season or max(self.group.seasons)
     stackmuls = self["stackmul"]
     try:
-      i_stackidx = self.stackidx(season)
+      i_stackidx = self.stackidx(season,
+          maxtournament=maxtournament,
+      )
     except ValueError:
       return 0
     else:
@@ -233,7 +239,7 @@ class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
     v = self.decayval(season) * stackmuls[i]
     return math.floor(v)
 
-  def stack(self, season=None):
+  def stack(self, season=None, maxtournament=None):
     season = season or max(self.group.seasons)
     stack_sort_key = self.stack_sort_key
     L = [
@@ -242,6 +248,10 @@ class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
       if A.stack_sort_key == stack_sort_key
       and A.group is self.group
       and A.tournament.season <= season
+      and (
+          maxtournament is None
+          or A.tournament <= maxtournament
+      )
     ]
     L.sort(key=lambda A: (
         -A.decayval(season),
@@ -251,8 +261,11 @@ class Achievement(metaclass=cibblbibbl.helper.InstanceRepeater):
     ))
     return L
 
-  def stackidx(self, season=None):
-    return self.stack(season=season).index(self)
+  def stackidx(self, season=None, maxtournament=None):
+    return self.stack(
+        season=season,
+        maxtournament=maxtournament,
+    ).index(self)
 
 
 

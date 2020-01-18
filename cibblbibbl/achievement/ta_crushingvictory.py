@@ -60,9 +60,11 @@ class TA_CrushingVictory(TeamAchievement):
     return args
 
   def export_bbcode(self):
+    team = self.subject
+    oppoteam = exporttools.oppoteam(self, team_=team)
     s1 = bbcode.team(self.subject)
-    s2 = f' [{bbcode.match(self.match, "match")}]'
-    s3 = exporttools.alreadyearned(self)
+    s2 = f' in {bbcode.match(self.match, "match")}'
+    s3 = f' vs. {bbcode.team(oppoteam)}'
     return s1 + s2 + s3
 
   def export_plaintext(self, show_Ids=False):
