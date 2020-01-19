@@ -219,7 +219,7 @@ def export(T):
             name = bbcode.player(Pl1)
           else:
             plparts = str(Pl1).split()
-            plparts[1] = Pl1.prevreason
+            plparts[0] = Pl1.prevreason
             name = " ".join(plparts)
         try:
           nextTe = dRPP[Pl1]["team"]
