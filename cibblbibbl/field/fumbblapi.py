@@ -56,6 +56,8 @@ class CachedFUMBBLAPIGetField(base.CustomKeyDescriptorBase):
       filename = f'{self.id_func(instance):0>8}.json'
       p = cibblbibbl.data.path / self.dir_path / filename
       p.unlink()  # delete file
+    if self.cache.get(instance, ...) != ...:
+      del self.cache[instance]
 
   def jf(self, instance):
     if self.dir_path:
