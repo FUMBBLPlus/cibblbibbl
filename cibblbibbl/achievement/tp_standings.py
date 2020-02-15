@@ -19,7 +19,10 @@ class TP_Standings(TeamAchievement):
         continue  # collected by the iterexisting agent
       if T.posonly == "yes":
         continue
-      pposgen = itertools.chain(T.ppos, itertools.repeat(0))
+      Tppos = T.ppos
+      if Tppos is None:
+        continue
+      pposgen = itertools.chain(Tppos, itertools.repeat(0))
       standings = T.standings()
       for nr, d in enumerate(standings, 1):
         prestige = next(pposgen)

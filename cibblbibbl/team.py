@@ -78,7 +78,7 @@ class Team(metaclass=cibblbibbl.helper.InstanceRepeater):
   @property
   def roster_name(self):
     s = self.apiget["roster"]["name"]
-    s = re.sub('\s*\(.+$', '', s)  # CIBBL/BIBBL specific!
+    s = re.sub(r'\s*\(.+$', '', s)  # CIBBL/BIBBL specific!
     return cibblbibbl.helper.norm_name(s)
 
   def matchups(self, group_key):
@@ -144,7 +144,7 @@ class Team(metaclass=cibblbibbl.helper.InstanceRepeater):
   ):
     S = set()
     d = self.legacyapiget
-    if in_pastplayers:
+    if in_pastplayers and d.get("pastplayers"):
       L = d["players"] + d["pastplayers"]
     else:
       L = d["players"]

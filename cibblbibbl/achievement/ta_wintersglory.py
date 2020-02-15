@@ -26,7 +26,9 @@ class TA_WintersGlory(TeamAchievement):
         continue
       pposgen = itertools.chain(T.ppos, itertools.repeat(0))
       standings = T.standings()
-      for i in range(C["count"]):
+      counts = C["count"]
+      count = counts.get(str(T.Id), counts["<default>"])
+      for i in range(count):
         try:
           d = standings[i]
         except IndexError:
