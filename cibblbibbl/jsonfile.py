@@ -123,6 +123,7 @@ class JSONFile(JSONFileRoot):
       self.reload()
     elif autosave:
       self.save()
+    # print(self.filepath)
 
   def __repr__(self):
     return f"{self.__class__.__name__}('{self.filepath}')"

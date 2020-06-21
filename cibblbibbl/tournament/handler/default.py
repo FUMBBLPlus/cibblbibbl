@@ -111,7 +111,10 @@ class BaseTournament(
   def longname(self):
     C = self.config
     G = self.group
-    codedata = G.code[self.code]
+    try:
+      codedata = G.code[self.code]
+    except KeyError:
+      return self.name
     name = f'{G.name}'
     name += f' – Y{self.year.nr}, {self.season.name}'
     name += f' – {codedata["longname"]}'
@@ -189,7 +192,10 @@ class BaseTournament(
   def shortname(self):
     C = self.config
     G = self.group
-    codedata = G.code[self.code]
+    try:
+      codedata = G.code[self.code]
+    except KeyError:
+      return self.name
     name = f'{G.name}'
     name += f' – Y{self.year.nr}, {self.season.name}'
     name += f' – {codedata["shortname"]}'
@@ -379,7 +385,7 @@ class Tournament(BaseTournament):
   def rpts(self):
     d = self.config.get("rpts", {})
     if not d:
-      if self.season.name == "Summer":
+      if self.style == "Swiss":
         d = {
             "W": 2,
             "D": 1,

@@ -16,6 +16,7 @@ class Replay(metaclass=cibblbibbl.helper.InstanceRepeater):
       default=lambda i, d: i.calculate_playerIdnorm(),
       default_set_delete = False,
       delete_set_default = False,
+      default_set = True,
   )
 
   def __init__(self, replayId: int, match=None):

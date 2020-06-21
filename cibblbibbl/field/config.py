@@ -134,6 +134,7 @@ class DDField(NDField):
   def __init__(self, *args,
       default = None,
       defaulterrorfstr = 'unreadable attribute',
+      default_set = False,
       default_set_delete = True,
       delete_set_default = False,
       get_f_typecast = None,
@@ -145,6 +146,7 @@ class DDField(NDField):
       defaulterrorfstr = defaulterrorfstr,
       f_typecast = get_f_typecast,
       **kwargs)
+    self.default_set = default_set
     self.default_set_delete = default_set_delete
     self.delete_set_default = delete_set_default
     self.set_f_typecast = set_f_typecast
@@ -154,6 +156,12 @@ class DDField(NDField):
       )
     except TypeError:
       self.set_f_typecast_a = 1
+
+  def default(self, instance):
+    value = super().default(instance)
+    if self.default_set:
+      instance.config[self.key] = value
+    return value
 
   def __set__(self, instance, value):
     if self.set_f_typecast:

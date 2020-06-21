@@ -207,7 +207,10 @@ class NormalPlayer(BasePlayer):
   @property
   def getname(self):
     if self._name is ...:
-      self._name = self.apiget["name"]
+      if "name" in self.config:
+        self._name = self.config["name"]
+      else:
+        self._name = self.apiget["name"]
     return self._name
 
   @property

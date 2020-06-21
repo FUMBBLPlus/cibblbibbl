@@ -65,8 +65,10 @@ class PA_BP_Mother(PlayerAchievement):
             Te = PP[Pl]["team"]
             code = group.rostercode[Te.roster_name]
           cls_c, CC = chldren_by_code[code]
-        else:
+        elif name is not None:
           cls_c, CC = chldren_by_name[name]
+        else:
+          continue
         value = CC["value"]
         A_categories = set(cls_c.default_categories)
         categories = categories & A_categories
