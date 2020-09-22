@@ -39,6 +39,6 @@ if __name__ == "__main__":
   p = cibblbibbl.data.path
   p /= f'{G.key}/tournament/bestplayers.txt'
   text = "\n\n\n\n".join(texts)
-  with p.open("w") as f:
+  with p.open("w", encoding="utf8") as f:
       f.write(text)
   print(text)

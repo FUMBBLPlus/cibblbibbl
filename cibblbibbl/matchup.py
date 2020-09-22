@@ -28,6 +28,12 @@ class BaseMatchup(metaclass=cibblbibbl.helper.InstanceRepeater):
     self._tournamentId = tournamentId
     self._keys = keys
 
+  def __str__(self):
+    return (
+        f'Matchup/{self.group_key}/{self.tournamentId}/'
+        f'{"-".join(str(k) for k in self.keys)}'
+    )
+
   @property
   def configfilepath(self):
     return (
@@ -61,6 +67,7 @@ class BaseMatchup(metaclass=cibblbibbl.helper.InstanceRepeater):
 
   @property
   def players(self):
+    # update scripts/resolve_unchain.py if changed!
     RaisedDeadPlayer = cibblbibbl.player.RaisedDeadPlayer
     PP_items = self.config["player"].items()
     S = set()
@@ -194,6 +201,12 @@ class Matchup(BaseMatchup):
         Te: {"prev": None, "next": None}
         for Te in self.teams
     }
+
+  def __str__(self):
+    return (
+        f'Matchup/{self.group_key}/{self.tournamentId}/'
+        f'{self.configfilebasename}'
+    )
 
   @property
   def apischedulerecord(self):

@@ -132,8 +132,8 @@ class Team(metaclass=cibblbibbl.helper.InstanceRepeater):
       anygroup=False,
       withmatch=True,
   ):
-    i = self.tournaments.index(tournament) - 1
-    for i in range(i,-1,-1):
+    i = self.tournaments.index(tournament)
+    for i in range(i, 0,-1):
       T = self.tournaments[i - 1]
       if not anygroup and T.group is not tournament.group:
         continue

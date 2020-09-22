@@ -185,6 +185,24 @@ class PA_BP_SCRIBBLsOutstandingPerformance(PA_BP_Child): pass
 class PA_BP_SippingTheWitchesBrew(PA_BP_Child): pass
 class PA_BP_StylePoints(PA_BP_Child): pass
 
+# Cups Y6
+class PA_BP_NufflesBlessing(PA_BP_Child): pass
+class PA_BP_Futuristic(PA_BP_Child): pass
+class PA_BP_The1Percent(PA_BP_Child): pass
+class PA_BP_Pathfinder(PA_BP_Child): pass
+class PA_BP_Slasher(PA_BP_Child): pass
+class PA_BP_DeathOrGlory(PA_BP_Child): pass
+class PA_BP_IceCold(PA_BP_Child): pass
+class PA_BP_AllYouCanEat(PA_BP_Child): pass
+class PA_BP_BloodRage(PA_BP_Child): pass
+class PA_BP_BlitzingBeauty(PA_BP_Child): pass
+class PA_BP_Eternal(PA_BP_Child): pass
+class PA_BP_FirstTry(PA_BP_Child): pass
+class PA_BP_ThumbUp(PA_BP_Child): pass
+class PA_BP_Escapist(PA_BP_Child): pass
+class PA_BP_Sleepless(PA_BP_Child): pass
+class PA_BP_WakeUpCall(PA_BP_Child): pass
+
 # Divisions
 class PA_BP_BronzeExcellence(PA_BP_Child): pass
 class PA_BP_ClayExcellence(PA_BP_Child): pass

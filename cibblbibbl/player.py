@@ -9,6 +9,10 @@ from .jsonfile import jsonfile
 import cibblbibbl
 
 
+class UnchainedPlayerException(Exception):
+  pass
+
+
 class BasePlayer(metaclass=cibblbibbl.helper.InstanceRepeater):
 
   config = field.config.CachedConfig()
@@ -256,7 +260,7 @@ class RaisedDeadPlayer(BasePlayer):
   def nextId(self):
     nextId = self.Id.split("_")[-1]
     if nextId.startswith("UNKNOWN"):
-      raise Exception(
+      raise UnchainedPlayerException(
           f'unchained raised dead player: {self.Id}'
       )
     elif nextId != "0":

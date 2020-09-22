@@ -51,11 +51,14 @@ class PA_BewareSupremeKiller(PlayerAchievement):
   @classmethod
   def argsnorm(cls, args):
     args = list(args)
-    args[0] = cibblbibbl.player.player(args[0])
-    args[1] = cibblbibbl.match.Match(args[1])
-    args[2] = int(args[2])
-    args[3] = int(args[3])
-    args[4] = cibblbibbl.player.player(args[4])
+    try:
+      args[0] = cibblbibbl.player.player(args[0])
+      args[1] = cibblbibbl.match.Match(args[1])
+      args[2] = int(args[2])
+      args[3] = int(args[3])
+      args[4] = cibblbibbl.player.player(args[4])
+    except ValueError as err:
+      raise ValueError(f'Wrong args: {args}') from err
     return args
 
   @property

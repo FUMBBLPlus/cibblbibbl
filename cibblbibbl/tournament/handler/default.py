@@ -734,6 +734,7 @@ class Tournament(BaseTournament):
             pts_HTH_results.append(r1)
         hth_mname = self.config.get("hth_module", "sweep")
         hth_module = getattr(pytourney.tie, f'hth_{hth_mname}')
+        #print(pts_HTH_results)
         pts_HTH = hth_module.calculate(pts_HTH_results)
         for teamId, hth_val in pts_HTH.items():
           S[teamId]["hth"] = Chth.get(teamId, hth_val)

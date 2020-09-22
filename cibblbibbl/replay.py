@@ -261,8 +261,24 @@ class Replay(metaclass=cibblbibbl.helper.InstanceRepeater):
           elif playerType == "Mercenary":
             normplayerId = f'MERC-{self.Id}-{playerId}'
           elif playerType == "RaisedFromDead":
+            pass
+          else:
+            raise NotImplementedError(
+                "Unhandled playerType: "
+                f'{playerType} (Replay: {self.Id})'
+            )
+          if playerId != normplayerId:
+            d[playerId] = normplayerId
+      for Te, d1 in self.teamdata.items():
+        for d2 in d1["playerArray"]:
+          playerId = normplayerId = d2["playerId"]
+          playerName = d2["playerName"]
+          playerType = d2["playerType"]
+          positionId = d2["positionId"]
+          if playerType == "RaisedFromDead":
             baseId = f'RAISED-{positionId}'
             aliveplayerId = playerId.split("R")[0]
+            aliveplayerId = d.get(aliveplayerId, aliveplayerId)
             postplayerId = "UNKNOWN"
             found = Te.search_player(playerName,
                 in_pastplayers = True,
@@ -276,10 +292,7 @@ class Replay(metaclass=cibblbibbl.helper.InstanceRepeater):
                 (baseId, aliveplayerId, postplayerId)
             )
           else:
-            raise NotImplementedError(
-                "Unhandled playerType: "
-                f'{playerType} (Replay: {self.Id})'
-            )
+            continue
           if playerId != normplayerId:
             d[playerId] = normplayerId
     return d

@@ -20,7 +20,7 @@ def iterexisting(cls, group):
     tournament = group.tournaments[tournamentId]
     args = p.stem.split("~")
     args = [
-        (a.lstrip("0") if a.isdecimal() else a)
+        (a.lstrip("0") if (a != "0" and a.isdecimal()) else a)
         for a in args
     ]
     args = cls.argsnorm(args)

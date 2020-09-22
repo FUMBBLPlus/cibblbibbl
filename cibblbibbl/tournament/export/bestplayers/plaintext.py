@@ -79,9 +79,14 @@ def export(T, order = None):
         name = f'{name[:28]}..'
     Te = Sj.team
     if Te:
-      teamname = Te.name
-      roster_name = Te.roster_name
-      coach_name = Te.coach_name
+      if hasattr(Te, "name"):
+        teamname = Te.name
+        roster_name = Te.roster_name
+        coach_name = Te.coach_name
+      else:
+        teamname = Te
+        roster_name = ""
+        coach_name = ""
     else:
       teamname, roster_name, coach_name = "", "", ""
     d = bestplayers[Sj]
