@@ -16,8 +16,8 @@ def exclude_teams(self, *teams):
     else:
       teamId = int(v)
     s = set(self.excluded_teamIds)
-    if teamId not in s:
-      self.excluded_teamIds.append(teamId)
+    s.add(teamId)
+    self.excluded_teamIds = sorted(s)  #TODO: remove
     team = cibblbibbl.team.Team(teamId)
     for Mu in self.matchups:
       if team in Mu.teams:

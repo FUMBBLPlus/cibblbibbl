@@ -38,6 +38,8 @@ if __name__ == "__main__":
       continue
     if T.posonly == "yes":
       continue
+    if T.status != "Completed":
+      continue
     try:
       s0 = T.export_awards_plaintext(show_Ids=show_Ids)
     except:

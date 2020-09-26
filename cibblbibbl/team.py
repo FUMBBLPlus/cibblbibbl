@@ -64,7 +64,7 @@ class Team(metaclass=cibblbibbl.helper.InstanceRepeater):
     return {
         cibblbibbl.player.player(str(d["id"]))
         for k in ("players", "pastplayers")
-        for d in self.legacyapiget[k]
+        for d in self.legacyapiget.get(k, [])
     }
 
   @property

@@ -1,15 +1,13 @@
 import cibblbibbl
 
-Mu = None
 
 def main():
-  global Mu
   for G in cibblbibbl.group.Group.__members__.values():
     print(f'********** {G.key.upper()} **********')
     print()
     G.register_tournaments()
     G.register_matchups()
-    Se = max(G.seasons).prev
+    Se = max(G.seasons).prev ### TODO
     for T in Se.tournaments.values():
       teams_with_match = set()
       teams_with_forfeits = set()
@@ -47,9 +45,11 @@ def main():
         while a.lower() not in ("", "y", "n"):
           a = input("Exclude team? (Y/N; Enter to pass) ")
         if a.lower() == "y":
-          for Mu in T.matchups:
-            if Te in Mu.teams:
-              Mu.excluded = "yes"
+          T.exclude_teams(Te)
+          #curr_excl = T.excluded_teamIds
+          #for Mu in T.matchups:
+          #  if Te in Mu.teams:
+          #    Mu.excluded = "yes"
         print()
 
 

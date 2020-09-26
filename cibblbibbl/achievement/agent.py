@@ -50,7 +50,7 @@ def iterpostponed(cls, group):
         A1["prev_tournamentId"] = T0.Id
       A1._prev = A0
       A0._nexts = A0._nexts | {A1,}
-    yield A1
+      yield A1
 
 
 def iterprevs(cls, group):

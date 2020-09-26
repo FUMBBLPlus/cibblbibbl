@@ -117,6 +117,8 @@ class Season(
     }
     d = {}
     d_aot = self.achievementsofteams(allteams=allteams)
+    d_gold = self.gold_partner_teams()
+    d_silver = self.silver_partner_teams()
     for Te, As in d_aot.items():
       d2 = collections.defaultdict(lambda: 0)
       prestige = 0
@@ -131,6 +133,10 @@ class Season(
             continue
           if T.season <= self:
             d2[T.season] += value
+      if Te in d_gold:  # TODO, hardcoded but simple
+        prestige += 50
+      if Te in d_silver:
+        prestige += 25
       seasons = sorted(d2, reverse=True)
       ties = [d2[Se] for Se in seasons]
       if seasons:
@@ -222,4 +228,3 @@ class Season(
     given season was later.
     """
     return -self.since(season)
-

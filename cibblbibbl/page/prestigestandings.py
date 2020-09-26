@@ -121,7 +121,7 @@ class PrestigeStandings(Page):
       else:
         move = "NEW"
         prev_ = prev
-        while prev_.prev:
+        while prev_ and prev_.prev:
           prev_ = prev_.prev
           if prev_.staticstandingsdata.get(Te):
             move = "RET"

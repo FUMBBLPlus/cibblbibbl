@@ -208,11 +208,15 @@ class PA_BP_BronzeExcellence(PA_BP_Child): pass
 class PA_BP_ClayExcellence(PA_BP_Child): pass
 class PA_BP_ClothExcellence(PA_BP_Child): pass
 class PA_BP_CopperExcellence(PA_BP_Child): pass
+class PA_BP_DustDevil(PA_BP_Child): pass
+class PA_BP_ExcellentOnPaper(PA_BP_Child): pass
 class PA_BP_ForgedGreatness(PA_BP_Child): pass
 class PA_BP_GoldExcellence(PA_BP_Child): pass
+class PA_BP_LeatherRebel(PA_BP_Child): pass
 class PA_BP_RefinedExcellence(PA_BP_Child): pass
 class PA_BP_SilverExcellence(PA_BP_Child): pass
 class PA_BP_SolidFoundation(PA_BP_Child): pass
+class PA_BP_StickInTheMud(PA_BP_Child): pass
 class PA_BP_TerrificMightOfTin(PA_BP_Child): pass
 class PA_BP_WhispererInTheWoods(PA_BP_Child): pass
 

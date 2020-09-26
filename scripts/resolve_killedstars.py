@@ -7,7 +7,7 @@ def main():
     print()
     G.register_tournaments()
     G.register_matchups()
-    Se = max(G.seasons)
+    Se = max(G.seasons).prev
     n = 1
     for Mu in Se.matchups:
       Ma = Mu.match

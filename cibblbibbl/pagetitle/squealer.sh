@@ -25,4 +25,4 @@ convert -size 960x90 xc:transparent \
     -draw "text 0,0 '$1'" \
     -compose over -stroke none -gravity center \
     -draw "text 0.5,0.7 '$1'" \
-    $filename
+    -depth 8 $filename

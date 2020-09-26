@@ -1,3 +1,5 @@
+import collections
+
 from .mastercls import Page
 
 import cibblbibbl

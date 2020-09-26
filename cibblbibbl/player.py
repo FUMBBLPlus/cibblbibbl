@@ -169,7 +169,7 @@ class MercenaryPlayer(BasePlayer):
     with Re as Re:
       D = Re.normteamdata[Te]
     for d in D["playerArray"]:
-      if d["playerId"] == playerId:
+      if d["playerId"] == self.Id: # ! NOT playerId
         break
     else:
       raise Exception(f'not found: {self.Id}')
@@ -177,7 +177,17 @@ class MercenaryPlayer(BasePlayer):
 
   @property
   def positionId(self):
-    return self.Id.split("-")[1]
+    replayId, playerId = self.Id[5:].split("-")
+    Re = cibblbibbl.replay.Replay(int(replayId))
+    Te = cibblbibbl.team.Team(int(playerId.split("M")[0]))
+    with Re as Re:
+      D = Re.normteamdata[Te]
+    for d in D["playerArray"]:
+      if d["playerId"] == self.Id: # ! NOT playerId
+        break
+    else:
+      raise Exception(f'not found: {self.Id}')
+    return d["positionId"]
 
   @property
   def sort_key(self):
@@ -319,7 +329,6 @@ class RaisedDeadPlayer(BasePlayer):
 
 class StarPlayer(BasePlayer):
   config = field.config.CachedConfig()
-  #getname = field.common.DiggedAttr("position", "name")
   permanent = field.common.Constant(False)
   prevsppmul = field.config.DDField(default=0)
   status = field.config.DDField(default="Active")
@@ -332,9 +341,17 @@ class StarPlayer(BasePlayer):
         / f'{slugify(self.Id[5:])}.json'  # exclude STAR- prefix
     )
 
-  #@property
-  #def positionId(self):
-  #  return self.Id.split("-")[1]
+  @property
+  def getname(self):
+    return self.Id[5:] # exclude STAR- prefix
+
+  @property
+  def position(self):
+    return None
+
+  @property
+  def positionId(self):
+    return None
 
   @property
   def sort_key(self):
