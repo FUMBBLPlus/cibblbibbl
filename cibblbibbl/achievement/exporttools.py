@@ -74,3 +74,17 @@ def team(A, Pl=None):
 def teamofmatch(A, Pl=None):
   Pl = Pl or A.subject
   return A.match.matchup.team_of_player(Pl)
+
+
+#def teamofmatch(A, Pl=None):
+#  Pl = originalPl = Pl or A.subject
+#  Te = A.match.matchup.team_of_player(Pl)
+#  while Pl is not None and Te is None:
+#    Pl = Pl.prev
+#    if Pl:
+#      Te = A.match.matchup.team_of_player(Pl)
+#    else:
+#      for Pl in originalPl.nexts:
+#        Te = A.match.matchup.team_of_player(Pl)
+#        if Te: break
+#  return Te
