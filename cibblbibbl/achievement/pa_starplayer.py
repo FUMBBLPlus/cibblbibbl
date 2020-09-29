@@ -39,12 +39,8 @@ class PA_StarPlayer(PlayerAchievement):
           if prespp < trigspp and trigspp <= postspp:
             A = cls(T, Pl, Mu.match)
             if "proposed" in A.get("status", "proposed"):
-              if T.friendly == "yes":
-                A["status"] = "postpone proposed"
-                A["prestige"] = 0
-              else:
-                A["status"] = "proposed"  # explicit
-                A["prestige"] = value
+              A["status"] = "proposed"  # explicit
+              A["prestige"] = value
             yield A
 
   agent50 = classmethod(agent.iterpostponed)
